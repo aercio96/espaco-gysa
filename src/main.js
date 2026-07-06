@@ -90,6 +90,18 @@ function initAnimations() {
   gsap.set("#slide-despertar", { opacity: 1, autoAlpha: 1, pointerEvents: "auto" });
   gsap.set("#slide-despertar .slide-body", { y: 0 });
 
+  // Controle dos indicadores da barra lateral
+  const indicators = document.querySelectorAll(".indicator-step");
+  function setActiveIndicator(index) {
+    indicators.forEach((ind, idx) => {
+      if (idx === index) {
+        ind.classList.add("active");
+      } else {
+        ind.classList.remove("active");
+      }
+    });
+  }
+
   // Timeline unificada para controlar a sequência de frames e fades de texto
   const mainTimeline = gsap.timeline({
     scrollTrigger: {
@@ -99,6 +111,13 @@ function initAnimations() {
       scrub: 0.5 // Suavização do scroll para uma experiência amanteigada
     }
   });
+
+  // Vincula ativação dos indicadores
+  mainTimeline.call(setActiveIndicator, [0], 0.0)
+              .call(setActiveIndicator, [1], 0.22)
+              .call(setActiveIndicator, [2], 0.48)
+              .call(setActiveIndicator, [3], 0.75)
+              .call(setActiveIndicator, [4], 0.94);
 
   // 1. Scrubbing do Vídeo (Sequência de Imagens)
   mainTimeline.to(airplay, {

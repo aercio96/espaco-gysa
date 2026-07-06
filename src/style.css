@@ -110,6 +110,42 @@ html, body {
   max-width: 950px;
 }
 
+/* Indicador de Progresso Lateral (Editorial) */
+.progress-sidebar {
+  position: fixed;
+  right: 4%;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  pointer-events: none;
+}
+
+.indicator-step {
+  font-family: var(--font-title);
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.2);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  text-align: center;
+}
+
+.indicator-step.active {
+  color: var(--color-gold-champagne);
+  font-weight: 600;
+  transform: scale(1.4);
+  text-shadow: 0 0 12px rgba(191, 168, 126, 0.5);
+}
+
+@media (max-width: 768px) {
+  .progress-sidebar {
+    display: none;
+  }
+}
+
 /* Slide 1 - Logo & Title */
 .logo-header {
   position: absolute;
@@ -123,15 +159,16 @@ html, body {
 }
 
 .brand-logo {
-  max-height: 85px;
+  max-height: 105px; /* Aumentado de 85px */
   width: auto;
   filter: drop-shadow(0 2px 10px rgba(0,0,0,0.3));
+  transition: max-height 0.4s ease;
 }
 
 .main-title {
   font-family: var(--font-title);
-  font-size: 3.2rem;
-  font-weight: 300; /* Editorial, elegante e leve */
+  font-size: 3.6rem; /* Aumentado de 3.2rem */
+  font-weight: 300;
   letter-spacing: 2px;
   color: #fff;
   text-shadow: 0 4px 20px rgba(0,0,0,0.5);
@@ -140,10 +177,10 @@ html, body {
 }
 
 .subtitle-brand {
-  font-family: var(--font-body); /* Montserrat para contraste contemporâneo */
-  font-size: 0.85rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem; /* Aumentado de 0.85rem */
   font-weight: 400;
-  letter-spacing: 8px; /* Grande espaçamento tipográfico de luxo */
+  letter-spacing: 10px; /* Mais espaçamento de luxo */
   color: var(--color-gold-champagne);
   display: block;
   margin-top: 8px;
@@ -151,7 +188,7 @@ html, body {
 }
 
 .slide-text {
-  font-size: 0.9rem;
+  font-size: 1.05rem; /* Aumentado de 0.9rem */
   line-height: 1.8;
   font-weight: 300;
   color: #E2E2E2;
@@ -161,9 +198,9 @@ html, body {
 /* Slide 2 - Manifesto */
 .manifesto-title {
   font-family: var(--font-title);
-  font-size: 2.1rem;
+  font-size: 2.5rem; /* Aumentado de 2.1rem */
   line-height: 1.5;
-  font-weight: 300; /* Mais fina para sofisticação */
+  font-weight: 300;
   color: #fff;
   text-shadow: 0 4px 20px rgba(0,0,0,0.5);
 }
@@ -180,7 +217,7 @@ html, body {
 /* Section Titles (Luxury Styling) */
 .section-title {
   font-family: var(--font-title);
-  font-size: 2rem;
+  font-size: 2.4rem; /* Aumentado de 2rem */
   font-weight: 300;
   color: #fff;
   text-shadow: 0 4px 15px rgba(0,0,0,0.5);
@@ -218,7 +255,7 @@ html, body {
 .service-card {
   background: rgba(140, 69, 88, 0.06); /* Deep Burgundy sutil */
   border: 1px solid rgba(191, 168, 126, 0.15); /* Bordas douradas finas */
-  border-radius: 0; /* Sem cantos arredondados para um visual mais arquitetônico e editorial */
+  border-radius: 0;
   padding: 2rem;
   text-align: left;
   backdrop-filter: blur(15px);
@@ -232,9 +269,21 @@ html, body {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(191, 168, 126, 0.05);
 }
 
+.service-label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 4px;
+  color: var(--color-gold-champagne);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  opacity: 0.8;
+}
+
 .service-card h3 {
   font-family: var(--font-title);
-  font-size: 1.15rem;
+  font-size: 1.35rem; /* Aumentado de 1.15rem */
   color: var(--color-gold-champagne);
   margin-bottom: 0.75rem;
   font-weight: 400;
@@ -242,7 +291,7 @@ html, body {
 }
 
 .service-card p {
-  font-size: 0.8rem;
+  font-size: 0.9rem; /* Aumentado de 0.8rem */
   line-height: 1.6;
   color: #CCCCCC;
   font-weight: 300;
@@ -275,7 +324,7 @@ html, body {
 .pilar-num {
   display: block;
   font-family: var(--font-title);
-  font-size: 1.75rem;
+  font-size: 2rem; /* Aumentado de 1.75rem */
   font-weight: 300;
   color: var(--color-gold-champagne);
   opacity: 0.8;
@@ -285,7 +334,7 @@ html, body {
 
 .pilar-card h3 {
   font-family: var(--font-title);
-  font-size: 1.05rem;
+  font-size: 1.25rem; /* Aumentado de 1.05rem */
   font-weight: 400;
   margin-bottom: 0.75rem;
   color: #fff;
@@ -293,7 +342,7 @@ html, body {
 }
 
 .pilar-card p {
-  font-size: 0.78rem;
+  font-size: 0.88rem; /* Aumentado de 0.78rem */
   line-height: 1.6;
   color: #CCCCCC;
   font-weight: 300;
@@ -311,7 +360,7 @@ html, body {
   text-transform: uppercase;
   letter-spacing: 4px;
   padding: 0.4rem 1.25rem;
-  border-radius: 0; /* Reto */
+  border-radius: 0;
   margin-bottom: 1.5rem;
   font-weight: 400;
   display: inline-block;
@@ -319,7 +368,7 @@ html, body {
 
 .cta-title {
   font-family: var(--font-title);
-  font-size: 2.25rem;
+  font-size: 2.8rem; /* Aumentado de 2.25rem */
   font-weight: 300;
   color: #fff;
   margin-bottom: 0.5rem;
@@ -328,7 +377,7 @@ html, body {
 }
 
 .badge-subtext {
-  font-size: 0.85rem;
+  font-size: 0.95rem; /* Aumentado de 0.85rem */
   color: #CCCCCC;
   margin-bottom: 2rem;
   font-weight: 300;
@@ -338,9 +387,9 @@ html, body {
 .cta-button {
   background: var(--color-gold-champagne);
   color: var(--color-deep-burgundy);
-  padding: 1.1rem 2.75rem;
-  border-radius: 0; /* Reto premium */
-  font-size: 0.8rem;
+  padding: 1.2rem 3rem; /* Aumentado ligeiramente */
+  border-radius: 0;
+  font-size: 0.85rem; /* Aumentado de 0.8rem */
   font-weight: 500;
   text-decoration: none;
   letter-spacing: 3px;
@@ -523,10 +572,10 @@ html, body {
     top: 6vh;
   }
   .brand-logo {
-    max-height: 70px;
+    max-height: 110px; /* Aumentado de 70px para dar presença de marca luxuosa */
   }
 
-  /* Slide 1 - Bottom Right (Face is on the Left in opening scene) */
+  /* Slide 1 - Bottom Right */
   #slide-despertar {
     justify-content: flex-end;
     align-items: flex-end;
@@ -534,19 +583,28 @@ html, body {
     padding-bottom: 12vh;
   }
   #slide-despertar .slide-body {
-    max-width: 520px;
+    max-width: 600px; /* Aumentado de 520px */
     text-align: right;
   }
+  #slide-despertar .main-title {
+    font-size: 4.8rem; /* Aumentado de 3.6rem */
+  }
+  #slide-despertar .slide-text {
+    font-size: 1.15rem; /* Aumentado de 1.05rem */
+  }
 
-  /* Slide 2 - Center Right (Face/Action is on Center-Left) */
+  /* Slide 2 - Center Right */
   #slide-manifesto {
     justify-content: center;
     align-items: flex-end;
     padding-right: 10%;
   }
   #slide-manifesto .slide-body {
-    max-width: 550px;
+    max-width: 650px;
     text-align: right;
+  }
+  #slide-manifesto .manifesto-title {
+    font-size: 3.2rem; /* Aumentado de 2.5rem */
   }
 
   /* Slide 3 - Services on the Right (Leaves Left open for model hair styling scene) */
@@ -556,8 +614,11 @@ html, body {
     padding-right: 8%;
   }
   #slide-servicos .slide-body {
-    max-width: 480px;
+    max-width: 520px;
     text-align: right;
+  }
+  #slide-servicos .section-title {
+    font-size: 2.8rem; /* Aumentado de 2.4rem */
   }
   #slide-servicos .services-grid {
     grid-template-columns: 1fr;
@@ -574,8 +635,11 @@ html, body {
     padding-left: 8%;
   }
   #slide-pilares .slide-body {
-    max-width: 480px;
+    max-width: 520px;
     text-align: left;
+  }
+  #slide-pilares .section-title {
+    font-size: 2.8rem; /* Aumentado de 2.4rem */
   }
   #slide-pilares .pilares-grid {
     grid-template-columns: 1fr;
@@ -594,10 +658,16 @@ html, body {
   #slide-convite .slide-body {
     max-width: 1100px;
   }
+  #slide-convite .cta-title {
+    font-size: 3.4rem; /* Aumentado de 2.8rem */
+  }
+  #slide-convite .badge-subtext {
+    font-size: 1.1rem; /* Aumentado de 0.95rem */
+  }
   #slide-convite .footer-slide {
     display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 4rem;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 4.5rem;
     align-items: center;
   }
   #slide-convite .badge-inauguracao, 
@@ -614,7 +684,7 @@ html, body {
     border-top: none;
     border-left: 1px solid rgba(191, 168, 126, 0.2);
     padding-top: 0;
-    padding-left: 4rem;
+    padding-left: 4.5rem;
     align-items: flex-start;
     text-align: left;
     margin-top: 0;
