@@ -1,0 +1,512 @@
+:root {
+  /* 60% Colors - Background & Off-White */
+  --color-bg-base: #D8D9D7;
+  --color-text-off: #F4F4F4;
+  --color-panel-dark: rgba(0, 0, 0, 0.55);
+
+  /* 30% Colors - Structure & Branding */
+  --color-musa-rose: #A65170;
+  --color-deep-burgundy: #8C4558;
+
+  /* 10% Colors - Lux Details & Highlights */
+  --color-gold-classic: #A68053;
+  --color-gold-champagne: #BFA87E;
+
+  /* Fonts */
+  --font-title: 'Playfair Display', serif;
+  --font-body: 'Montserrat', sans-serif;
+}
+
+/* Reset & General Setup */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background-color: var(--color-bg-base);
+  color: var(--color-text-off);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  height: 100%;
+  overscroll-behavior-y: none;
+}
+
+/* Fixed Background Video */
+.video-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.video-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.7));
+  z-index: 2;
+}
+
+/* Scroll Tracker - invisible height to drive GSAP */
+.scroll-tracker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 500vh; /* 5 slides x 100vh */
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Flipped Layout Overlay */
+.content-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10;
+  pointer-events: none; /* Let pointer events go to button links */
+}
+
+.text-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.text-slide.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto; /* Enable clicks inside active slide elements */
+}
+
+.slide-body {
+  max-width: 650px;
+  text-align: center;
+  transform: translateY(30px);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.text-slide.active .slide-body {
+  transform: translateY(0);
+}
+
+.slide-body.wide-body {
+  max-width: 950px;
+}
+
+/* Slide 1 - Logo & Title */
+.logo-header {
+  position: absolute;
+  top: 5vh;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+
+.brand-logo {
+  max-height: 80px;
+  width: auto;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+}
+
+.main-title {
+  font-family: var(--font-title);
+  font-size: 3.5rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: #fff;
+  text-shadow: 0 4px 15px rgba(0,0,0,0.6);
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+}
+
+.subtitle-brand {
+  font-family: var(--font-title);
+  font-size: 1.25rem;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 6px;
+  color: var(--color-gold-champagne);
+  display: block;
+  margin-top: 5px;
+}
+
+.slide-text {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  font-weight: 300;
+  color: var(--color-bg-base);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+/* Slide 2 - Manifesto */
+.manifesto-title {
+  font-family: var(--font-title);
+  font-size: 2.25rem;
+  line-height: 1.4;
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 4px 15px rgba(0,0,0,0.6);
+}
+
+.gold-highlight {
+  color: var(--color-gold-champagne);
+  font-style: italic;
+  font-family: var(--font-title);
+  display: block;
+  margin-top: 10px;
+}
+
+/* Section Titles */
+.section-title {
+  font-family: var(--font-title);
+  font-size: 2.2rem;
+  color: #fff;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  margin-bottom: 2rem;
+  letter-spacing: 2px;
+}
+
+/* Slide 3 - Services Grid */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.service-card {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(191, 168, 126, 0.15);
+  border-radius: 12px;
+  padding: 1.75rem;
+  text-align: left;
+  backdrop-filter: blur(8px);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.service-card:hover {
+  border-color: var(--color-gold-champagne);
+  transform: translateY(-4px);
+  background: rgba(140, 69, 88, 0.2); /* Deep Burgundy tint */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.service-card h3 {
+  font-family: var(--font-title);
+  font-size: 1.25rem;
+  color: var(--color-gold-champagne);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.service-card p {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--color-bg-base);
+  font-weight: 300;
+}
+
+/* Slide 4 - Pilares Grid */
+.pilares-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.pilar-card {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(191, 168, 126, 0.15);
+  border-radius: 12px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  backdrop-filter: blur(8px);
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pilar-card:hover {
+  border-color: var(--color-gold-champagne);
+  transform: translateY(-4px);
+  background: rgba(166, 81, 112, 0.15); /* Musa Rose tint */
+}
+
+.pilar-num {
+  display: block;
+  font-family: var(--font-title);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-gold-champagne);
+  opacity: 0.7;
+  margin-bottom: 0.75rem;
+}
+
+.pilar-card h3 {
+  font-family: var(--font-title);
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+  color: #fff;
+}
+
+.pilar-card p {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--color-bg-base);
+  font-weight: 300;
+}
+
+/* Slide 5 - Footer & CTA */
+.footer-slide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: 4vh;
+}
+
+.badge-inauguracao {
+  background: rgba(140, 69, 88, 0.8);
+  border: 1px solid var(--color-gold-classic);
+  color: var(--color-gold-champagne);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.cta-title {
+  font-family: var(--font-title);
+  font-size: 2.5rem;
+  color: #fff;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+.badge-subtext {
+  font-size: 0.9rem;
+  color: var(--color-bg-base);
+  margin-bottom: 2rem;
+  font-weight: 300;
+}
+
+.cta-button {
+  background: linear-gradient(135deg, var(--color-gold-classic), var(--color-gold-champagne));
+  color: #000;
+  padding: 1rem 2.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 2px;
+  box-shadow: 0 6px 20px rgba(166, 128, 83, 0.3);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255,255,255,0.1);
+  display: inline-block;
+}
+
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(166, 128, 83, 0.5);
+  filter: brightness(1.1);
+}
+
+/* Institutional Footer details */
+.footer-details {
+  margin-top: 3.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  border-top: 1px solid rgba(216, 217, 215, 0.15);
+  padding-top: 1.5rem;
+}
+
+.address-box, .contacts-box {
+  flex: 1;
+  text-align: left;
+  max-width: 320px;
+}
+
+.contacts-box {
+  margin-left: 2rem;
+}
+
+.footer-details h4 {
+  font-family: var(--font-title);
+  color: var(--color-gold-champagne);
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+}
+
+.footer-details p {
+  font-size: 0.75rem;
+  color: var(--color-bg-base);
+  line-height: 1.5;
+  font-weight: 300;
+}
+
+/* QR Code Card */
+.qr-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(191, 168, 126, 0.25);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 320px;
+  backdrop-filter: blur(4px);
+}
+
+.qr-code-placeholder {
+  background: #fff;
+  padding: 6px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.qr-card p {
+  font-size: 0.68rem;
+  color: var(--color-bg-base);
+  line-height: 1.4;
+  font-weight: 300;
+  text-align: left;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .main-title {
+    font-size: 2.2rem;
+  }
+  .manifesto-title {
+    font-size: 1.6rem;
+  }
+  .section-title {
+    font-size: 1.6rem;
+    margin-bottom: 1.25rem;
+  }
+  .services-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  .service-card {
+    padding: 1.25rem;
+  }
+  .pilares-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  .pilar-card {
+    padding: 1.25rem;
+  }
+  .cta-title {
+    font-size: 1.75rem;
+  }
+  .cta-button {
+    padding: 0.8rem 1.75rem;
+    font-size: 0.75rem;
+  }
+  .footer-slide {
+    margin-top: 1vh;
+  }
+  .footer-details {
+    flex-direction: column;
+    gap: 1.25rem;
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+  }
+  .address-box, .contacts-box {
+    text-align: center;
+    margin-left: 0;
+    max-width: 100%;
+  }
+  .qr-card {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+}
+
+@media (max-height: 600px) {
+  .brand-logo {
+    max-height: 50px;
+  }
+  .main-title {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+  }
+  .section-title {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+  }
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+  .service-card {
+    padding: 0.75rem;
+  }
+  .service-card h3 {
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+  }
+  .pilar-card {
+    padding: 0.75rem;
+  }
+  .pilar-card h3 {
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+  }
+  .pilar-num {
+    font-size: 1.25rem;
+    margin-bottom: 0.25rem;
+  }
+  .cta-title {
+    font-size: 1.4rem;
+  }
+  .cta-button {
+    padding: 0.6rem 1.5rem;
+  }
+  .footer-details {
+    margin-top: 1rem;
+    padding-top: 0.5rem;
+  }
+}
