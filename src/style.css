@@ -607,25 +607,25 @@ html, body {
     font-size: 3.2rem; /* Aumentado de 2.5rem */
   }
 
-  /* Slide 3 - Services on the Right (Leaves Left open for model hair styling scene) */
+  /* Slide 3 - Services on the Left (Posicionado na esquerda conforme solicitação) */
   #slide-servicos {
     justify-content: center;
-    align-items: flex-end;
-    padding-right: 8%;
+    align-items: flex-start;
+    padding-left: 8%;
   }
   #slide-servicos .slide-body {
     max-width: 520px;
-    text-align: right;
+    text-align: left;
   }
   #slide-servicos .section-title {
-    font-size: 2.8rem; /* Aumentado de 2.4rem */
+    font-size: 2.8rem;
   }
   #slide-servicos .services-grid {
     grid-template-columns: 1fr;
     gap: 1.25rem;
   }
   #slide-servicos .service-card {
-    text-align: right;
+    text-align: left;
   }
 
   /* Slide 4 - Pilares on the Left (Leaves Right open for facial/treatment action scene) */
