@@ -498,3 +498,69 @@ html, body {
     padding-top: 0.5rem;
   }
 }
+
+/* Custom alignments for desktop to avoid covering the faces of the models */
+@media (min-width: 769px) {
+  /* Slide 1 - Bottom Left */
+  #slide-despertar {
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding-left: 8%;
+    padding-bottom: 12vh;
+  }
+  #slide-despertar .slide-body {
+    max-width: 520px;
+    text-align: left;
+  }
+
+  /* Slide 2 - Center Right */
+  #slide-manifesto {
+    justify-content: center;
+    align-items: flex-end;
+    padding-right: 10%;
+  }
+  #slide-manifesto .slide-body {
+    max-width: 520px;
+    text-align: right;
+  }
+
+  /* Slide 3 - Services on the Left (Single column) */
+  #slide-servicos {
+    justify-content: center;
+    align-items: flex-start;
+    padding-left: 8%;
+  }
+  #slide-servicos .slide-body {
+    max-width: 480px;
+    text-align: left;
+  }
+  #slide-servicos .services-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* Slide 4 - Pilares on the Right (Single column) */
+  #slide-pilares {
+    justify-content: center;
+    align-items: flex-end;
+    padding-right: 8%;
+  }
+  #slide-pilares .slide-body {
+    max-width: 480px;
+    text-align: right;
+  }
+  #slide-pilares .pilares-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  #slide-pilares .pilar-card {
+    text-align: right;
+  }
+  
+  /* Slide 5 - Bottom aligned */
+  #slide-convite {
+    justify-content: flex-end;
+    align-items: center;
+    padding-bottom: 6vh;
+  }
+}
