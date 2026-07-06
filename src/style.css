@@ -331,11 +331,11 @@ html, body {
 }
 
 .service-card p {
-  font-size: 0.9rem;
+  font-size: 1.2rem; /* Aumentado de 0.9rem para legibilidade e impacto */
   line-height: 1.6;
   color: #FFFFFF; /* Texto em branco total */
-  opacity: 0.85; /* Leve transparência para elegância */
-  font-weight: 300;
+  opacity: 0.95; /* Maior contraste */
+  font-weight: 400; /* Peso médio para Montserrat ficar nítida no vídeo */
 }
 
 /* Slide 4 - Pilares Grid */
@@ -410,11 +410,11 @@ html, body {
 }
 
 .pilar-card p {
-  font-size: 0.88rem;
+  font-size: 1.15rem; /* Aumentado para legibilidade e forte presença */
   line-height: 1.6;
   color: #FFFFFF; /* Branco para legibilidade total */
-  opacity: 0.85;
-  font-weight: 300;
+  opacity: 0.95;
+  font-weight: 400; /* Peso médio para Montserrat ficar nítida no vídeo */
 }
 
 /* Slide 5 - Footer & CTA (Split Layout) */
@@ -425,10 +425,10 @@ html, body {
 .badge-inauguracao {
   border: 1px solid var(--color-gold-classic);
   color: var(--color-gold-champagne);
-  font-size: 0.65rem;
+  font-size: 0.8rem; /* Aumentado de 0.65rem */
   text-transform: uppercase;
-  letter-spacing: 4px;
-  padding: 0.4rem 1.25rem;
+  letter-spacing: 5px;
+  padding: 0.5rem 1.5rem;
   border-radius: 0;
   margin-bottom: 1.5rem;
   font-weight: 400;
@@ -437,29 +437,31 @@ html, body {
 
 .cta-title {
   font-family: var(--font-title);
-  font-size: 2.8rem; /* Aumentado de 2.25rem */
+  font-size: 2.8rem;
   font-weight: 300;
   color: #fff;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
   text-shadow: 0 4px 15px rgba(0,0,0,0.5);
   letter-spacing: 1px;
 }
 
 .badge-subtext {
-  font-size: 0.95rem; /* Aumentado de 0.85rem */
-  color: #CCCCCC;
-  margin-bottom: 2rem;
+  font-size: 1.15rem; /* Aumentado de 0.95rem */
+  color: #FFFFFF;
+  opacity: 0.85;
+  margin-bottom: 2.5rem;
   font-weight: 300;
+  line-height: 1.6;
 }
 
 /* Luxury CTA Button - Outline/Metallic Fill Hybrid */
 .cta-button {
   background: var(--color-gold-champagne);
   color: var(--color-deep-burgundy);
-  padding: 1.2rem 3rem; /* Aumentado ligeiramente */
+  padding: 1.3rem 3.5rem; /* Aumentado padding */
   border-radius: 0;
-  font-size: 0.85rem; /* Aumentado de 0.8rem */
-  font-weight: 500;
+  font-size: 0.95rem; /* Aumentado de 0.85rem */
+  font-weight: 600;
   text-decoration: none;
   letter-spacing: 3px;
   border: 1px solid var(--color-gold-classic);
@@ -484,36 +486,42 @@ html, body {
 .address-box h4, .contacts-box h4 {
   font-family: var(--font-title);
   color: var(--color-gold-champagne);
-  font-size: 0.8rem;
-  letter-spacing: 2px;
-  margin-bottom: 0.5rem;
+  font-size: 1.15rem; /* Aumentado substancialmente de 0.8rem */
+  letter-spacing: 3px;
+  margin-bottom: 0.75rem;
   text-transform: uppercase;
   font-weight: 400;
+  text-shadow: 0 0 8px rgba(191, 168, 126, 0.3);
 }
 
 .address-box p, .contacts-box p {
-  font-size: 0.75rem;
-  color: #BBBBBB;
-  line-height: 1.6;
+  font-size: 0.95rem; /* Aumentado substancialmente de 0.75rem */
+  color: #FFFFFF; /* Branco para legibilidade total */
+  opacity: 0.9;
+  line-height: 1.7;
   font-weight: 300;
+}
+
+.address-box, .contacts-box {
+  margin-bottom: 2rem;
 }
 
 /* QR Code Card (Luxury texture) */
 .qr-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(191, 168, 126, 0.2);
-  border-radius: 0; /* Reto */
-  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(191, 168, 126, 0.25);
+  border-radius: 0;
+  padding: 1.25rem; /* Aumentado de 1rem */
   display: flex;
   align-items: center;
-  gap: 1.25rem;
-  max-width: 320px;
-  backdrop-filter: blur(10px);
+  gap: 1.5rem;
+  max-width: 440px; /* Aumentado de 320px */
+  backdrop-filter: blur(15px);
 }
 
 .qr-code-placeholder {
   background: #fff;
-  padding: 6px;
+  padding: 8px;
   border-radius: 0;
   display: flex;
   justify-content: center;
@@ -522,9 +530,10 @@ html, body {
 }
 
 .qr-card p {
-  font-size: 0.65rem;
-  color: #BBBBBB;
-  line-height: 1.5;
+  font-size: 0.85rem; /* Aumentado substancialmente de 0.65rem */
+  color: #FFFFFF;
+  opacity: 0.85;
+  line-height: 1.6;
   font-weight: 300;
   text-align: left;
 }
@@ -743,6 +752,12 @@ html, body {
     grid-template-columns: 1.25fr 1fr;
     gap: 4.5rem;
     align-items: center;
+  }
+  #slide-convite .footer-cta-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
   }
   #slide-convite .badge-inauguracao, 
   #slide-convite .cta-title,
