@@ -3,51 +3,86 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const video = document.getElementById("bg-video");
+// Seletores DOM
+const canvas = document.getElementById("video-canvas");
+const context = canvas.getContext("2d");
 const slides = document.querySelectorAll(".text-slide");
 
-// State variables for video Lerp scrubbing
-let targetTime = 0;
-let currentTime = 0;
-const easeFactor = 0.05; // Suavização refinada para seek de vídeo mais fluido
+// Configurações da sequência de frames
+const frameCount = 286;
+const getFramePath = (index) => `/frames/frame_${index.toString().padStart(4, "0")}.jpg`;
 
-// Initial pause to prevent autoplay interference
-video.pause();
+// Pré-carregamento de Imagens
+const images = [];
+const airplay = { frame: 0 };
 
-// Lerp update loop running on requestAnimationFrame
-function updateVideoScrub() {
-  if (video.duration) {
-    currentTime += (targetTime - currentTime) * easeFactor;
-    
-    // Evita oscilação de ponto flutuante e estouro de limites
-    if (Math.abs(targetTime - currentTime) > 0.001) {
-      video.currentTime = Math.min(Math.max(currentTime, 0), video.duration - 0.05);
+let loadedImagesCount = 0;
+let isLoaded = false;
+
+// Pré-carrega todas as imagens para evitar flashes pretos durante o scroll
+for (let i = 1; i <= frameCount; i++) {
+  const img = new Image();
+  img.src = getFramePath(i);
+  img.onload = () => {
+    loadedImagesCount++;
+    if (loadedImagesCount === 1) {
+      // Renderiza o primeiro frame imediatamente para evitar tela em branco
+      resizeCanvas();
     }
-  }
-  requestAnimationFrame(updateVideoScrub);
+    if (loadedImagesCount === frameCount) {
+      isLoaded = true;
+      console.log("Todos os frames foram pré-carregados.");
+    }
+  };
+  images.push(img);
 }
 
-let isInitialized = false;
-function initScrollTrigger() {
-  if (isInitialized) return;
-  if (!video.duration) return;
-  isInitialized = true;
+// Redimensionamento do canvas com lógica 'object-fit: cover'
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  render();
+}
 
-  // Inicia o Loop de Renderização
-  requestAnimationFrame(updateVideoScrub);
+function render() {
+  const img = images[airplay.frame];
+  if (!img || !img.complete) return;
 
-  // 1. ScrollTrigger para conduzir a propriedade targetTime do vídeo
-  ScrollTrigger.create({
-    trigger: ".scroll-tracker",
-    start: "top top",
-    end: "bottom bottom",
-    scrub: true,
-    onUpdate: (self) => {
-      targetTime = self.progress * video.duration;
-    }
-  });
+  const canvasWidth = canvas.width;
+  const canvasHeight = canvas.height;
+  const imgWidth = img.width;
+  const imgHeight = img.height;
 
-  // Configuração inicial de estado dos slides e slide-bodies via GSAP
+  // Lógica de centralização mantendo proporções (cover)
+  const canvasRatio = canvasWidth / canvasHeight;
+  const imgRatio = imgWidth / imgHeight;
+
+  let drawWidth, drawHeight, drawX, drawY;
+
+  if (canvasRatio > imgRatio) {
+    drawWidth = canvasWidth;
+    drawHeight = canvasWidth / imgRatio;
+    drawX = 0;
+    drawY = (canvasHeight - drawHeight) / 2;
+  } else {
+    drawWidth = canvasHeight * imgRatio;
+    drawHeight = canvasHeight;
+    drawX = (canvasWidth - drawWidth) / 2;
+    drawY = 0;
+  }
+
+  context.clearRect(0, 0, canvasWidth, canvasHeight);
+  context.drawImage(img, drawX, drawY, drawWidth, drawHeight);
+}
+
+window.addEventListener("resize", resizeCanvas);
+
+// Inicializa as animações
+function initAnimations() {
+  // Ajusta o tamanho inicial do canvas
+  resizeCanvas();
+
+  // Configuração inicial de estado dos slides e slide-bodies
   gsap.set(".text-slide", { opacity: 0, autoAlpha: 0, pointerEvents: "none" });
   gsap.set(".text-slide .slide-body", { y: 40 });
   
@@ -55,54 +90,52 @@ function initScrollTrigger() {
   gsap.set("#slide-despertar", { opacity: 1, autoAlpha: 1, pointerEvents: "auto" });
   gsap.set("#slide-despertar .slide-body", { y: 0 });
 
-  // 2. Timeline unificada para controlar fades e transições de posição de forma fluida
-  const textTimeline = gsap.timeline({
+  // Timeline unificada para controlar a sequência de frames e fades de texto
+  const mainTimeline = gsap.timeline({
     scrollTrigger: {
       trigger: ".scroll-tracker",
       start: "top top",
       end: "bottom bottom",
-      scrub: 1 // Suavização da timeline para transições fluidas de texto
+      scrub: 0.5 // Suavização do scroll para uma experiência amanteigada
     }
   });
 
+  // 1. Scrubbing do Vídeo (Sequência de Imagens)
+  mainTimeline.to(airplay, {
+    frame: frameCount - 1,
+    snap: "frame", // Garante índices inteiros no array de imagens
+    ease: "none",
+    duration: 1,
+    onUpdate: render // Renderiza o frame correspondente a cada atualização
+  }, 0);
+
+  // 2. Fades e Movimentos dos Slides de Texto
   // Slide 1 (Despertar) desaparece
-  textTimeline.to("#slide-despertar", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.15 }, 0.12)
+  mainTimeline.to("#slide-despertar", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.15 }, 0.12)
               .to("#slide-despertar .slide-body", { y: -40, duration: 0.15 }, 0.12);
 
   // Slide 2 (Manifesto) surge e desaparece
-  textTimeline.to("#slide-manifesto", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.15 }, 0.22)
+  mainTimeline.to("#slide-manifesto", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.15 }, 0.22)
               .to("#slide-manifesto .slide-body", { y: 0, duration: 0.15 }, 0.22)
               .to("#slide-manifesto", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.15 }, 0.38)
               .to("#slide-manifesto .slide-body", { y: -40, duration: 0.15 }, 0.38);
 
   // Slide 3 (Serviços) surge e desaparece
-  textTimeline.to("#slide-servicos", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.15 }, 0.48)
+  mainTimeline.to("#slide-servicos", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.15 }, 0.48)
               .to("#slide-servicos .slide-body", { y: 0, duration: 0.15 }, 0.48)
               .to("#slide-servicos", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.15 }, 0.65)
               .to("#slide-servicos .slide-body", { y: -40, duration: 0.15 }, 0.65);
 
   // Slide 4 (Pilares) surge e desaparece
-  textTimeline.to("#slide-pilares", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.15 }, 0.75)
+  mainTimeline.to("#slide-pilares", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.15 }, 0.75)
               .to("#slide-pilares .slide-body", { y: 0, duration: 0.15 }, 0.75)
               .to("#slide-pilares", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.15 }, 0.88)
               .to("#slide-pilares .slide-body", { y: -40, duration: 0.15 }, 0.88);
 
-  // Slide 5 (Convite/Rodapé) surge e permanece
-  textTimeline.to("#slide-convite", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.15 }, 0.94)
+  // Slide 5 (Convite/Rodapé) surge e permanece ativo
+  mainTimeline.to("#slide-convite", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.15 }, 0.94)
               .to("#slide-convite .slide-body", { y: 0, duration: 0.15 }, 0.94);
 }
 
-// Listeners para iniciar o script de forma segura e única
-video.addEventListener("loadedmetadata", initScrollTrigger);
-if (video.readyState >= 1) {
-  initScrollTrigger();
-}
-
-// Buffer de inicialização para navegadores
-window.addEventListener("DOMContentLoaded", () => {
-  video.play().then(() => {
-    video.pause();
-  }).catch(err => {
-    console.log("Autoplay restrictions bypassed: waiting for user scroll.");
-  });
-});
+// Inicializa a timeline assim que o DOM estiver carregado
+window.addEventListener("DOMContentLoaded", initAnimations);
