@@ -744,81 +744,88 @@ html, body {
     font-size: 1.25rem; /* Aumentado de 1.15rem */
   }
 
-  /* Slide 2 - Center Left (Posicionado na esquerda conforme solicitação) */
+  /* Slide 2 - Center Right (Deslocado para a direita para limpar o rosto da modelo focado na esquerda/centro) */
   #slide-manifesto {
     justify-content: center;
-    align-items: flex-start;
-    padding-left: 8%;
+    align-items: flex-end;
+    padding-right: 10%;
   }
   #slide-manifesto .slide-body {
-    max-width: 750px; /* Aumentado de 650px */
-    text-align: left;
+    max-width: 650px;
+    text-align: right;
   }
   #slide-manifesto .manifesto-title {
-    font-size: 3.8rem; /* Aumentado de 3.2rem */
+    font-size: 3.8rem;
   }
 
-  /* Slide 3 - Services split-screen layout (Título na Esquerda, Cards 2x2 na Direita) */
+  /* Slide 3 - Services on the Right (Título e Cards na direita, deixando a lateral esquerda 100% livre para o vídeo/rosto) */
   #slide-servicos {
     justify-content: center;
-    align-items: center;
-    padding-left: 6%;
-    padding-right: 6%;
+    align-items: flex-end;
+    padding-right: 8%;
+    padding-left: 8%;
   }
   #slide-servicos .slide-body {
-    display: grid;
-    grid-template-columns: 0.8fr 2fr; /* Divide em coluna de Título (esquerda) e Cards (direita) */
-    gap: 3.5rem;
-    align-items: center;
-    max-width: 1250px; /* Largura ampliada para comportar lado a lado */
-    text-align: left;
+    max-width: 950px; /* Reduzido de 1250px para concentrar no lado direito */
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
   }
   #slide-servicos .section-title {
     font-size: 3.2rem;
-    margin-bottom: 0; /* Alinhado horizontalmente */
+    margin-bottom: 2.5rem;
   }
-  #slide-servicos .services-grid {
-    grid-template-columns: repeat(2, 1fr); /* Grid 2x2 */
-    gap: 1.5rem;
-  }
-  #slide-servicos .service-card {
-    text-align: left;
-  }
-
-  /* Slide 4 - Pilares split-screen layout (Cards na Esquerda, Título na Direita) */
-  #slide-pilares {
-    justify-content: center;
-    align-items: center;
-    padding-left: 6%;
-    padding-right: 6%;
-  }
-  #slide-pilares .slide-body {
-    display: grid;
-    grid-template-columns: 2fr 0.8fr; /* Divide em Cards (esquerda) e Título (direita) */
-    gap: 3.5rem;
-    align-items: center;
-    max-width: 1250px;
-    text-align: left;
-  }
-  #slide-pilares .section-title {
-    font-size: 3.2rem;
-    margin-bottom: 0; /* Alinhado horizontalmente */
-    text-align: right;
-  }
-  #slide-pilares .section-title::after {
+  #slide-servicos .section-title::after {
     left: auto;
     right: 0; /* Underline dourado alinhado na direita */
   }
+  #slide-servicos .services-grid {
+    grid-template-columns: repeat(2, 1fr); /* Mantém 2x2 para evitar cortes verticais */
+    gap: 1.5rem;
+    width: 100%;
+  }
+  #slide-servicos .service-card {
+    text-align: right; /* Alinhamento editorial de texto à direita */
+  }
+  #slide-servicos .service-card h3::after {
+    margin-left: auto;
+    margin-right: 0; /* Underlines crescendo para a esquerda */
+  }
+
+  /* Slide 4 - Pilares on the Left (Título e Cards na esquerda, deixando a lateral direita 100% livre para a ação/rosto) */
+  #slide-pilares {
+    justify-content: center;
+    align-items: flex-start;
+    padding-left: 8%;
+    padding-right: 8%;
+  }
+  #slide-pilares .slide-body {
+    max-width: 1100px; /* 3 colunas horizontais */
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  #slide-pilares .section-title {
+    font-size: 3.2rem;
+    margin-bottom: 2.5rem;
+  }
+  #slide-pilares .section-title::after {
+    left: 0;
+    right: auto; /* Underline dourado alinhado na esquerda */
+  }
   #slide-pilares .pilares-grid {
-    grid-template-columns: repeat(3, 1fr); /* 3 colunas horizontais */
-    gap: 1.25rem;
+    grid-template-columns: repeat(3, 1fr); /* 3 colunas horizontais para respiração */
+    gap: 1.5rem;
+    width: 100%;
   }
   #slide-pilares .pilar-card {
     text-align: left;
   }
   #slide-pilares .pilar-card h3::after {
     margin-left: 0;
-    margin-right: auto;
+    margin-right: auto; /* Underlines crescendo para a direita */
   }
   
   /* Slide 5 - Split Ad-style Layout (CTA Left, Contacts Right, split by vertical line) */
