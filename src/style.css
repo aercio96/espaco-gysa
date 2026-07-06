@@ -275,15 +275,15 @@ html, body {
   text-align: left;
   backdrop-filter: blur(20px);
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .service-card:hover {
   background: rgba(255, 255, 255, 0.06);
   border-color: rgba(255, 255, 255, 0.15);
   border-left-color: #fff; /* Borda brilha em branco-dourado no hover */
-  transform: translateY(-4px);
-  box-shadow: 0 20px 50px rgba(166, 128, 83, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transform: translateY(-6px) scale(1.02); /* Aumenta ligeiramente de escala para dar mais feedback visual */
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(191, 168, 126, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .service-label {
@@ -306,6 +306,23 @@ html, body {
   margin-bottom: 0.75rem;
   font-weight: 400;
   letter-spacing: 1px;
+}
+
+/* Linha fina que cresce no hover */
+.service-card h3::after {
+  content: '';
+  display: block;
+  width: 30px;
+  height: 1px;
+  background-color: var(--color-gold-champagne);
+  margin-top: 0.75rem;
+  transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+.service-card:hover h3::after {
+  width: 60px;
+  background-color: #fff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
 }
 
 .service-card:hover h3 {
@@ -338,15 +355,15 @@ html, body {
   text-align: center;
   backdrop-filter: blur(20px);
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .pilar-card:hover {
   background: rgba(255, 255, 255, 0.06);
   border-color: rgba(255, 255, 255, 0.15);
   border-left-color: #fff; /* Borda brilha em branco-dourado no hover */
-  transform: translateY(-4px);
-  box-shadow: 0 20px 50px rgba(166, 128, 83, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transform: translateY(-6px) scale(1.02); /* Aumenta ligeiramente de escala para dar mais feedback visual */
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(191, 168, 126, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .pilar-num {
@@ -368,6 +385,23 @@ html, body {
   color: #fff; /* Branco para alto contraste */
   letter-spacing: 1px;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Linha fina que cresce no hover (centrada por padrão no mobile) */
+.pilar-card h3::after {
+  content: '';
+  display: block;
+  width: 30px;
+  height: 1px;
+  background-color: var(--color-gold-champagne);
+  margin: 0.75rem auto 0 auto;
+  transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+.pilar-card:hover h3::after {
+  width: 60px;
+  background-color: #fff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
 }
 
 .pilar-card:hover h3 {
@@ -683,6 +717,10 @@ html, body {
   }
   #slide-pilares .pilar-card {
     text-align: left;
+  }
+  #slide-pilares .pilar-card h3::after {
+    margin-left: 0;
+    margin-right: auto;
   }
   
   /* Slide 5 - Split Ad-style Layout (CTA Left, Contacts Right, split by vertical line) */
