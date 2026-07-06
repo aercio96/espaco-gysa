@@ -159,7 +159,7 @@ html, body {
 }
 
 .brand-logo {
-  max-height: 105px; /* Aumentado de 85px */
+  max-height: 130px; /* Aumentado para maior presença no mobile */
   width: auto;
   filter: drop-shadow(0 2px 10px rgba(0,0,0,0.3));
   transition: max-height 0.4s ease;
@@ -572,7 +572,7 @@ html, body {
     top: 6vh;
   }
   .brand-logo {
-    max-height: 110px; /* Aumentado de 70px para dar presença de marca luxuosa */
+    max-height: 150px; /* Aumentado para maior destaque no desktop */
   }
 
   /* Slide 1 - Bottom Right */
@@ -593,15 +593,15 @@ html, body {
     font-size: 1.15rem; /* Aumentado de 1.05rem */
   }
 
-  /* Slide 2 - Center Right */
+  /* Slide 2 - Center Left (Posicionado na esquerda conforme solicitação) */
   #slide-manifesto {
     justify-content: center;
-    align-items: flex-end;
-    padding-right: 10%;
+    align-items: flex-start;
+    padding-left: 8%;
   }
   #slide-manifesto .slide-body {
     max-width: 650px;
-    text-align: right;
+    text-align: left;
   }
   #slide-manifesto .manifesto-title {
     font-size: 3.2rem; /* Aumentado de 2.5rem */
