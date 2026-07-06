@@ -758,43 +758,60 @@ html, body {
     font-size: 3.8rem; /* Aumentado de 3.2rem */
   }
 
-  /* Slide 3 - Services on the Left (Posicionado na esquerda com layout 2x2 para respiração) */
+  /* Slide 3 - Services split-screen layout (Título na Esquerda, Cards 2x2 na Direita) */
   #slide-servicos {
     justify-content: center;
-    align-items: flex-start;
-    padding-left: 8%;
+    align-items: center;
+    padding-left: 6%;
+    padding-right: 6%;
   }
   #slide-servicos .slide-body {
-    max-width: 1050px; /* Aumentado de 600px para acomodar 2 colunas */
+    display: grid;
+    grid-template-columns: 0.8fr 2fr; /* Divide em coluna de Título (esquerda) e Cards (direita) */
+    gap: 3.5rem;
+    align-items: center;
+    max-width: 1250px; /* Largura ampliada para comportar lado a lado */
     text-align: left;
   }
   #slide-servicos .section-title {
     font-size: 3.2rem;
+    margin-bottom: 0; /* Alinhado horizontalmente */
   }
   #slide-servicos .services-grid {
-    grid-template-columns: repeat(2, 1fr); /* Grid 2x2 evita cortes verticais */
-    gap: 2rem; /* Muito mais respiro */
+    grid-template-columns: repeat(2, 1fr); /* Grid 2x2 */
+    gap: 1.5rem;
   }
   #slide-servicos .service-card {
     text-align: left;
   }
 
-  /* Slide 4 - Pilares on the Left (Grid horizontal de 3 colunas para respiração) */
+  /* Slide 4 - Pilares split-screen layout (Cards na Esquerda, Título na Direita) */
   #slide-pilares {
     justify-content: center;
-    align-items: flex-start;
-    padding-left: 8%;
+    align-items: center;
+    padding-left: 6%;
+    padding-right: 6%;
   }
   #slide-pilares .slide-body {
-    max-width: 1100px; /* Aumentado de 600px para acomodar 3 colunas */
+    display: grid;
+    grid-template-columns: 2fr 0.8fr; /* Divide em Cards (esquerda) e Título (direita) */
+    gap: 3.5rem;
+    align-items: center;
+    max-width: 1250px;
     text-align: left;
   }
   #slide-pilares .section-title {
     font-size: 3.2rem;
+    margin-bottom: 0; /* Alinhado horizontalmente */
+    text-align: right;
+  }
+  #slide-pilares .section-title::after {
+    left: auto;
+    right: 0; /* Underline dourado alinhado na direita */
   }
   #slide-pilares .pilares-grid {
-    grid-template-columns: repeat(3, 1fr); /* 3 colunas lado a lado evitam rolagem vertical longa */
-    gap: 2rem; /* Muito mais respiro */
+    grid-template-columns: repeat(3, 1fr); /* 3 colunas horizontais */
+    gap: 1.25rem;
   }
   #slide-pilares .pilar-card {
     text-align: left;
