@@ -1,18 +1,19 @@
 :root {
-  /* 60% Colors - Background & Off-White */
+  /* 60% Colors - Background & Off-White (Editorial Minimalist) */
   --color-bg-base: #D8D9D7;
   --color-text-off: #F4F4F4;
-  --color-panel-dark: rgba(0, 0, 0, 0.55);
+  --color-text-dark: #1D1D1F;
+  --color-panel-dark: rgba(0, 0, 0, 0.45);
 
   /* 30% Colors - Structure & Branding */
   --color-musa-rose: #A65170;
   --color-deep-burgundy: #8C4558;
 
-  /* 10% Colors - Lux Details & Highlights */
+  /* 10% Colors - Luxury Details & Highlights */
   --color-gold-classic: #A68053;
   --color-gold-champagne: #BFA87E;
 
-  /* Fonts */
+  /* Font Families */
   --font-title: 'Playfair Display', serif;
   --font-body: 'Montserrat', sans-serif;
 }
@@ -33,7 +34,7 @@ html, body {
   overscroll-behavior-y: none;
 }
 
-/* Fixed Background Video */
+/* Fixed Background Video Canvas */
 .video-container {
   position: fixed;
   top: 0;
@@ -56,11 +57,11 @@ html, body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.7));
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.75));
   z-index: 2;
 }
 
-/* Scroll Tracker - invisible height to drive GSAP */
+/* Scroll Tracker - invisible track height to drive GSAP */
 .scroll-tracker {
   position: absolute;
   top: 0;
@@ -71,7 +72,7 @@ html, body {
   z-index: 0;
 }
 
-/* Flipped Layout Overlay */
+/* Content Layout Overlay */
 .content-overlay {
   position: fixed;
   top: 0;
@@ -79,7 +80,7 @@ html, body {
   width: 100vw;
   height: 100vh;
   z-index: 10;
-  pointer-events: none; /* Let pointer events go to button links */
+  pointer-events: none;
 }
 
 .text-slide {
@@ -99,9 +100,10 @@ html, body {
 }
 
 .slide-body {
+  width: 100%;
   max-width: 650px;
   text-align: center;
-  transform: translateY(30px);
+  transform: translateY(40px);
 }
 
 .slide-body.wide-body {
@@ -111,7 +113,7 @@ html, body {
 /* Slide 1 - Logo & Title */
 .logo-header {
   position: absolute;
-  top: 5vh;
+  top: 6vh;
   left: 0;
   width: 100%;
   display: flex;
@@ -121,67 +123,88 @@ html, body {
 }
 
 .brand-logo {
-  max-height: 80px;
+  max-height: 85px;
   width: auto;
-  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+  filter: drop-shadow(0 2px 10px rgba(0,0,0,0.3));
 }
 
 .main-title {
   font-family: var(--font-title);
-  font-size: 3.5rem;
-  font-weight: 700;
-  letter-spacing: 4px;
+  font-size: 3.2rem;
+  font-weight: 300; /* Editorial, elegante e leve */
+  letter-spacing: 2px;
   color: #fff;
-  text-shadow: 0 4px 15px rgba(0,0,0,0.6);
+  text-shadow: 0 4px 20px rgba(0,0,0,0.5);
   margin-bottom: 1.5rem;
-  line-height: 1.1;
+  line-height: 1.2;
 }
 
 .subtitle-brand {
-  font-family: var(--font-title);
-  font-size: 1.25rem;
+  font-family: var(--font-body); /* Montserrat para contraste contemporâneo */
+  font-size: 0.85rem;
   font-weight: 400;
-  font-style: italic;
-  letter-spacing: 6px;
+  letter-spacing: 8px; /* Grande espaçamento tipográfico de luxo */
   color: var(--color-gold-champagne);
   display: block;
-  margin-top: 5px;
+  margin-top: 8px;
+  text-transform: uppercase;
 }
 
 .slide-text {
-  font-size: 0.95rem;
-  line-height: 1.7;
+  font-size: 0.9rem;
+  line-height: 1.8;
   font-weight: 300;
-  color: var(--color-bg-base);
-  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  color: #E2E2E2;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.6);
 }
 
 /* Slide 2 - Manifesto */
 .manifesto-title {
   font-family: var(--font-title);
-  font-size: 2.25rem;
-  line-height: 1.4;
-  font-weight: 600;
+  font-size: 2.1rem;
+  line-height: 1.5;
+  font-weight: 300; /* Mais fina para sofisticação */
   color: #fff;
-  text-shadow: 0 4px 15px rgba(0,0,0,0.6);
+  text-shadow: 0 4px 20px rgba(0,0,0,0.5);
 }
 
 .gold-highlight {
   color: var(--color-gold-champagne);
   font-style: italic;
   font-family: var(--font-title);
+  font-weight: 400;
   display: block;
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
-/* Section Titles */
+/* Section Titles (Luxury Styling) */
 .section-title {
   font-family: var(--font-title);
-  font-size: 2.2rem;
+  font-size: 2rem;
+  font-weight: 300;
   color: #fff;
-  text-shadow: 0 4px 12px rgba(0,0,0,0.5);
-  margin-bottom: 2rem;
-  letter-spacing: 2px;
+  text-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  margin-bottom: 2.5rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  position: relative;
+  display: inline-block;
+}
+
+/* Linha fina editorial sob os títulos de seções */
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 40px;
+  height: 1px;
+  background-color: var(--color-gold-champagne);
+}
+
+#slide-pilares .section-title::after {
+  left: auto;
+  right: 0;
 }
 
 /* Slide 3 - Services Grid */
@@ -193,34 +216,35 @@ html, body {
 }
 
 .service-card {
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(191, 168, 126, 0.15);
-  border-radius: 12px;
-  padding: 1.75rem;
+  background: rgba(140, 69, 88, 0.06); /* Deep Burgundy sutil */
+  border: 1px solid rgba(191, 168, 126, 0.15); /* Bordas douradas finas */
+  border-radius: 0; /* Sem cantos arredondados para um visual mais arquitetônico e editorial */
+  padding: 2rem;
   text-align: left;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(15px);
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .service-card:hover {
   border-color: var(--color-gold-champagne);
   transform: translateY(-4px);
-  background: rgba(140, 69, 88, 0.2); /* Deep Burgundy tint */
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  background: rgba(140, 69, 88, 0.12);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(191, 168, 126, 0.05);
 }
 
 .service-card h3 {
   font-family: var(--font-title);
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   color: var(--color-gold-champagne);
-  margin-bottom: 0.5rem;
-  font-weight: 600;
+  margin-bottom: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 1px;
 }
 
 .service-card p {
-  font-size: 0.85rem;
-  line-height: 1.5;
-  color: var(--color-bg-base);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: #CCCCCC;
   font-weight: 300;
 }
 
@@ -233,158 +257,146 @@ html, body {
 }
 
 .pilar-card {
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(191, 168, 126, 0.15);
-  border-radius: 12px;
-  padding: 2rem 1.5rem;
+  background: rgba(166, 81, 112, 0.04); /* Musa Rose sutil */
+  border: 1px solid rgba(191, 168, 126, 0.12);
+  border-radius: 0; /* Bordas retas de design premium */
+  padding: 2.25rem 1.75rem;
   text-align: center;
-  backdrop-filter: blur(8px);
-  position: relative;
+  backdrop-filter: blur(15px);
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .pilar-card:hover {
   border-color: var(--color-gold-champagne);
   transform: translateY(-4px);
-  background: rgba(166, 81, 112, 0.15); /* Musa Rose tint */
+  background: rgba(166, 81, 112, 0.1);
 }
 
 .pilar-num {
   display: block;
   font-family: var(--font-title);
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 1.75rem;
+  font-weight: 300;
   color: var(--color-gold-champagne);
-  opacity: 0.7;
+  opacity: 0.8;
   margin-bottom: 0.75rem;
+  letter-spacing: 2px;
 }
 
 .pilar-card h3 {
   font-family: var(--font-title);
-  font-size: 1.1rem;
+  font-size: 1.05rem;
+  font-weight: 400;
   margin-bottom: 0.75rem;
   color: #fff;
+  letter-spacing: 1px;
 }
 
 .pilar-card p {
-  font-size: 0.8rem;
-  line-height: 1.5;
-  color: var(--color-bg-base);
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: #CCCCCC;
   font-weight: 300;
 }
 
-/* Slide 5 - Footer & CTA */
+/* Slide 5 - Footer & CTA (Split Layout) */
 .footer-slide {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   width: 100%;
-  margin-top: 4vh;
 }
 
 .badge-inauguracao {
-  background: rgba(140, 69, 88, 0.8);
   border: 1px solid var(--color-gold-classic);
   color: var(--color-gold-champagne);
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   text-transform: uppercase;
-  letter-spacing: 3px;
-  padding: 0.4rem 1rem;
-  border-radius: 20px;
+  letter-spacing: 4px;
+  padding: 0.4rem 1.25rem;
+  border-radius: 0; /* Reto */
   margin-bottom: 1.5rem;
-  font-weight: 500;
+  font-weight: 400;
+  display: inline-block;
 }
 
 .cta-title {
   font-family: var(--font-title);
-  font-size: 2.5rem;
+  font-size: 2.25rem;
+  font-weight: 300;
   color: #fff;
   margin-bottom: 0.5rem;
   text-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  letter-spacing: 1px;
 }
 
 .badge-subtext {
-  font-size: 0.9rem;
-  color: var(--color-bg-base);
+  font-size: 0.85rem;
+  color: #CCCCCC;
   margin-bottom: 2rem;
   font-weight: 300;
 }
 
+/* Luxury CTA Button - Outline/Metallic Fill Hybrid */
 .cta-button {
-  background: linear-gradient(135deg, var(--color-gold-classic), var(--color-gold-champagne));
-  color: #000;
-  padding: 1rem 2.5rem;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  font-weight: 600;
+  background: var(--color-gold-champagne);
+  color: var(--color-deep-burgundy);
+  padding: 1.1rem 2.75rem;
+  border-radius: 0; /* Reto premium */
+  font-size: 0.8rem;
+  font-weight: 500;
   text-decoration: none;
-  letter-spacing: 2px;
-  box-shadow: 0 6px 20px rgba(166, 128, 83, 0.3);
-  transition: all 0.3s ease;
-  border: 1px solid rgba(255,255,255,0.1);
+  letter-spacing: 3px;
+  border: 1px solid var(--color-gold-classic);
   display: inline-block;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: center;
 }
 
 .cta-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(166, 128, 83, 0.5);
-  filter: brightness(1.1);
+  background: transparent;
+  color: var(--color-gold-champagne);
+  border-color: var(--color-gold-champagne);
+  box-shadow: 0 10px 30px rgba(191, 168, 126, 0.25);
 }
 
 /* Institutional Footer details */
 .footer-details {
   margin-top: 3.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   width: 100%;
-  border-top: 1px solid rgba(216, 217, 215, 0.15);
-  padding-top: 1.5rem;
 }
 
-.address-box, .contacts-box {
-  flex: 1;
-  text-align: left;
-  max-width: 320px;
-}
-
-.contacts-box {
-  margin-left: 2rem;
-}
-
-.footer-details h4 {
+.address-box h4, .contacts-box h4 {
   font-family: var(--font-title);
   color: var(--color-gold-champagne);
-  font-size: 0.85rem;
-  letter-spacing: 1px;
-  margin-bottom: 0.4rem;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  margin-bottom: 0.5rem;
   text-transform: uppercase;
+  font-weight: 400;
 }
 
-.footer-details p {
+.address-box p, .contacts-box p {
   font-size: 0.75rem;
-  color: var(--color-bg-base);
-  line-height: 1.5;
+  color: #BBBBBB;
+  line-height: 1.6;
   font-weight: 300;
 }
 
-/* QR Code Card */
+/* QR Code Card (Luxury texture) */
 .qr-card {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(191, 168, 126, 0.25);
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(191, 168, 126, 0.2);
+  border-radius: 0; /* Reto */
+  padding: 1rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.25rem;
   max-width: 320px;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(10px);
 }
 
 .qr-code-placeholder {
   background: #fff;
   padding: 6px;
-  border-radius: 4px;
+  border-radius: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -392,9 +404,9 @@ html, body {
 }
 
 .qr-card p {
-  font-size: 0.68rem;
-  color: var(--color-bg-base);
-  line-height: 1.4;
+  font-size: 0.65rem;
+  color: #BBBBBB;
+  line-height: 1.5;
   font-weight: 300;
   text-align: left;
 }
@@ -402,45 +414,47 @@ html, body {
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .main-title {
-    font-size: 2.2rem;
+    font-size: 2.1rem;
   }
   .manifesto-title {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
   }
   .section-title {
-    font-size: 1.6rem;
-    margin-bottom: 1.25rem;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
   }
   .services-grid {
     grid-template-columns: 1fr;
     gap: 0.75rem;
   }
   .service-card {
-    padding: 1.25rem;
+    padding: 1.5rem;
   }
   .pilares-grid {
     grid-template-columns: 1fr;
     gap: 0.75rem;
   }
   .pilar-card {
-    padding: 1.25rem;
+    padding: 1.5rem;
   }
   .cta-title {
-    font-size: 1.75rem;
+    font-size: 1.6rem;
   }
   .cta-button {
-    padding: 0.8rem 1.75rem;
+    padding: 0.9rem 2rem;
     font-size: 0.75rem;
+    width: 100%;
   }
   .footer-slide {
     margin-top: 1vh;
   }
   .footer-details {
     flex-direction: column;
-    gap: 1.25rem;
+    gap: 1.5rem;
     text-align: center;
-    margin-top: 1.5rem;
-    padding-top: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(216, 217, 215, 0.1);
   }
   .address-box, .contacts-box {
     text-align: center;
@@ -458,11 +472,11 @@ html, body {
     max-height: 50px;
   }
   .main-title {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     margin-bottom: 0.5rem;
   }
   .section-title {
-    font-size: 1.4rem;
+    font-size: 1.25rem;
     margin-bottom: 0.5rem;
   }
   .services-grid {
@@ -473,94 +487,145 @@ html, body {
     padding: 0.75rem;
   }
   .service-card h3 {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     margin-bottom: 0.25rem;
   }
   .pilar-card {
     padding: 0.75rem;
   }
   .pilar-card h3 {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     margin-bottom: 0.25rem;
   }
   .pilar-num {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     margin-bottom: 0.25rem;
   }
   .cta-title {
-    font-size: 1.4rem;
+    font-size: 1.25rem;
   }
   .cta-button {
-    padding: 0.6rem 1.5rem;
+    padding: 0.6rem 1.25rem;
   }
   .footer-details {
     margin-top: 1rem;
-    padding-top: 0.5rem;
   }
 }
 
-/* Custom alignments for desktop to avoid covering the faces of the models */
+/* ==========================================================================
+   DESKTOP EDITORIAL LAYOUT & ASYMMETRICAL ALIGNMENTS (Prevent covering faces)
+   ========================================================================== */
 @media (min-width: 769px) {
-  /* Slide 1 - Bottom Left */
+  /* Logo Header: Pushed slightly to the left side */
+  .logo-header {
+    justify-content: flex-start;
+    padding-left: 8%;
+    top: 6vh;
+  }
+  .brand-logo {
+    max-height: 70px;
+  }
+
+  /* Slide 1 - Bottom Right (Face is on the Left in opening scene) */
   #slide-despertar {
     justify-content: flex-end;
-    align-items: flex-start;
-    padding-left: 8%;
+    align-items: flex-end;
+    padding-right: 8%;
     padding-bottom: 12vh;
   }
   #slide-despertar .slide-body {
     max-width: 520px;
-    text-align: left;
+    text-align: right;
   }
 
-  /* Slide 2 - Center Right */
+  /* Slide 2 - Center Right (Face/Action is on Center-Left) */
   #slide-manifesto {
     justify-content: center;
     align-items: flex-end;
     padding-right: 10%;
   }
   #slide-manifesto .slide-body {
-    max-width: 520px;
+    max-width: 550px;
     text-align: right;
   }
 
-  /* Slide 3 - Services on the Left (Single column) */
+  /* Slide 3 - Services on the Right (Leaves Left open for model hair styling scene) */
   #slide-servicos {
-    justify-content: center;
-    align-items: flex-start;
-    padding-left: 8%;
-  }
-  #slide-servicos .slide-body {
-    max-width: 480px;
-    text-align: left;
-  }
-  #slide-servicos .services-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  /* Slide 4 - Pilares on the Right (Single column) */
-  #slide-pilares {
     justify-content: center;
     align-items: flex-end;
     padding-right: 8%;
   }
-  #slide-pilares .slide-body {
+  #slide-servicos .slide-body {
     max-width: 480px;
     text-align: right;
   }
-  #slide-pilares .pilares-grid {
+  #slide-servicos .services-grid {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 1.25rem;
   }
-  #slide-pilares .pilar-card {
+  #slide-servicos .service-card {
     text-align: right;
   }
+
+  /* Slide 4 - Pilares on the Left (Leaves Right open for facial/treatment action scene) */
+  #slide-pilares {
+    justify-content: center;
+    align-items: flex-start;
+    padding-left: 8%;
+  }
+  #slide-pilares .slide-body {
+    max-width: 480px;
+    text-align: left;
+  }
+  #slide-pilares .pilares-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  #slide-pilares .pilar-card {
+    text-align: left;
+  }
   
-  /* Slide 5 - Bottom aligned */
+  /* Slide 5 - Split Ad-style Layout (CTA Left, Contacts Right, split by vertical line) */
   #slide-convite {
     justify-content: flex-end;
     align-items: center;
-    padding-bottom: 6vh;
+    padding-bottom: 8vh;
+  }
+  #slide-convite .slide-body {
+    max-width: 1100px;
+  }
+  #slide-convite .footer-slide {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+  #slide-convite .badge-inauguracao, 
+  #slide-convite .cta-title,
+  #slide-convite .badge-subtext,
+  #slide-convite .cta-button {
+    align-self: flex-start;
+    text-align: left;
+  }
+  #slide-convite .footer-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    border-top: none;
+    border-left: 1px solid rgba(191, 168, 126, 0.2);
+    padding-top: 0;
+    padding-left: 4rem;
+    align-items: flex-start;
+    text-align: left;
+    margin-top: 0;
+  }
+  #slide-convite .address-box, 
+  #slide-convite .contacts-box {
+    max-width: 100%;
+    margin-left: 0;
+  }
+  #slide-convite .qr-card {
+    max-width: 100%;
+    margin-left: 0;
   }
 }
