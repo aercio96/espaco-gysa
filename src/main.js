@@ -3,113 +3,106 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Seletores DOM
 const video = document.getElementById("bg-video");
 const slides = document.querySelectorAll(".text-slide");
 
-// Lerp Variables
+// State variables for video Lerp scrubbing
 let targetTime = 0;
 let currentTime = 0;
-const easeFactor = 0.06; // Suavização (menor = mais suave/lento, maior = mais reativo)
+const easeFactor = 0.05; // Suavização refinada para seek de vídeo mais fluido
 
-// Assegura que o autoplay do navegador não interfira no scrubbing
+// Initial pause to prevent autoplay interference
 video.pause();
 
-// Loop de atualização do vídeo (Lerp)
+// Lerp update loop running on requestAnimationFrame
 function updateVideoScrub() {
-  // Interpolação linear em direção ao targetTime
-  currentTime += (targetTime - currentTime) * easeFactor;
-  
-  // Evita pequenas oscilações de ponto flutuante e estouro de limites
-  if (Math.abs(targetTime - currentTime) > 0.001 && video.duration) {
-    // Limita currentTime entre 0 e um décimo de segundo antes do fim para não quebrar no fim da faixa
-    video.currentTime = Math.min(Math.max(currentTime, 0), video.duration - 0.05);
+  if (video.duration) {
+    currentTime += (targetTime - currentTime) * easeFactor;
+    
+    // Evita oscilação de ponto flutuante e estouro de limites
+    if (Math.abs(targetTime - currentTime) > 0.001) {
+      video.currentTime = Math.min(Math.max(currentTime, 0), video.duration - 0.05);
+    }
   }
-  
   requestAnimationFrame(updateVideoScrub);
 }
 
-// Monitora o carregamento do vídeo para obter metadados corretos
-video.addEventListener("loadedmetadata", initScrollTrigger);
-// Fallback caso os metadados já estejam carregados
-if (video.readyState >= 1) {
-  initScrollTrigger();
-}
-
+let isInitialized = false;
 function initScrollTrigger() {
+  if (isInitialized) return;
   if (!video.duration) return;
+  isInitialized = true;
 
   // Inicia o Loop de Renderização
   requestAnimationFrame(updateVideoScrub);
 
-  // 1. ScrollTrigger para o vídeo de fundo
+  // 1. ScrollTrigger para conduzir a propriedade targetTime do vídeo
   ScrollTrigger.create({
     trigger: ".scroll-tracker",
     start: "top top",
     end: "bottom bottom",
-    scrub: 0.1, // Sincronização básica adicional do GSAP
+    scrub: true,
     onUpdate: (self) => {
-      // Multiplica o progresso (0 a 1) pela duração do vídeo
       targetTime = self.progress * video.duration;
     }
   });
 
-  // 2. Timeline GSAP para controlar o fade-in e fade-out de cada Slide de texto
+  // Configuração inicial de estado dos slides e slide-bodies via GSAP
+  gsap.set(".text-slide", { opacity: 0, autoAlpha: 0, pointerEvents: "none" });
+  gsap.set(".text-slide .slide-body", { y: 40 });
+  
+  // Define o Slide 1 (Despertar) como ativo no início
+  gsap.set("#slide-despertar", { opacity: 1, autoAlpha: 1, pointerEvents: "auto" });
+  gsap.set("#slide-despertar .slide-body", { y: 0 });
+
+  // 2. Timeline unificada para controlar fades e transições de posição de forma fluida
   const textTimeline = gsap.timeline({
     scrollTrigger: {
       trigger: ".scroll-tracker",
       start: "top top",
       end: "bottom bottom",
-      scrub: true
+      scrub: 1 // Suavização da timeline para transições fluidas de texto
     }
   });
 
-  // Nós temos 5 slides. Mapearemos em percentuais exatos do scroll:
-  // Slide 1 (Despertar): Ativo de 0% a 15%
-  // Slide 2 (Manifesto): Ativo de 20% a 40%
-  // Slide 3 (Serviços): Ativo de 45% a 65%
-  // Slide 4 (Pilares): Ativo de 70% a 85%
-  // Slide 5 (Convite): Ativo de 90% a 100%
+  // Slide 1 (Despertar) desaparece
+  textTimeline.to("#slide-despertar", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.15 }, 0.12)
+              .to("#slide-despertar .slide-body", { y: -40, duration: 0.15 }, 0.12);
 
-  // Definimos uma função de controle para alternar a classe .active dos slides no DOM
-  function setActiveSlide(index) {
-    slides.forEach((slide, idx) => {
-      if (idx === index) {
-        slide.classList.add("active");
-      } else {
-        slide.classList.remove("active");
-      }
-    });
-  }
+  // Slide 2 (Manifesto) surge e desaparece
+  textTimeline.to("#slide-manifesto", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.15 }, 0.22)
+              .to("#slide-manifesto .slide-body", { y: 0, duration: 0.15 }, 0.22)
+              .to("#slide-manifesto", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.15 }, 0.38)
+              .to("#slide-manifesto .slide-body", { y: -40, duration: 0.15 }, 0.38);
 
-  // Vinculamos ganchos na timeline para ligar/desligar slides baseados no scroll
-  textTimeline
-    // Entrada slide 1 (já começa ativo)
-    .call(setActiveSlide, [0], 0.0)
-    
-    // Transição para o slide 2
-    .to({}, { duration: 0.15 }) // espera no slide 1
-    .call(setActiveSlide, [1], 0.20)
-    
-    // Transição para o slide 3
-    .to({}, { duration: 0.20 }) // espera no slide 2
-    .call(setActiveSlide, [2], 0.45)
-    
-    // Transição para o slide 4
-    .to({}, { duration: 0.20 }) // espera no slide 3
-    .call(setActiveSlide, [3], 0.70)
-    
-    // Transição para o slide 5
-    .to({}, { duration: 0.15 }) // espera no slide 4
-    .call(setActiveSlide, [4], 0.90)
-    .to({}, { duration: 0.10 }); // fim
+  // Slide 3 (Serviços) surge e desaparece
+  textTimeline.to("#slide-servicos", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.15 }, 0.48)
+              .to("#slide-servicos .slide-body", { y: 0, duration: 0.15 }, 0.48)
+              .to("#slide-servicos", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.15 }, 0.65)
+              .to("#slide-servicos .slide-body", { y: -40, duration: 0.15 }, 0.65);
+
+  // Slide 4 (Pilares) surge e desaparece
+  textTimeline.to("#slide-pilares", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.15 }, 0.75)
+              .to("#slide-pilares .slide-body", { y: 0, duration: 0.15 }, 0.75)
+              .to("#slide-pilares", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.15 }, 0.88)
+              .to("#slide-pilares .slide-body", { y: -40, duration: 0.15 }, 0.88);
+
+  // Slide 5 (Convite/Rodapé) surge e permanece
+  textTimeline.to("#slide-convite", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.15 }, 0.94)
+              .to("#slide-convite .slide-body", { y: 0, duration: 0.15 }, 0.94);
 }
 
-// Tenta tocar o vídeo sem áudio uma vez no início (para contornar autoplay do iOS/Chrome e forçar cache inicial)
+// Listeners para iniciar o script de forma segura e única
+video.addEventListener("loadedmetadata", initScrollTrigger);
+if (video.readyState >= 1) {
+  initScrollTrigger();
+}
+
+// Buffer de inicialização para navegadores
 window.addEventListener("DOMContentLoaded", () => {
   video.play().then(() => {
     video.pause();
   }).catch(err => {
-    console.log("Autoplay policy handle: video initialized in paused scrub state.");
+    console.log("Autoplay restrictions bypassed: waiting for user scroll.");
   });
 });
