@@ -709,7 +709,7 @@ html, body {
     text-align: left;
   }
 
-  /* Slide 4 - Pilares on the Left (Com 3 colunas para respiro vertical máximo) */
+  /* Slide 4 - Pilares on the Left (Em 1 coluna com respiro vertical otimizado) */
   #slide-pilares {
     justify-content: center;
     align-items: flex-start;
@@ -717,19 +717,20 @@ html, body {
     padding-top: 14vh; /* Respiro vertical do topo (cabeçalho) */
   }
   #slide-pilares .slide-body {
-    max-width: 1050px; /* Aumentado para acomodar 3 colunas confortavelmente */
+    max-width: 550px; /* Alinhamento estreito para coluna única */
     text-align: left;
   }
   #slide-pilares .section-title {
     font-size: 3.2rem;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem; /* Reduzido de 2.5rem para respiro */
   }
   #slide-pilares .pilares-grid {
-    grid-template-columns: repeat(3, 1fr); /* 3 colunas lado a lado */
-    gap: 1.5rem;
+    grid-template-columns: 1fr; /* Coluna única */
+    gap: 1rem; /* Espaço reduzido entre cards para encaixar perfeitamente */
   }
   #slide-pilares .pilar-card {
     text-align: left;
+    padding: 1.25rem 1.75rem; /* Padding vertical compacto para diminuir altura total do bloco */
   }
   #slide-pilares .pilar-card h3::after {
     margin-left: 0;
