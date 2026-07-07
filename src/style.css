@@ -61,7 +61,7 @@ html, body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.75));
+  background: linear-gradient(135deg, rgba(45, 15, 25, 0.45), rgba(20, 5, 10, 0.8)); /* Sobreposição em tom burguês/vinho sutil para aquecer o vídeo */
   z-index: 2;
 }
 
@@ -161,7 +161,7 @@ html, body {
   justify-content: center;
   align-items: center;
   pointer-events: none;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 100%);
+  background: linear-gradient(to bottom, rgba(30, 5, 12, 0.8) 0%, rgba(30, 5, 12, 0) 100%); /* Degradê em tom burgundy quente */
   z-index: 100;
   padding-top: 3vh; /* Reduzido de 4vh */
 }
@@ -271,7 +271,7 @@ html, body {
 }
 
 .service-card {
-  background: rgba(15, 15, 15, 0.6); /* Glassmorphism escuro com menos transparência para leitura excelente */
+  background: rgba(100, 45, 60, 0.65); /* Glassmorphism em tom de batom burguês/rosa aveludado quente */
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-left: 3px solid var(--color-gold-champagne); /* Borda esquerda dourada marcante */
   border-radius: 0;
@@ -283,7 +283,7 @@ html, body {
 }
 
 .service-card:hover {
-  background: rgba(25, 25, 25, 0.75); /* Fica ligeiramente mais sólido no hover */
+  background: rgba(80, 30, 45, 0.8); /* Tom de batom mate mais escuro e fechado no hover */
   border-color: rgba(255, 255, 255, 0.15);
   border-left-color: #fff; /* Borda brilha em branco-dourado no hover */
   transform: translateY(-6px) scale(1.02); /* Aumenta ligeiramente de escala para dar mais feedback visual */
@@ -351,7 +351,7 @@ html, body {
 }
 
 .pilar-card {
-  background: rgba(15, 15, 15, 0.6); /* Glassmorphism escuro com menos transparência para leitura excelente */
+  background: rgba(100, 45, 60, 0.65); /* Glassmorphism em tom de batom burguês/rosa aveludado quente */
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-left: 3px solid var(--color-gold-champagne); /* Borda esquerda dourada marcante */
   border-radius: 0;
@@ -363,7 +363,7 @@ html, body {
 }
 
 .pilar-card:hover {
-  background: rgba(25, 25, 25, 0.75); /* Fica ligeiramente mais sólido no hover */
+  background: rgba(80, 30, 45, 0.8); /* Tom de batom mate mais escuro e fechado no hover */
   border-color: rgba(255, 255, 255, 0.15);
   border-left-color: #fff; /* Borda brilha em branco-dourado no hover */
   transform: translateY(-6px) scale(1.02); /* Aumenta ligeiramente de escala para dar mais feedback visual */
@@ -516,7 +516,7 @@ html, body {
 
 /* QR Code Card (Luxury texture) */
 .qr-card {
-  background: rgba(15, 15, 15, 0.6); /* Glassmorphism escuro com menos transparência para leitura excelente */
+  background: rgba(100, 45, 60, 0.65); /* Glassmorphism em tom de batom burguês/rosa aveludado quente */
   border: 1px solid rgba(191, 168, 126, 0.25);
   border-radius: 0;
   padding: 1.25rem; /* Aumentado de 1rem */
