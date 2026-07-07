@@ -132,22 +132,7 @@ function initAnimations() {
       trigger: ".scroll-tracker",
       start: "top top",
       end: "bottom bottom",
-      scrub: 0.5, // Suavização do scroll para uma experiência amanteigada
-      onUpdate: (self) => {
-        const progress = self.progress;
-        const vantaBg = document.getElementById("vanta-bg");
-        // Exibe o contêiner do Vanta (ativando o rendering WebGL no browser) apenas quando entra na zona de transição (70%+)
-        // Oculta o contêiner nas seções iniciais, forçando o browser a suspender o render loop e liberando 100% da GPU!
-        if (progress >= 0.70) {
-          if (vantaBg && vantaBg.style.display !== "block") {
-            vantaBg.style.display = "block";
-          }
-        } else {
-          if (vantaBg && vantaBg.style.display !== "none") {
-            vantaBg.style.display = "none";
-          }
-        }
-      }
+      scrub: 0.5 // Suavização do scroll para uma experiência amanteigada
     }
   });
 

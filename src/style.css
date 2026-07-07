@@ -74,7 +74,7 @@ html, body {
   height: 100vh;
   z-index: 1.5; /* Fica acima do vídeo (z-index: 1) mas abaixo do conteúdo overlay (z-index: 10) */
   opacity: 0;
-  display: none; /* Escondido por padrão para suspender rendering WebGL e poupar GPU */
+  visibility: hidden; /* Escondido por padrão, mas mantendo dimensões reais (100% da tela) no startup */
   pointer-events: none;
 }
 
