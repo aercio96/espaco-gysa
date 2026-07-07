@@ -61,7 +61,7 @@ html, body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, rgba(45, 15, 25, 0.45), rgba(20, 5, 10, 0.8)); /* Sobreposição em tom burguês/vinho sutil para aquecer o vídeo */
+  background: linear-gradient(135deg, rgba(30, 15, 20, 0.35), rgba(12, 6, 8, 0.85)); /* Tom quente de overlay ultra-suave e desaturado */
   z-index: 2;
 }
 
