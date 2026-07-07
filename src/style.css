@@ -271,7 +271,7 @@ html, body {
 }
 
 .service-card {
-  background: rgba(255, 255, 255, 0.02); /* Frosted glass ultra sutil */
+  background: rgba(15, 15, 15, 0.6); /* Glassmorphism escuro com menos transparência para leitura excelente */
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-left: 3px solid var(--color-gold-champagne); /* Borda esquerda dourada marcante */
   border-radius: 0;
@@ -283,7 +283,7 @@ html, body {
 }
 
 .service-card:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(25, 25, 25, 0.75); /* Fica ligeiramente mais sólido no hover */
   border-color: rgba(255, 255, 255, 0.15);
   border-left-color: #fff; /* Borda brilha em branco-dourado no hover */
   transform: translateY(-6px) scale(1.02); /* Aumenta ligeiramente de escala para dar mais feedback visual */
@@ -351,7 +351,7 @@ html, body {
 }
 
 .pilar-card {
-  background: rgba(255, 255, 255, 0.02); /* Frosted glass ultra sutil */
+  background: rgba(15, 15, 15, 0.6); /* Glassmorphism escuro com menos transparência para leitura excelente */
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-left: 3px solid var(--color-gold-champagne); /* Borda esquerda dourada marcante */
   border-radius: 0;
@@ -363,7 +363,7 @@ html, body {
 }
 
 .pilar-card:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(25, 25, 25, 0.75); /* Fica ligeiramente mais sólido no hover */
   border-color: rgba(255, 255, 255, 0.15);
   border-left-color: #fff; /* Borda brilha em branco-dourado no hover */
   transform: translateY(-6px) scale(1.02); /* Aumenta ligeiramente de escala para dar mais feedback visual */
@@ -516,7 +516,7 @@ html, body {
 
 /* QR Code Card (Luxury texture) */
 .qr-card {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(15, 15, 15, 0.6); /* Glassmorphism escuro com menos transparência para leitura excelente */
   border: 1px solid rgba(191, 168, 126, 0.25);
   border-radius: 0;
   padding: 1.25rem; /* Aumentado de 1rem */
