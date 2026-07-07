@@ -88,10 +88,10 @@ function initVanta() {
       gyroControls: false,
       minHeight: 200.00,
       minWidth: 200.00,
-      skyColor: 0x1d0d12,      /* Vinho escuro desaturado (Combina com overlay de vídeo) */
-      cloudColor: 0x6e3241,    /* Tom de batom aveludado / musa rose escuro */
-      sunColor: 0xbfa87e,      /* Dourado champanhe (Combina com detalhes de ouro) */
-      sunGlareColor: 0x8c4558, /* Brilho em tom burgundy */
+      skyColor: 0x2b1a20,      /* Cinza-ameixa escuro com subtom rosa quente */
+      cloudColor: 0xa65170,    /* Rosa musa / rosa queimado oficial (Combina com o primeiro bloco) */
+      sunColor: 0xbfa87e,      /* Dourado champanhe */
+      sunGlareColor: 0xa65170, /* Brilho solar em tom rosa musa */
       sunlightColor: 0xbfa87e  /* Luz dourada suave */
     });
   }
