@@ -88,8 +88,11 @@ function initVanta() {
       gyroControls: false,
       minHeight: 200.00,
       minWidth: 200.00,
-      skyColor: 0xd768d0,
-      cloudColor: 0xae599a
+      skyColor: 0x1d0d12,      /* Vinho escuro desaturado (Combina com overlay de vídeo) */
+      cloudColor: 0x6e3241,    /* Tom de batom aveludado / musa rose escuro */
+      sunColor: 0xbfa87e,      /* Dourado champanhe (Combina com detalhes de ouro) */
+      sunGlareColor: 0x8c4558, /* Brilho em tom burgundy */
+      sunlightColor: 0xbfa87e  /* Luz dourada suave */
     });
   }
 }
