@@ -25,6 +25,10 @@
   padding: 0;
 }
 
+html {
+  font-size: 85%; /* Escalona todo o site (fontes, paddings, gaps, margens em rem) em 85% */
+}
+
 html, body {
   background-color: var(--color-bg-base);
   color: var(--color-text-off);
@@ -152,18 +156,18 @@ html, body {
   top: 0;
   left: 0;
   width: 100%;
-  height: 24vh;
+  height: 20vh; /* Reduzido de 24vh para se adequar ao logo menor */
   display: flex;
   justify-content: center;
   align-items: center;
   pointer-events: none;
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 100%);
   z-index: 100;
-  padding-top: 4vh;
+  padding-top: 3vh; /* Reduzido de 4vh */
 }
 
 .brand-logo {
-  max-height: 160px; /* Aumentado de 130px para maior presença no mobile */
+  max-height: 135px; /* Reduzido de 160px para 85% do tamanho */
   width: auto;
   filter: drop-shadow(0 4px 15px rgba(0,0,0,0.6)) drop-shadow(0 8px 30px rgba(0,0,0,0.4));
   transition: max-height 0.4s ease, filter 0.4s ease;
@@ -652,10 +656,10 @@ html, body {
     justify-content: flex-start;
     padding-left: 8%;
     top: 0;
-    padding-top: 4vh;
+    padding-top: 3vh; /* Reduzido de 4vh */
   }
   .brand-logo {
-    max-height: 190px; /* Aumentado de 150px para dar presença de marca luxuosa */
+    max-height: 160px; /* Reduzido de 190px para 85% do tamanho */
   }
 
   /* Slide 1 - Bottom Right */
