@@ -206,7 +206,7 @@ html, body {
 /* Slide 2 - Manifesto */
 .manifesto-title {
   font-family: var(--font-title);
-  font-size: 2.5rem; /* Aumentado de 2.1rem */
+  font-size: 2.6rem; /* Padronizado com os outros títulos de seção no mobile */
   line-height: 1.5;
   font-weight: 300;
   color: #fff;
@@ -234,7 +234,7 @@ html, body {
 /* Section Titles (Luxury Styling) */
 .section-title {
   font-family: var(--font-title);
-  font-size: 2.4rem;
+  font-size: 2.6rem; /* Padronizado com os outros títulos de seção no mobile */
   font-weight: 300;
   color: #fff;
   text-shadow: 0 4px 20px rgba(0,0,0,0.6);
@@ -304,7 +304,7 @@ html, body {
 
 .service-card h3 {
   font-family: var(--font-title);
-  font-size: 1.7rem; /* Aumentado para destaque proeminente */
+  font-size: 1.5rem; /* Padronizado com os cartões dos pilares */
   color: #fff;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
   margin-bottom: 0.75rem;
@@ -335,8 +335,8 @@ html, body {
 }
 
 .service-card p {
-  font-size: 1.15rem; /* Aumentado de 0.9rem para legibilidade excelente */
-  line-height: 1.7;
+  font-size: 1.1rem; /* Padronizado com os cartões dos pilares */
+  line-height: 1.6;
   color: #FFFFFF;
   opacity: 0.95; /* Maior contraste e peso */
   font-weight: 400; /* Peso 400 para traço mais forte e visível */
@@ -385,7 +385,7 @@ html, body {
 .pilar-card h3 {
   display: inline-block; /* Alinhado inline com o número */
   font-family: var(--font-title);
-  font-size: 1.40rem; /* Ajustado proporcionalmente */
+  font-size: 1.5rem; /* Padronizado com os cartões de serviços */
   font-weight: 400;
   color: #fff;
   vertical-align: middle;
@@ -417,7 +417,7 @@ html, body {
 }
 
 .pilar-card p {
-  font-size: 1.05rem; /* Ajustado ligeiramente para economizar espaço mantendo alta legibilidade */
+  font-size: 1.1rem; /* Padronizado com os cartões de serviços */
   line-height: 1.6;
   color: #FFFFFF;
   opacity: 0.95;
@@ -445,7 +445,7 @@ html, body {
 
 .cta-title {
   font-family: var(--font-title);
-  font-size: 2.8rem;
+  font-size: 2.6rem; /* Padronizado com todos os outros títulos no mobile */
   font-weight: 300;
   color: #fff;
   margin-bottom: 1rem;
@@ -454,11 +454,11 @@ html, body {
 }
 
 .badge-subtext {
-  font-size: 1.15rem; /* Aumentado de 0.95rem */
+  font-size: 1.1rem; /* Padronizado com as outras descrições */
   color: #FFFFFF;
-  opacity: 0.85;
+  opacity: 0.95; /* Aumentado contraste */
   margin-bottom: 2.5rem;
-  font-weight: 300;
+  font-weight: 400; /* Mais legível */
   line-height: 1.6;
 }
 
@@ -699,14 +699,14 @@ html, body {
     justify-content: center;
     align-items: flex-start;
     padding-left: 8%;
-    padding-top: 14vh; /* Respiro vertical do topo (cabeçalho) */
+    /* padding-top removido para perfeita centralização vertical */
   }
   #slide-servicos .slide-body {
     max-width: 950px; /* Aumentado para acomodar 2 colunas */
     text-align: left;
   }
   #slide-servicos .section-title {
-    font-size: 3.2rem;
+    font-size: 3.5rem; /* Padronizado com os outros títulos de seção no desktop */
     margin-bottom: 2.5rem;
   }
   #slide-servicos .services-grid {
@@ -722,14 +722,14 @@ html, body {
     justify-content: center;
     align-items: flex-start;
     padding-left: 8%;
-    padding-top: 14vh; /* Respiro vertical do topo (cabeçalho) */
+    /* padding-top removido para perfeita centralização vertical */
   }
   #slide-pilares .slide-body {
     max-width: 550px; /* Alinhamento estreito para coluna única */
     text-align: left;
   }
   #slide-pilares .section-title {
-    font-size: 3.2rem;
+    font-size: 3.5rem; /* Padronizado com os outros títulos de seção no desktop */
     margin-bottom: 2rem; /* Reduzido de 2.5rem para respiro */
   }
   #slide-pilares .pilares-grid {
@@ -755,10 +755,10 @@ html, body {
     max-width: 1100px;
   }
   #slide-convite .cta-title {
-    font-size: 3.8rem; /* Aumentado de 3.4rem */
+    font-size: 3.5rem; /* Padronizado com todos os outros títulos de seção no desktop */
   }
   #slide-convite .badge-subtext {
-    font-size: 1.2rem; /* Aumentado de 1.1rem */
+    font-size: 1.1rem; /* Padronizado com as outras descrições */
   }
   #slide-convite .footer-slide {
     display: grid;
