@@ -65,13 +65,25 @@ html, body {
   z-index: 2;
 }
 
+/* Container do Vanta.js Clouds Background */
+.vanta-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1.5; /* Fica acima do vídeo (z-index: 1) mas abaixo do conteúdo overlay (z-index: 10) */
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* Scroll Tracker - invisible track height to drive GSAP */
 .scroll-tracker {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 500vh; /* 5 slides x 100vh */
+  height: 600vh; /* 6 slides x 100vh */
   pointer-events: none;
   z-index: 0;
 }
@@ -694,26 +706,26 @@ html, body {
     font-size: 3.8rem; /* Aumentado de 3.2rem */
   }
 
-  /* Slide 3 - Services on the Left (Posicionado na esquerda, com 2 colunas e 2 linhas) */
-  #slide-servicos {
+  /* Slide 3 & Slide 5 (Serviços & Atmosfera) - 2 colunas e 2 linhas na esquerda */
+  #slide-servicos, #slide-atmosfera {
     justify-content: center;
     align-items: flex-start;
     padding-left: 8%;
     /* padding-top removido para perfeita centralização vertical */
   }
-  #slide-servicos .slide-body {
-    max-width: 950px; /* Aumentado para acomodar 2 colunas */
+  #slide-servicos .slide-body, #slide-atmosfera .slide-body {
+    max-width: 950px; /* Acomoda 2 colunas confortavelmente */
     text-align: left;
   }
-  #slide-servicos .section-title {
+  #slide-servicos .section-title, #slide-atmosfera .section-title {
     font-size: 3.5rem; /* Padronizado com os outros títulos de seção no desktop */
     margin-bottom: 2.5rem;
   }
-  #slide-servicos .services-grid {
+  #slide-servicos .services-grid, #slide-atmosfera .services-grid {
     grid-template-columns: repeat(2, 1fr); /* 2 colunas */
     gap: 1.5rem;
   }
-  #slide-servicos .service-card {
+  #slide-servicos .service-card, #slide-atmosfera .service-card {
     text-align: left;
   }
 

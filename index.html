@@ -19,6 +19,9 @@
     <div class="video-overlay"></div>
   </div>
 
+  <!-- Container do Vanta.js Clouds background fixed -->
+  <div class="vanta-container" id="vanta-bg"></div>
+
   <!-- Indicador de Progresso Editorial Lateral -->
   <div class="progress-sidebar">
     <span class="indicator-step active">I</span>
@@ -26,6 +29,7 @@
     <span class="indicator-step">III</span>
     <span class="indicator-step">IV</span>
     <span class="indicator-step">V</span>
+    <span class="indicator-step">VI</span>
   </div>
 
   <!-- Container fixo para as seções de texto flutuantes -->
@@ -102,7 +106,26 @@
       </div>
     </section>
 
-    <!-- Seção 5: O Convite e Rodapé -->
+    <!-- Seção 5: A Experiência (Atmosfera Gysa) -->
+    <section class="text-slide" id="slide-atmosfera">
+      <div class="slide-body wide-body">
+        <h2 class="section-title">A Atmosfera <span class="title-italic-accent">Espaço Gysa</span></h2>
+        <div class="services-grid">
+          <div class="service-card">
+            <span class="service-label">Ambiente</span>
+            <h3>Refúgio Urbano</h3>
+            <p>Um espaço planejado milimetricamente para afastar a pressa e acolher sua essência.</p>
+          </div>
+          <div class="service-card">
+            <span class="service-label">Cuidado</span>
+            <h3>Experiência Personalizada</h3>
+            <p>Rituais desenhados de forma singular, com atendimento individualizado e atencioso.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção 6: O Convite e Rodapé -->
     <section class="text-slide" id="slide-convite">
       <div class="slide-body wide-body footer-slide">
         <!-- Bloco de CTA (Esquerda) -->
@@ -144,6 +167,9 @@
   <!-- Scroll Track Invisível para controlar o ScrollTrigger -->
   <div class="scroll-tracker"></div>
 
+  <!-- Scripts do Three.js e Vanta.js Clouds -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.clouds.min.js"></script>
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>

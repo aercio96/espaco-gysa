@@ -18,6 +18,7 @@ const airplay = { frame: 0 };
 
 let loadedImagesCount = 0;
 let isLoaded = false;
+let vantaEffect = null;
 
 // Pré-carrega todas as imagens para evitar flashes pretos durante o scroll
 for (let i = 1; i <= frameCount; i++) {
@@ -45,6 +46,10 @@ function resizeCanvas() {
 }
 
 function render() {
+  // Se o frame passar do limite de transição do vídeo para o Vanta (cerca de 75%),
+  // não renderiza o canvas do vídeo para poupar processamento de CPU/GPU
+  if (airplay.frame > 220) return;
+
   const img = images[airplay.frame];
   if (!img || !img.complete) return;
 
@@ -77,8 +82,27 @@ function render() {
 
 window.addEventListener("resize", resizeCanvas);
 
+// Inicializa o efeito de nuvens do Vanta.js
+function initVanta() {
+  if (typeof VANTA !== "undefined" && !vantaEffect) {
+    vantaEffect = VANTA.CLOUDS({
+      el: "#vanta-bg",
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      minHeight: 200.00,
+      minWidth: 200.00,
+      skyColor: 0xd768d0,
+      cloudColor: 0xae599a
+    });
+  }
+}
+
 // Inicializa as animações
 function initAnimations() {
+  // Inicializa o background tridimensional Vanta Clouds
+  initVanta();
+
   // Ajusta o tamanho inicial do canvas
   resizeCanvas();
 
@@ -112,12 +136,13 @@ function initAnimations() {
     }
   });
 
-  // Vincula ativação dos indicadores
+  // Vincula ativação dos indicadores para 6 slides
   mainTimeline.call(setActiveIndicator, [0], 0.0)
-              .call(setActiveIndicator, [1], 0.22)
-              .call(setActiveIndicator, [2], 0.48)
-              .call(setActiveIndicator, [3], 0.75)
-              .call(setActiveIndicator, [4], 0.94);
+              .call(setActiveIndicator, [1], 0.18)
+              .call(setActiveIndicator, [2], 0.36)
+              .call(setActiveIndicator, [3], 0.56)
+              .call(setActiveIndicator, [4], 0.74)
+              .call(setActiveIndicator, [5], 0.90);
 
   // 1. Scrubbing do Vídeo (Sequência de Imagens)
   mainTimeline.to(airplay, {
@@ -130,30 +155,40 @@ function initAnimations() {
 
   // 2. Fades e Movimentos dos Slides de Texto
   // Slide 1 (Despertar) desaparece
-  mainTimeline.to("#slide-despertar", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.15 }, 0.12)
-              .to("#slide-despertar .slide-body", { y: -40, duration: 0.15 }, 0.12);
+  mainTimeline.to("#slide-despertar", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.06 }, 0.10)
+              .to("#slide-despertar .slide-body", { y: -40, duration: 0.06 }, 0.10);
 
   // Slide 2 (Manifesto) surge e desaparece
-  mainTimeline.to("#slide-manifesto", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.15 }, 0.22)
-              .to("#slide-manifesto .slide-body", { y: 0, duration: 0.15 }, 0.22)
-              .to("#slide-manifesto", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.15 }, 0.38)
-              .to("#slide-manifesto .slide-body", { y: -40, duration: 0.15 }, 0.38);
+  mainTimeline.to("#slide-manifesto", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.06 }, 0.18)
+              .to("#slide-manifesto .slide-body", { y: 0, duration: 0.06 }, 0.18)
+              .to("#slide-manifesto", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.06 }, 0.30)
+              .to("#slide-manifesto .slide-body", { y: -40, duration: 0.06 }, 0.30);
 
   // Slide 3 (Serviços) surge e desaparece (bloco completo surge junto)
-  mainTimeline.to("#slide-servicos", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.15 }, 0.48)
-              .to("#slide-servicos .slide-body", { y: 0, duration: 0.15 }, 0.48)
-              .to("#slide-servicos", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.15 }, 0.67)
-              .to("#slide-servicos .slide-body", { y: -40, duration: 0.15 }, 0.67);
+  mainTimeline.to("#slide-servicos", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.06 }, 0.36)
+              .to("#slide-servicos .slide-body", { y: 0, duration: 0.06 }, 0.36)
+              .to("#slide-servicos", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.06 }, 0.50)
+              .to("#slide-servicos .slide-body", { y: -40, duration: 0.06 }, 0.50);
 
   // Slide 4 (Pilares) surge e desaparece (bloco completo surge junto)
-  mainTimeline.to("#slide-pilares", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.15 }, 0.75)
-              .to("#slide-pilares .slide-body", { y: 0, duration: 0.15 }, 0.75)
-              .to("#slide-pilares", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.15 }, 0.89)
-              .to("#slide-pilares .slide-body", { y: -40, duration: 0.15 }, 0.89);
+  mainTimeline.to("#slide-pilares", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.06 }, 0.56)
+              .to("#slide-pilares .slide-body", { y: 0, duration: 0.06 }, 0.56)
+              .to("#slide-pilares", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.06 }, 0.70)
+              .to("#slide-pilares .slide-body", { y: -40, duration: 0.06 }, 0.70);
 
-  // Slide 5 (Convite/Rodapé) surge e permanece ativo
-  mainTimeline.to("#slide-convite", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.15 }, 0.94)
-              .to("#slide-convite .slide-body", { y: 0, duration: 0.15 }, 0.94);
+  // Transição do Vídeo para o Vanta.js Clouds background
+  mainTimeline.to("#vanta-bg", { opacity: 1, autoAlpha: 1, duration: 0.08 }, 0.72)
+              .to(".video-container", { opacity: 0, duration: 0.08 }, 0.72);
+
+  // Slide 5 (Atmosfera Gysa - Nuvem Background) surge e desaparece
+  mainTimeline.to("#slide-atmosfera", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.06 }, 0.74)
+              .to("#slide-atmosfera .slide-body", { y: 0, duration: 0.06 }, 0.74)
+              .to("#slide-atmosfera", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.06 }, 0.84)
+              .to("#slide-atmosfera .slide-body", { y: -40, duration: 0.06 }, 0.84);
+
+  // Slide 6 (Convite/Rodapé - Nuvem Background) surge e permanece ativo
+  mainTimeline.to("#slide-convite", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.06 }, 0.90)
+              .to("#slide-convite .slide-body", { y: 0, duration: 0.06 }, 0.90);
 }
 
 // Inicializa a timeline assim que o DOM estiver carregado
