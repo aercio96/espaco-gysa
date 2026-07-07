@@ -90,10 +90,6 @@ function initAnimations() {
   gsap.set("#slide-despertar", { opacity: 1, autoAlpha: 1, pointerEvents: "auto" });
   gsap.set("#slide-despertar .slide-body", { y: 0 });
 
-  // Estados iniciais individuais dos cards para animação de revelação por scroll
-  gsap.set(".service-card", { opacity: 0, y: 50 });
-  gsap.set(".pilar-card", { opacity: 0, y: 50 });
-
   // Controle dos indicadores da barra lateral
   const indicators = document.querySelectorAll(".indicator-step");
   function setActiveIndicator(index) {
@@ -143,33 +139,17 @@ function initAnimations() {
               .to("#slide-manifesto", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.15 }, 0.38)
               .to("#slide-manifesto .slide-body", { y: -40, duration: 0.15 }, 0.38);
 
-  // Slide 3 (Serviços) surge e desaparece
-  mainTimeline.to("#slide-servicos", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.1 }, 0.48)
-              .to("#slide-servicos .slide-body", { y: 0, duration: 0.1 }, 0.48);
+  // Slide 3 (Serviços) surge e desaparece (bloco completo surge junto)
+  mainTimeline.to("#slide-servicos", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.15 }, 0.48)
+              .to("#slide-servicos .slide-body", { y: 0, duration: 0.15 }, 0.48)
+              .to("#slide-servicos", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.15 }, 0.67)
+              .to("#slide-servicos .slide-body", { y: -40, duration: 0.15 }, 0.67);
 
-  // Revelação sequencial (stagger) dos cards de serviço via scroll
-  const serviceCards = document.querySelectorAll(".service-card");
-  serviceCards.forEach((card, i) => {
-    const startOffset = 0.49 + (i * 0.04); // Stagger progressivo
-    mainTimeline.to(card, { opacity: 1, y: 0, duration: 0.1, ease: "power2.out" }, startOffset);
-  });
-
-  mainTimeline.to("#slide-servicos", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.1 }, 0.67)
-              .to("#slide-servicos .slide-body", { y: -40, duration: 0.1 }, 0.67);
-
-  // Slide 4 (Pilares) surge e desaparece
-  mainTimeline.to("#slide-pilares", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.1 }, 0.75)
-              .to("#slide-pilares .slide-body", { y: 0, duration: 0.1 }, 0.75);
-
-  // Revelação sequencial (stagger) dos cards de pilares via scroll
-  const pilarCards = document.querySelectorAll(".pilar-card");
-  pilarCards.forEach((card, i) => {
-    const startOffset = 0.76 + (i * 0.04); // Stagger progressivo
-    mainTimeline.to(card, { opacity: 1, y: 0, duration: 0.1, ease: "power2.out" }, startOffset);
-  });
-
-  mainTimeline.to("#slide-pilares", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.1 }, 0.89)
-              .to("#slide-pilares .slide-body", { y: -40, duration: 0.1 }, 0.89);
+  // Slide 4 (Pilares) surge e desaparece (bloco completo surge junto)
+  mainTimeline.to("#slide-pilares", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.15 }, 0.75)
+              .to("#slide-pilares .slide-body", { y: 0, duration: 0.15 }, 0.75)
+              .to("#slide-pilares", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.15 }, 0.89)
+              .to("#slide-pilares .slide-body", { y: -40, duration: 0.15 }, 0.89);
 
   // Slide 5 (Convite/Rodapé) surge e permanece ativo
   mainTimeline.to("#slide-convite", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.15 }, 0.94)
