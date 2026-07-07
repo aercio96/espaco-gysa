@@ -191,7 +191,212 @@ function initAnimations() {
   // Slide 6 (Convite/Rodapé - Nuvem Background) surge e permanece ativo
   mainTimeline.to("#slide-convite", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.06 }, 0.90)
               .to("#slide-convite .slide-body", { y: 0, duration: 0.06 }, 0.90);
+
+  // Inicializa o painel explorador de serviços
+  renderTabs();
+  renderSlides();
+  renderDots();
+
+  // Escuta os botões de navegação do painel
+  document.getElementById("explorer-prev")?.addEventListener("click", prevSlide);
+  document.getElementById("explorer-next")?.addEventListener("click", nextSlide);
+  document.getElementById("explorer-prev-mobile")?.addEventListener("click", prevSlide);
+  document.getElementById("explorer-next-mobile")?.addEventListener("click", nextSlide);
+
+  // Sincroniza os dots no evento de swipe manual no mobile
+  const slider = document.getElementById("explorer-slider");
+  if (slider) {
+    let scrollTimeout;
+    slider.addEventListener("scroll", () => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        const width = slider.clientWidth;
+        const scrollLeft = slider.scrollLeft;
+        if (width > 0) {
+          const newIdx = Math.round(scrollLeft / width);
+          const list = getFilteredServices();
+          if (newIdx >= 0 && newIdx < list.length && newIdx !== currentSlideIdx) {
+            currentSlideIdx = newIdx;
+            renderDots();
+          }
+        }
+      }, 50);
+    });
+  }
 }
+
+// ---------- ESTADO E DADOS DO EXPLORADOR DE SERVIÇOS ----------
+const services = [
+  { id: 1, category: "Cabelos", title: "Corte, Tratamentos & Cachos", desc: "Cortes modernos, transição capilar, terapia capilar, hidratação profunda e reconstrução para fios saudáveis e brilhantes.", duration: "40–120 min", price: "a partir de R$ 90", cta: "Agendar agora", image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=900&auto=format&fit=crop" },
+  { id: 2, category: "Estética", title: "Limpeza de Pele & Protocolos", desc: "Protocolos faciais personalizados, limpeza de pele profunda, drenagem linfática e massagens corporais relaxantes.", duration: "50–90 min", price: "a partir de R$ 120", cta: "Agendar sessão", image: "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?q=80&w=900&auto=format&fit=crop" },
+  { id: 3, category: "Unhas", title: "Manicure, Pedicure & Alongamento", desc: "Esmaltação em gel de alta durabilidade, alongamento em fibra e rituais de spa exclusivos para mãos e pés.", duration: "45–90 min", price: "a partir de R$ 50", cta: "Agendar horário", image: "https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=900&auto=format&fit=crop" },
+  { id: 4, category: "Sobrancelhas", title: "Design, Henna & Cílios", desc: "Design geométrico personalizado de sobrancelhas, aplicação de henna, brow lamination e lash lifting para valorizar o olhar.", duration: "30–75 min", price: "a partir de R$ 45", cta: "Agendar design", image: "https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?q=80&w=900&auto=format&fit=crop" },
+  { id: 5, category: "Maquiagem", title: "Maquiagem Social & Eventos", desc: "Makes sofisticadas com produtos importados de alta fixação para casamentos, formaturas, ensaios fotográficos e festas.", duration: "60–90 min", price: "a partir de R$ 150", cta: "Agendar make", image: "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?q=80&w=900&auto=format&fit=crop" }
+];
+
+const categories = ["Todos", "Cabelos", "Estética", "Unhas", "Sobrancelhas", "Maquiagem"];
+let activeCategory = "Todos";
+let currentSlideIdx = 0;
+let selectedServiceIdx = null;
+
+function getFilteredServices() {
+  return activeCategory === "Todos" ? services : services.filter(s => s.category === activeCategory);
+}
+
+// Renderiza abas de categoria
+function renderTabs() {
+  const tabsContainer = document.getElementById("explorer-tabs");
+  if (!tabsContainer) return;
+  tabsContainer.innerHTML = categories.map(cat => {
+    const isActive = cat === activeCategory;
+    const btnClass = isActive ? "explorer-tab-btn active" : "explorer-tab-btn inactive";
+    return `<button onclick="selectCategory('${cat}')" class="${btnClass}">${cat}</button>`;
+  }).join("");
+}
+
+// Seleciona categoria
+function selectCategory(cat) {
+  activeCategory = cat;
+  currentSlideIdx = 0;
+  renderTabs();
+  renderSlides();
+  renderDots();
+  scrollToCurrentSlide(false);
+}
+
+// Renderiza slides de serviços
+function renderSlides() {
+  const slider = document.getElementById("explorer-slider");
+  if (!slider) return;
+  const list = getFilteredServices();
+  slider.innerHTML = list.map((item, idx) => {
+    return `
+      <div onclick="openServiceModal(${idx})" class="service-explorer-card-item animate-fade-up">
+        <div class="explorer-card-bg-container">
+          <img src="${item.image}" alt="${item.title}" class="explorer-card-image" loading="lazy">
+          <div class="explorer-card-overlay"></div>
+        </div>
+        <div class="explorer-card-badge">
+          <span class="text-rose-400">✦</span> ${item.category}
+        </div>
+        <div class="explorer-card-content">
+          <h3 class="explorer-card-title">${item.title}</h3>
+          <p class="explorer-card-desc">${item.desc}</p>
+          <div class="explorer-card-meta">
+            <span>⏱ ${item.duration}</span>
+            <span class="explorer-card-price">${item.price}</span>
+          </div>
+          <button class="explorer-card-btn">${item.cta}</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+// Renderiza dots
+function renderDots() {
+  const dotsContainer = document.getElementById("explorer-dots");
+  if (!dotsContainer) return;
+  const list = getFilteredServices();
+  dotsContainer.innerHTML = list.map((_, idx) => {
+    const isActive = idx === currentSlideIdx;
+    const dotClass = isActive ? "explorer-dot active" : "explorer-dot inactive";
+    return `<button onclick="goToSlide(${idx})" class="${dotClass}" aria-label="Ir para o slide ${idx + 1}"></button>`;
+  }).join("");
+}
+
+// Navegação do slider
+function scrollToCurrentSlide(smooth = true) {
+  const slider = document.getElementById("explorer-slider");
+  if (!slider || !slider.children.length) return;
+  const card = slider.children[currentSlideIdx];
+  if (card) {
+    slider.scrollTo({
+      left: card.offsetLeft - 4,
+      behavior: smooth ? "smooth" : "auto"
+    });
+  }
+}
+
+function goToSlide(idx) {
+  currentSlideIdx = idx;
+  renderDots();
+  scrollToCurrentSlide(true);
+}
+
+function nextSlide() {
+  const list = getFilteredServices();
+  if (!list.length) return;
+  currentSlideIdx = (currentSlideIdx + 1) % list.length;
+  goToSlide(currentSlideIdx);
+}
+
+function prevSlide() {
+  const list = getFilteredServices();
+  if (!list.length) return;
+  currentSlideIdx = (currentSlideIdx - 1 + list.length) % list.length;
+  goToSlide(currentSlideIdx);
+}
+
+// ---------- CONTROLE DO MODAL DE DETALHES ----------
+function openServiceModal(idx) {
+  selectedServiceIdx = idx;
+  renderModalDetails();
+  const modal = document.getElementById("service-modal");
+  if (modal) {
+    modal.classList.add("active");
+  }
+}
+
+function closeServiceModal(e) {
+  if (e) e.stopPropagation();
+  selectedServiceIdx = null;
+  const modal = document.getElementById("service-modal");
+  if (modal) {
+    modal.classList.remove("active");
+  }
+}
+
+function modalNav(e, dir) {
+  if (e) e.stopPropagation();
+  const list = getFilteredServices();
+  if (!list.length) return;
+  selectedServiceIdx = (selectedServiceIdx + dir + list.length) % list.length;
+  renderModalDetails();
+}
+
+function renderModalDetails() {
+  const list = getFilteredServices();
+  const item = list[selectedServiceIdx];
+  if (!item) return;
+  
+  const modalImage = document.getElementById("modal-image");
+  const modalCategory = document.getElementById("modal-category");
+  const modalTitle = document.getElementById("modal-title");
+  const modalDesc = document.getElementById("modal-desc");
+  const modalDuration = document.getElementById("modal-duration");
+  const modalPrice = document.getElementById("modal-price");
+  const modalCta = document.getElementById("modal-whatsapp-cta");
+  
+  if (modalImage) modalImage.src = item.image;
+  if (modalCategory) modalCategory.innerHTML = `<span class="text-rose-400">✦</span> ${item.category}`;
+  if (modalTitle) modalTitle.innerText = item.title;
+  if (modalDesc) modalDesc.innerText = item.desc;
+  if (modalDuration) modalDuration.innerText = `⏱ Duração: ${item.duration}`;
+  if (modalPrice) modalPrice.innerText = item.price;
+  
+  if (modalCta) {
+    const textMsg = encodeURIComponent(`Olá! Vi no site o serviço "${item.title}" e gostaria de solicitar um agendamento.`);
+    modalCta.href = `https://wa.me/5561998461559?text=${textMsg}`;
+  }
+}
+
+// Binda funções ao escopo global (window) para os handlers onclick do HTML
+window.selectCategory = selectCategory;
+window.goToSlide = goToSlide;
+window.openServiceModal = openServiceModal;
+window.closeServiceModal = closeServiceModal;
+window.modalNav = modalNav;
 
 // Inicializa a timeline assim que o DOM estiver carregado
 window.addEventListener("DOMContentLoaded", initAnimations);

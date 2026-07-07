@@ -807,3 +807,498 @@ html, body {
     margin-left: 0;
   }
 }
+
+/* ==========================================
+   SERVICES EXPLORER CARD (SLIDE 5)
+   ========================================== */
+
+.services-explorer-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.services-explorer-card {
+  width: 100%;
+  max-width: 1100px;
+  background: rgba(100, 45, 60, 0.45); /* Velvet lipstick glassmorphism */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(191, 168, 126, 0.2);
+  border-radius: 28px;
+  padding: 2rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  transition: background-color 0.5s ease;
+  pointer-events: auto; /* Permite interações */
+  margin: 0 auto;
+}
+
+/* Top Row */
+.explorer-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.explorer-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.explorer-tab-btn {
+  padding: 0.5rem 1.15rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.explorer-tab-btn.active {
+  background: var(--color-musa-rose);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(166, 81, 112, 0.3);
+  border: 1px solid var(--color-musa-rose);
+}
+
+.explorer-tab-btn.inactive {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(191, 168, 126, 0.15);
+}
+
+.explorer-tab-btn.inactive:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* Arrows controls */
+.explorer-navigation-desktop {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.explorer-navigation-mobile {
+  display: none;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.explorer-arrow-btn {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(191, 168, 126, 0.2);
+  color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.explorer-arrow-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border-color: rgba(191, 168, 126, 0.4);
+}
+
+.explorer-arrow-btn:active {
+  transform: scale(0.95);
+}
+
+/* Horizontal Slider */
+.explorer-slider {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 1.5rem;
+}
+
+.service-explorer-card-item {
+  scroll-snap-align: start;
+  flex: 0 0 86%;
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(191, 168, 126, 0.15);
+  background: rgba(20, 10, 15, 0.6);
+  cursor: pointer;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
+}
+
+.service-explorer-card-item:hover {
+  border-color: rgba(191, 168, 126, 0.4);
+}
+
+.service-explorer-card-item:hover .explorer-card-image {
+  transform: scale(1.04);
+}
+
+.explorer-card-bg-container {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.explorer-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.explorer-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.45) 65%, rgba(0, 0, 0, 0.1) 100%);
+  z-index: 1;
+}
+
+.explorer-card-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.explorer-card-content {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.5rem;
+}
+
+.explorer-card-title {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1.25rem;
+  color: #fff;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+  text-align: left;
+}
+
+.explorer-card-desc {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.4;
+  margin-bottom: 0.75rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-align: left;
+}
+
+.explorer-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+
+.explorer-card-price {
+  color: var(--color-musa-rose);
+  font-weight: 700;
+}
+
+.explorer-card-btn {
+  width: fit-content;
+  padding: 0.45rem 1rem;
+  background: #fff;
+  color: #000;
+  font-weight: 700;
+  font-size: 0.7rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.explorer-card-btn:hover {
+  background: var(--color-musa-rose);
+  color: #fff;
+}
+
+/* Bottom Row */
+.explorer-bottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.explorer-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.explorer-dot {
+  height: 0.35rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.explorer-dot.active {
+  width: 1.5rem;
+  background: var(--color-gold-champagne);
+}
+
+.explorer-dot.inactive {
+  width: 0.35rem;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.explorer-dot.inactive:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.explorer-footer-text {
+  text-align: center;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 1rem;
+}
+
+/* Responsive Media Queries */
+@media (min-width: 640px) {
+  .service-explorer-card-item {
+    flex: 0 0 47%;
+    aspect-ratio: 3.4 / 4;
+  }
+}
+
+@media (min-width: 1024px) {
+  .service-explorer-card-item {
+    flex: 0 0 31.5%;
+  }
+}
+
+@media (max-width: 640px) {
+  .explorer-navigation-desktop {
+    display: none;
+  }
+  .explorer-navigation-mobile {
+    display: flex;
+  }
+  .services-explorer-card {
+    padding: 1.25rem;
+  }
+}
+
+
+/* ==========================================
+   DETAIL MODAL
+   ========================================== */
+
+.service-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(10, 5, 8, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: none; /* Controlado via JS */
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  pointer-events: auto;
+}
+
+.service-modal.active {
+  display: flex;
+  animation: modalFadeIn 0.3s ease forwards;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+.modal-close-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.modal-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3rem;
+  height: 3rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+.modal-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.modal-nav-btn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.modal-nav-btn.left-nav {
+  left: 1.5rem;
+}
+
+.modal-nav-btn.right-nav {
+  right: 1.5rem;
+}
+
+.modal-content-card {
+  width: 100%;
+  max-width: 600px;
+  background: rgba(40, 20, 28, 0.9); /* Velvet glassmorphism */
+  border: 1px solid rgba(191, 168, 126, 0.2);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+  animation: modalScaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalScaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal-image {
+  width: 100%;
+  max-height: 260px;
+  object-fit: cover;
+  border-bottom: 1px solid rgba(191, 168, 126, 0.15);
+}
+
+.modal-body-details {
+  padding: 1.75rem;
+  text-align: center;
+}
+
+.modal-category-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.85rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--color-musa-rose);
+  margin-bottom: 0.75rem;
+}
+
+.modal-service-title {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1.5rem;
+  color: #fff;
+  margin-bottom: 0.75rem;
+}
+
+.modal-service-desc {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.modal-meta-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 1.5rem;
+}
+
+.modal-price-accent {
+  color: var(--color-gold-champagne);
+  font-weight: 700;
+}
+
+.modal-whatsapp-btn {
+  display: inline-block;
+  width: 100%;
+  padding: 0.85rem;
+  background: var(--color-musa-rose);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.modal-whatsapp-btn:hover {
+  background: #bd5c80; /* lighter musa rose hover */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(166, 81, 112, 0.4);
+}
+
+@media (max-width: 768px) {
+  .modal-nav-btn {
+    display: none; /* Oculta setas laterais em mobile por restrições de espaço */
+  }
+}
+

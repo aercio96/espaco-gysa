@@ -106,22 +106,61 @@
       </div>
     </section>
 
-    <!-- Seção 5: A Experiência (Atmosfera Gysa) -->
+    <!-- Seção 5: A Experiência (Serviços e Atmosfera) -->
     <section class="text-slide" id="slide-atmosfera">
       <div class="slide-body wide-body">
-        <h2 class="section-title">A Atmosfera <span class="title-italic-accent">Espaço Gysa</span></h2>
-        <div class="services-grid">
-          <div class="service-card">
-            <span class="service-label">Ambiente</span>
-            <h3>Refúgio Urbano</h3>
-            <p>Um espaço planejado milimetricamente para afastar a pressa e acolher sua essência.</p>
-          </div>
-          <div class="service-card">
-            <span class="service-label">Cuidado</span>
-            <h3>Experiência Personalizada</h3>
-            <p>Rituais desenhados de forma singular, com atendimento individualizado e atencioso.</p>
-          </div>
+        
+        <!-- Cabeçalho da Seção -->
+        <div class="services-explorer-header">
+          <h2 class="section-title">Cuidar de você é a nossa <span class="title-italic-accent">arte</span></h2>
+          <p class="badge-subtext max-w-xl text-center">
+            Conheça os rituais e serviços do nosso espaço — do cabelo à pele, das unhas ao olhar. Tudo em um só refúgio.
+          </p>
         </div>
+
+        <!-- Painel Explorador de Serviços -->
+        <div id="services-explorer-card" class="services-explorer-card">
+          
+          <!-- Linha superior: Tabs de categoria + setas de controle -->
+          <div class="explorer-top-row">
+            <div id="explorer-tabs" class="explorer-tabs">
+              <!-- Injetado dinamicamente via JS -->
+            </div>
+            
+            <div class="explorer-navigation-desktop">
+              <button id="explorer-prev" class="explorer-arrow-btn" aria-label="Anterior">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+              </button>
+              <button id="explorer-next" class="explorer-arrow-btn" aria-label="Próximo">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Slider horizontal de serviços -->
+          <div id="explorer-slider" class="explorer-slider scrollbar-none">
+            <!-- Injetado dinamicamente via JS -->
+          </div>
+
+          <!-- Rodapé do Slider: Dots indicadores + botões de navegação mobile -->
+          <div class="explorer-bottom-row">
+            <div id="explorer-dots" class="explorer-dots">
+              <!-- Injetado dinamicamente via JS -->
+            </div>
+            
+            <div class="explorer-navigation-mobile">
+              <button id="explorer-prev-mobile" class="explorer-arrow-btn" aria-label="Anterior">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+              </button>
+              <button id="explorer-next-mobile" class="explorer-arrow-btn" aria-label="Próximo">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <p class="explorer-footer-text">Agendamentos via WhatsApp · Seg a Sáb, 9h às 19h</p>
       </div>
     </section>
 
@@ -163,6 +202,38 @@
     </section>
 
   </main>
+
+  <!-- Modal de Detalhe do Serviço -->
+  <div id="service-modal" class="service-modal" onclick="closeServiceModal(event)">
+    <button onclick="closeServiceModal(event)" class="modal-close-btn" aria-label="Fechar detalhe">✕</button>
+    
+    <button onclick="modalNav(event, -1)" class="modal-nav-btn left-nav" aria-label="Anterior">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+    </button>
+    <button onclick="modalNav(event, 1)" class="modal-nav-btn right-nav" aria-label="Próximo">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+    </button>
+    
+    <div class="modal-content-card" onclick="event.stopPropagation()">
+      <img id="modal-image" src="" alt="" class="modal-image">
+      <div class="modal-body-details">
+        <div id="modal-category" class="modal-category-badge">
+          <!-- Injetado dinamicamente -->
+        </div>
+        <h3 id="modal-title" class="modal-service-title"></h3>
+        <p id="modal-desc" class="modal-service-desc"></p>
+        
+        <div class="modal-meta-info">
+          <span id="modal-duration"></span>
+          <span id="modal-price" class="modal-price-accent"></span>
+        </div>
+        
+        <a id="modal-whatsapp-cta" href="" target="_blank" rel="noopener" class="modal-whatsapp-btn">
+          AGENDAR VIA WHATSAPP
+        </a>
+      </div>
+    </div>
+  </div>
 
   <!-- Scroll Track Invisível para controlar o ScrollTrigger -->
   <div class="scroll-tracker"></div>

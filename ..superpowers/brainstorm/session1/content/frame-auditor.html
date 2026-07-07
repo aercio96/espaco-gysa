@@ -1,0 +1,85 @@
+<h2>Auditor de Frames - Espaço Gysa</h2>
+<p class="subtitle">Use esta tela para inspecionar os frames e ver o posicionamento das modelos em tempo real.</p>
+
+<div style="background:#1d1d1f; border-radius:12px; padding:1.5rem; border:1px solid #A68053; margin-bottom:2rem;">
+  <div style="display:flex; gap:2rem; align-items:flex-start;">
+    <!-- Lado Esquerdo: Canvas do Vídeo -->
+    <div style="flex:1.5; background:#000; border-radius:8px; overflow:hidden; aspect-ratio:16/9; position:relative;">
+      <img id="audit-frame" src="/frames/frame_0001.jpg" style="width:100%; height:100%; object-fit:cover;">
+      <div id="grid-overlay" style="position:absolute; inset:0; display:grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); border:1px solid rgba(255,255,255,0.1); pointer-events:none;">
+        <div style="border-right:1px dashed rgba(255,255,255,0.2); border-bottom:1px dashed rgba(255,255,255,0.2);"></div>
+        <div style="border-right:1px dashed rgba(255,255,255,0.2); border-bottom:1px dashed rgba(255,255,255,0.2);"></div>
+        <div style="border-bottom:1px dashed rgba(255,255,255,0.2);"></div>
+        <div style="border-right:1px dashed rgba(255,255,255,0.2); border-bottom:1px dashed rgba(255,255,255,0.2);"></div>
+        <div style="border-right:1px dashed rgba(255,255,255,0.2); border-bottom:1px dashed rgba(255,255,255,0.2);"></div>
+        <div style="border-bottom:1px dashed rgba(255,255,255,0.2);"></div>
+        <div style="border-right:1px dashed rgba(255,255,255,0.2);"></div>
+        <div style="border-right:1px dashed rgba(255,255,255,0.2);"></div>
+        <div></div>
+      </div>
+    </div>
+    
+    <!-- Lado Direito: Controles -->
+    <div style="flex:1; color:#f5f5f7; font-family:'Montserrat',sans-serif;">
+      <h3 style="color:#BFA87E; font-family:'Playfair Display',serif; margin-bottom:1rem;">Controles de Análise</h3>
+      
+      <div style="margin-bottom:1.5rem;">
+        <label style="display:block; font-size:0.8rem; margin-bottom:0.5rem; color:#aeaeb2;">Frame Atual:</label>
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <input type="range" id="frame-slider" min="1" max="286" value="1" style="width:100%; accent-color:#BFA87E;">
+          <span id="frame-val" style="font-weight:bold; min-width:40px; text-align:right;">0001</span>
+        </div>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.05); padding:1rem; border-radius:8px; font-size:0.8rem; line-height:1.5;">
+        <h4 style="color:#BFA87E; margin-bottom:0.5rem; font-family:'Playfair Display',serif;">Informações do Frame</h4>
+        <p><strong>Tempo Estimado:</strong> <span id="time-val">0.00s</span></p>
+        <p><strong>Cena:</strong> <span id="scene-val">Carregando...</span></p>
+        <p><strong>Foco Visual:</strong> <span id="focus-val">Carregando...</span></p>
+        <p style="margin-top:0.5rem; color:#D8D9D7;">Use o slider acima para navegar e verificar a posição dos rostos.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const slider = document.getElementById('frame-slider');
+  const img = document.getElementById('audit-frame');
+  const frameVal = document.getElementById('frame-val');
+  const timeVal = document.getElementById('time-val');
+  const sceneVal = document.getElementById('scene-val');
+  const focusVal = document.getElementById('focus-val');
+
+  const frameInfo = {
+    // Definindo as cenas baseadas na inspeção de tempos reais de 0 a 286
+    scenes: [
+      { start: 1, end: 72, name: "Slide 1: Hero (Abertura)", focus: "Rosto da Modelo na Esquerda (Olhando para a direita)" },
+      { start: 73, end: 135, name: "Slide 2: Manifesto", focus: "Modelo no Centro/Esquerda (Completamente à esquerda nas transições)" },
+      { start: 136, end: 198, name: "Slide 3: Serviços", focus: "Modelo Interagindo com Cabelo/Cachos na Esquerda" },
+      { start: 199, end: 245, name: "Slide 4: Pilares", focus: "Foco em Detalhes de Tratamento (Estética/Facial na Direita/Centro)" },
+      { start: 246, end: 286, name: "Slide 5: Convite/Rodapé", focus: "Ação de Beleza (Modelo sorrindo na Esquerda/Centro)" }
+    ]
+  };
+
+  function updateFrame(val) {
+    const frameIndex = parseInt(val);
+    img.src = `/frames/frame_${frameIndex.toString().padStart(4, '0')}.jpg`;
+    frameVal.innerText = frameIndex.toString().padStart(4, '0');
+    
+    // Calcula o tempo
+    const seconds = (frameIndex / 30).toFixed(2);
+    timeVal.innerText = `${seconds}s`;
+
+    // Encontra cena correspondente
+    const scene = frameInfo.scenes.find(s => frameIndex >= s.start && frameIndex <= s.end) || { name: "Desconhecido", focus: "Desconhecido" };
+    sceneVal.innerText = scene.name;
+    focusVal.innerText = scene.focus;
+  }
+
+  slider.addEventListener('input', (e) => {
+    updateFrame(e.target.value);
+  });
+
+  // Inicializa
+  updateFrame(1);
+</script>
