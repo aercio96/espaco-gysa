@@ -742,8 +742,8 @@ html, body {
     text-align: center;
   }
   #slide-atmosfera .section-title {
-    font-size: 2.8rem; /* Reduzido de 3.5rem para liberar espaço vertical */
-    margin-bottom: 0.5rem; /* Margem enxuta */
+    font-size: 2.1rem; /* Reduzido de 2.8rem para poupar espaço do cabeçalho */
+    margin-bottom: 0.25rem; /* Margem ultra-enxuta */
     text-align: center;
   }
 
@@ -830,22 +830,22 @@ html, body {
    ========================================== */
 
 .services-explorer-header {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem; /* Reduzido de 1.5rem */
   text-align: center;
 }
 
 .services-explorer-card {
   width: 100%;
-  max-width: 1200px; /* Aumentado de 1100px para ficar mais wide e preencher a tela */
-  background: rgba(100, 45, 60, 0.45); /* Velvet lipstick glassmorphism */
+  max-width: 1200px;
+  background: rgba(100, 45, 60, 0.45);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(191, 168, 126, 0.2);
   border-radius: 28px;
-  padding: 1.25rem 2rem; /* Compactado verticalmente de 2rem para respiro */
+  padding: 1rem 2rem; /* Compactado verticalmente */
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   transition: background-color 0.5s ease;
-  pointer-events: auto; /* Permite interações */
+  pointer-events: auto;
   margin: 0 auto;
 }
 
@@ -855,7 +855,7 @@ html, body {
   justify-content: space-between;
   align-items: center;
   gap: 1.5rem;
-  margin-bottom: 1.75rem;
+  margin-bottom: 1rem; /* Reduzido de 1.75rem */
 }
 
 .explorer-tabs {
@@ -865,8 +865,8 @@ html, body {
 }
 
 .explorer-tab-btn {
-  padding: 0.5rem 1.15rem;
-  font-size: 0.75rem;
+  padding: 0.4rem 1rem; /* Compactado */
+  font-size: 0.7rem; /* Reduzido de 0.75rem */
   font-weight: 700;
   border-radius: 50px;
   cursor: pointer;
@@ -948,7 +948,7 @@ html, body {
   scroll-snap-align: start;
   flex: 0 0 86%;
   position: relative;
-  aspect-ratio: 1.15 / 1; /* Modificado de retrato para paisagem compacta para liberar 130px+ verticais */
+  aspect-ratio: 1 / 1.15; /* Aumentado de 1.15/1 para 1/1.15 (Vertical/Retrato) para ampliar as fontes internas */
   border-radius: 20px;
   overflow: hidden;
   border: 1px solid rgba(191, 168, 126, 0.15);
@@ -1017,18 +1017,18 @@ html, body {
 .explorer-card-title {
   font-family: 'Playfair Display', serif;
   font-style: italic;
-  font-size: 1.25rem;
+  font-size: 1.45rem; /* Aumentado de 1.25rem */
   color: #fff;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
   line-height: 1.2;
   text-align: left;
 }
 
 .explorer-card-desc {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.75);
-  line-height: 1.4;
-  margin-bottom: 0.75rem;
+  font-size: 0.85rem; /* Aumentado de 0.75rem */
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.45;
+  margin-bottom: 0.65rem;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -1040,10 +1040,10 @@ html, body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.7rem;
+  font-size: 0.8rem; /* Aumentado de 0.7rem */
   color: rgba(255, 255, 255, 0.6);
   font-weight: 500;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.65rem;
 }
 
 .explorer-card-price {
@@ -1053,11 +1053,11 @@ html, body {
 
 .explorer-card-btn {
   width: fit-content;
-  padding: 0.45rem 1rem;
+  padding: 0.5rem 1.15rem; /* Aumentado */
   background: #fff;
   color: #000;
   font-weight: 700;
-  font-size: 0.7rem;
+  font-size: 0.8rem; /* Aumentado de 0.7rem */
   border-radius: 8px;
   transition: all 0.3s ease;
   border: none;
@@ -1116,7 +1116,7 @@ html, body {
 @media (min-width: 640px) {
   .service-explorer-card-item {
     flex: 0 0 47%;
-    aspect-ratio: 1.2 / 1; /* Aspect-ratio paisagem para desktop */
+    aspect-ratio: 1 / 1.15; /* Formato retrato vertical amplo para desktop */
   }
 }
 
