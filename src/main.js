@@ -37,17 +37,10 @@ for (let i = 1; i <= frameCount; i++) {
   images.push(img);
 }
 
-// Redimensionamento do canvas com lógica 'object-fit: cover' e suporte a High-DPI/Retina
+// Redimensionamento do canvas com lógica 'object-fit: cover' otimizado para performance máxima (60fps)
 function resizeCanvas() {
-  const dpr = window.devicePixelRatio || 1;
-  // Define o tamanho interno em pixels reais (multiplicado pelo DPR)
-  canvas.width = window.innerWidth * dpr;
-  canvas.height = window.innerHeight * dpr;
-  
-  // Define o tamanho de exibição (CSS) correspondente às dimensões da janela
-  canvas.style.width = window.innerWidth + "px";
-  canvas.style.height = window.innerHeight + "px";
-  
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
   render();
 }
 
@@ -79,11 +72,6 @@ function render() {
   }
 
   context.clearRect(0, 0, canvasWidth, canvasHeight);
-  
-  // Habilita suavização de imagem com qualidade máxima (High)
-  context.imageSmoothingEnabled = true;
-  context.imageSmoothingQuality = "high";
-  
   context.drawImage(img, drawX, drawY, drawWidth, drawHeight);
 }
 
