@@ -300,8 +300,8 @@ html, body {
 
 .service-card h3 {
   font-family: var(--font-title);
-  font-size: 1.35rem;
-  color: #fff; /* Título em branco para maior contraste contra fundo escuro */
+  font-size: 1.7rem; /* Aumentado para destaque proeminente */
+  color: #fff;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
   margin-bottom: 0.75rem;
   font-weight: 400;
@@ -331,11 +331,11 @@ html, body {
 }
 
 .service-card p {
-  font-size: 1.2rem; /* Aumentado de 0.9rem para legibilidade e impacto */
-  line-height: 1.6;
-  color: #FFFFFF; /* Texto em branco total */
-  opacity: 0.95; /* Maior contraste */
-  font-weight: 400; /* Peso médio para Montserrat ficar nítida no vídeo */
+  font-size: 1.15rem; /* Aumentado de 0.9rem para legibilidade excelente */
+  line-height: 1.7;
+  color: #FFFFFF;
+  opacity: 0.95; /* Maior contraste e peso */
+  font-weight: 400; /* Peso 400 para traço mais forte e visível */
 }
 
 /* Slide 4 - Pilares Grid */
@@ -379,10 +379,10 @@ html, body {
 
 .pilar-card h3 {
   font-family: var(--font-title);
-  font-size: 1.25rem;
+  font-size: 1.6rem; /* Aumentado para destaque proeminente */
   font-weight: 400;
   margin-bottom: 0.75rem;
-  color: #fff; /* Branco para alto contraste */
+  color: #fff;
   letter-spacing: 1px;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
@@ -410,11 +410,11 @@ html, body {
 }
 
 .pilar-card p {
-  font-size: 1.15rem; /* Aumentado para legibilidade e forte presença */
-  line-height: 1.6;
-  color: #FFFFFF; /* Branco para legibilidade total */
-  opacity: 0.95;
-  font-weight: 400; /* Peso médio para Montserrat ficar nítida no vídeo */
+  font-size: 1.1rem; /* Aumentado de 0.88rem para legibilidade excelente */
+  line-height: 1.7;
+  color: #FFFFFF;
+  opacity: 0.95; /* Maior contraste e peso */
+  font-weight: 400; /* Peso 400 para traço mais visível */
 }
 
 /* Slide 5 - Footer & CTA (Split Layout) */
@@ -536,78 +536,6 @@ html, body {
   line-height: 1.6;
   font-weight: 300;
   text-align: left;
-}
-
-/* Botão de Som Imersivo (Web Audio API) */
-.audio-control-btn {
-  position: fixed;
-  bottom: 4vh;
-  left: 4%;
-  z-index: 150; /* Garante que fique acima de outros overlays */
-  background: rgba(0, 0, 0, 0.55);
-  border: 1px solid rgba(191, 168, 126, 0.35);
-  color: var(--color-gold-champagne);
-  padding: 0.65rem 1.15rem;
-  font-family: var(--font-body);
-  font-size: 0.65rem;
-  font-weight: 500;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  cursor: pointer;
-  pointer-events: auto; /* Garante que seja clicável */
-  backdrop-filter: blur(12px);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-}
-
-.audio-control-btn:hover {
-  border-color: var(--color-gold-champagne);
-  box-shadow: 0 0 15px rgba(191, 168, 126, 0.25);
-  background: rgba(191, 168, 126, 0.12);
-  color: #fff;
-}
-
-.audio-wave {
-  display: flex;
-  align-items: flex-end;
-  gap: 3px;
-  width: 14px;
-  height: 10px;
-}
-
-.wave-bar {
-  display: block;
-  width: 2px;
-  height: 3px;
-  background-color: var(--color-gold-champagne);
-  transition: background-color 0.4s ease;
-}
-
-.audio-control-btn.playing .wave-bar {
-  background-color: #fff;
-  animation: wave 1.2s ease-in-out infinite alternate;
-}
-
-.audio-control-btn.playing .wave-bar:nth-child(1) { animation-delay: 0.1s; height: 10px; }
-.audio-control-btn.playing .wave-bar:nth-child(2) { animation-delay: 0.4s; height: 6px; }
-.audio-control-btn.playing .wave-bar:nth-child(3) { animation-delay: 0.2s; height: 8px; }
-.audio-control-btn.playing .wave-bar:nth-child(4) { animation-delay: 0.6s; height: 4px; }
-
-@keyframes wave {
-  0% { height: 2px; }
-  100% { height: 10px; }
-}
-
-@media (max-width: 768px) {
-  .audio-control-btn {
-    bottom: 3vh;
-    left: 6%;
-    padding: 0.6rem 1rem;
-    font-size: 0.6rem;
-  }
 }
 
 /* Mobile responsiveness */
@@ -744,88 +672,64 @@ html, body {
     font-size: 1.25rem; /* Aumentado de 1.15rem */
   }
 
-  /* Slide 2 - Center Right (Deslocado para a direita para limpar o rosto da modelo focado na esquerda/centro) */
+  /* Slide 2 - Center Left (Posicionado na esquerda conforme solicitação) */
   #slide-manifesto {
     justify-content: center;
-    align-items: flex-end;
-    padding-right: 10%;
+    align-items: flex-start;
+    padding-left: 8%;
   }
   #slide-manifesto .slide-body {
-    max-width: 650px;
-    text-align: right;
+    max-width: 750px; /* Aumentado de 650px */
+    text-align: left;
   }
   #slide-manifesto .manifesto-title {
-    font-size: 3.8rem;
+    font-size: 3.8rem; /* Aumentado de 3.2rem */
   }
 
-  /* Slide 3 - Services on the Right (Título e Cards na direita, deixando a lateral esquerda 100% livre para o vídeo/rosto) */
+  /* Slide 3 - Services on the Left (Posicionado na esquerda conforme solicitação) */
   #slide-servicos {
     justify-content: center;
-    align-items: flex-end;
-    padding-right: 8%;
+    align-items: flex-start;
     padding-left: 8%;
   }
   #slide-servicos .slide-body {
-    max-width: 950px; /* Reduzido de 1250px para concentrar no lado direito */
-    text-align: right;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+    max-width: 600px; /* Aumentado de 520px */
+    text-align: left;
   }
   #slide-servicos .section-title {
-    font-size: 3.2rem;
-    margin-bottom: 2.5rem;
-  }
-  #slide-servicos .section-title::after {
-    left: auto;
-    right: 0; /* Underline dourado alinhado na direita */
+    font-size: 3.2rem; /* Aumentado de 2.8rem */
   }
   #slide-servicos .services-grid {
-    grid-template-columns: repeat(2, 1fr); /* Mantém 2x2 para evitar cortes verticais */
-    gap: 1.5rem;
-    width: 100%;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
   #slide-servicos .service-card {
-    text-align: right; /* Alinhamento editorial de texto à direita */
-  }
-  #slide-servicos .service-card h3::after {
-    margin-left: auto;
-    margin-right: 0; /* Underlines crescendo para a esquerda */
+    text-align: left;
   }
 
-  /* Slide 4 - Pilares on the Left (Título e Cards na esquerda, deixando a lateral direita 100% livre para a ação/rosto) */
+  /* Slide 4 - Pilares on the Left (Leaves Right open for facial/treatment action scene) */
   #slide-pilares {
     justify-content: center;
     align-items: flex-start;
     padding-left: 8%;
-    padding-right: 8%;
   }
   #slide-pilares .slide-body {
-    max-width: 1100px; /* 3 colunas horizontais */
+    max-width: 600px; /* Aumentado de 520px */
     text-align: left;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
   }
   #slide-pilares .section-title {
-    font-size: 3.2rem;
-    margin-bottom: 2.5rem;
-  }
-  #slide-pilares .section-title::after {
-    left: 0;
-    right: auto; /* Underline dourado alinhado na esquerda */
+    font-size: 3.2rem; /* Aumentado de 2.8rem */
   }
   #slide-pilares .pilares-grid {
-    grid-template-columns: repeat(3, 1fr); /* 3 colunas horizontais para respiração */
-    gap: 1.5rem;
-    width: 100%;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
   #slide-pilares .pilar-card {
     text-align: left;
   }
   #slide-pilares .pilar-card h3::after {
     margin-left: 0;
-    margin-right: auto; /* Underlines crescendo para a direita */
+    margin-right: auto;
   }
   
   /* Slide 5 - Split Ad-style Layout (CTA Left, Contacts Right, split by vertical line) */
@@ -853,13 +757,6 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    text-align: left;
-  }
-  #slide-convite .badge-inauguracao, 
-  #slide-convite .cta-title,
-  #slide-convite .badge-subtext,
-  #slide-convite .cta-button {
-    align-self: flex-start;
     text-align: left;
   }
   #slide-convite .footer-details {
