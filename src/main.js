@@ -99,6 +99,10 @@ function initVanta() {
 
 // Inicializa as animações
 function initAnimations() {
+  // Inicializa o background tridimensional Vanta Clouds de uma vez
+  // Isso compila os shaders e aloca memória imediatamente para evitar travamentos no scroll
+  initVanta();
+
   // Ajusta o tamanho inicial do canvas
   resizeCanvas();
 
@@ -131,16 +135,16 @@ function initAnimations() {
       scrub: 0.5, // Suavização do scroll para uma experiência amanteigada
       onUpdate: (self) => {
         const progress = self.progress;
-        // Inicializa dinamicamente o Vanta apenas quando o scroll passa de 70%
-        // E destrói o Vanta quando o usuário rola de volta para cima, liberando 100% dos recursos de GPU!
+        const vantaBg = document.getElementById("vanta-bg");
+        // Exibe o contêiner do Vanta (ativando o rendering WebGL no browser) apenas quando entra na zona de transição (70%+)
+        // Oculta o contêiner nas seções iniciais, forçando o browser a suspender o render loop e liberando 100% da GPU!
         if (progress >= 0.70) {
-          if (!vantaEffect) {
-            initVanta();
+          if (vantaBg && vantaBg.style.display !== "block") {
+            vantaBg.style.display = "block";
           }
         } else {
-          if (vantaEffect) {
-            vantaEffect.destroy();
-            vantaEffect = null;
+          if (vantaBg && vantaBg.style.display !== "none") {
+            vantaBg.style.display = "none";
           }
         }
       }
@@ -152,7 +156,7 @@ function initAnimations() {
               .call(setActiveIndicator, [1], 0.18)
               .call(setActiveIndicator, [2], 0.36)
               .call(setActiveIndicator, [3], 0.56)
-              .call(setActiveIndicator, [4], 0.74)
+              .call(setActiveIndicator, [4], 0.76) /* Alinhado ao início do Slide 5 */
               .call(setActiveIndicator, [5], 0.90);
 
   // 1. Scrubbing do Vídeo (Sequência de Imagens)
@@ -189,15 +193,15 @@ function initAnimations() {
               .to("#slide-pilares", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.06 }, 0.70)
               .to("#slide-pilares .slide-body", { y: -40, duration: 0.06 }, 0.70);
 
-  // Transição do Vídeo para o Vanta.js Clouds background
-  mainTimeline.to("#vanta-bg", { opacity: 1, autoAlpha: 1, duration: 0.08 }, 0.72)
-              .to(".video-container", { opacity: 0, duration: 0.08 }, 0.72);
+  // Transição do Vídeo para o Vanta.js Clouds background (suavizada para 0.10 de duração)
+  mainTimeline.to("#vanta-bg", { opacity: 1, autoAlpha: 1, duration: 0.10 }, 0.70)
+              .to(".video-container", { opacity: 0, duration: 0.10 }, 0.70);
 
-  // Slide 5 (Atmosfera Gysa - Nuvem Background) surge e desaparece
-  mainTimeline.to("#slide-atmosfera", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.06 }, 0.74)
-              .to("#slide-atmosfera .slide-body", { y: 0, duration: 0.06 }, 0.74)
-              .to("#slide-atmosfera", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.06 }, 0.84)
-              .to("#slide-atmosfera .slide-body", { y: -40, duration: 0.06 }, 0.84);
+  // Slide 5 (Atmosfera Gysa - Nuvem Background) surge e desaparece (início sincronizado na transição)
+  mainTimeline.to("#slide-atmosfera", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.06 }, 0.75)
+              .to("#slide-atmosfera .slide-body", { y: 0, duration: 0.06 }, 0.75)
+              .to("#slide-atmosfera", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.06 }, 0.85)
+              .to("#slide-atmosfera .slide-body", { y: -40, duration: 0.06 }, 0.85);
 
   // Slide 6 (Convite/Rodapé - Nuvem Background) surge e permanece ativo
   mainTimeline.to("#slide-convite", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.06 }, 0.90)
