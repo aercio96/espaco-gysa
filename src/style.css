@@ -707,27 +707,45 @@ html, body {
     font-size: 3.8rem; /* Aumentado de 3.2rem */
   }
 
-  /* Slide 3 & Slide 5 (Serviços & Atmosfera) - 2 colunas e 2 linhas na esquerda */
-  #slide-servicos, #slide-atmosfera {
+  /* Slide 3 - Services on the Left (Posicionado na esquerda, com 2 colunas e 2 linhas) */
+  #slide-servicos {
     justify-content: center;
     align-items: flex-start;
     padding-left: 8%;
     /* padding-top removido para perfeita centralização vertical */
   }
-  #slide-servicos .slide-body, #slide-atmosfera .slide-body {
+  #slide-servicos .slide-body {
     max-width: 950px; /* Acomoda 2 colunas confortavelmente */
     text-align: left;
   }
-  #slide-servicos .section-title, #slide-atmosfera .section-title {
+  #slide-servicos .section-title {
     font-size: 3.5rem; /* Padronizado com os outros títulos de seção no desktop */
     margin-bottom: 2.5rem;
   }
-  #slide-servicos .services-grid, #slide-atmosfera .services-grid {
+  #slide-servicos .services-grid {
     grid-template-columns: repeat(2, 1fr); /* 2 colunas */
     gap: 1.5rem;
   }
-  #slide-servicos .service-card, #slide-atmosfera .service-card {
+  #slide-servicos .service-card {
     text-align: left;
+  }
+
+  /* Slide 5 - Atmosfera (Serviços Explorer) - Centralizado e Amplo */
+  #slide-atmosfera {
+    justify-content: center;
+    align-items: center;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  #slide-atmosfera .slide-body {
+    max-width: 1250px; /* Layout expandido para aproveitar o fundo de nuvens */
+    width: 100%;
+    text-align: center;
+  }
+  #slide-atmosfera .section-title {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
   }
 
   /* Slide 4 - Pilares on the Left (Em 1 coluna com respiro vertical otimizado) */
@@ -819,7 +837,7 @@ html, body {
 
 .services-explorer-card {
   width: 100%;
-  max-width: 1100px;
+  max-width: 1200px; /* Aumentado de 1100px para ficar mais wide e preencher a tela */
   background: rgba(100, 45, 60, 0.45); /* Velvet lipstick glassmorphism */
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
