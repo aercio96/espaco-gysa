@@ -46,10 +46,6 @@ function resizeCanvas() {
 }
 
 function render() {
-  // Se o frame passar do limite de transição do vídeo para o Vanta (cerca de 75%),
-  // não renderiza o canvas do vídeo para poupar processamento de CPU/GPU
-  if (airplay.frame > 220) return;
-
   const img = images[airplay.frame];
   if (!img || !img.complete) return;
 
@@ -100,9 +96,6 @@ function initVanta() {
 
 // Inicializa as animações
 function initAnimations() {
-  // Inicializa o background tridimensional Vanta Clouds
-  initVanta();
-
   // Ajusta o tamanho inicial do canvas
   resizeCanvas();
 
@@ -132,7 +125,22 @@ function initAnimations() {
       trigger: ".scroll-tracker",
       start: "top top",
       end: "bottom bottom",
-      scrub: 0.5 // Suavização do scroll para uma experiência amanteigada
+      scrub: 0.5, // Suavização do scroll para uma experiência amanteigada
+      onUpdate: (self) => {
+        const progress = self.progress;
+        // Inicializa dinamicamente o Vanta apenas quando o scroll passa de 70%
+        // E destrói o Vanta quando o usuário rola de volta para cima, liberando 100% dos recursos de GPU!
+        if (progress >= 0.70) {
+          if (!vantaEffect) {
+            initVanta();
+          }
+        } else {
+          if (vantaEffect) {
+            vantaEffect.destroy();
+            vantaEffect = null;
+          }
+        }
+      }
     }
   });
 
@@ -145,11 +153,13 @@ function initAnimations() {
               .call(setActiveIndicator, [5], 0.90);
 
   // 1. Scrubbing do Vídeo (Sequência de Imagens)
+  // O vídeo roda até o final (frame 285) exatamente aos 72% do scroll total,
+  // permitindo que a última mulher apareça completamente antes da transição do fundo
   mainTimeline.to(airplay, {
     frame: frameCount - 1,
     snap: "frame", // Garante índices inteiros no array de imagens
     ease: "none",
-    duration: 1,
+    duration: 0.72,
     onUpdate: render // Renderiza o frame correspondente a cada atualização
   }, 0);
 
