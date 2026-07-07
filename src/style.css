@@ -918,7 +918,13 @@ html, body {
   gap: 1.5rem;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  padding-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE e Edge */
+}
+
+.explorer-slider::-webkit-scrollbar {
+  display: none; /* Chrome, Safari e Opera */
 }
 
 .service-explorer-card-item {
