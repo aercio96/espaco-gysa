@@ -734,8 +734,7 @@ html, body {
   #slide-atmosfera {
     justify-content: center;
     align-items: center;
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding: 6vh 2rem 4vh 2rem; /* Adicionado respiro vertical robusto no topo e base */
   }
   #slide-atmosfera .slide-body {
     max-width: 1250px; /* Layout expandido para aproveitar o fundo de nuvens */
@@ -743,8 +742,8 @@ html, body {
     text-align: center;
   }
   #slide-atmosfera .section-title {
-    font-size: 3.5rem;
-    margin-bottom: 1rem;
+    font-size: 2.8rem; /* Reduzido de 3.5rem para liberar espaço vertical */
+    margin-bottom: 0.5rem; /* Margem enxuta */
     text-align: center;
   }
 
@@ -843,7 +842,7 @@ html, body {
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(191, 168, 126, 0.2);
   border-radius: 28px;
-  padding: 2rem;
+  padding: 1.25rem 2rem; /* Compactado verticalmente de 2rem para respiro */
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   transition: background-color 0.5s ease;
   pointer-events: auto; /* Permite interações */
@@ -949,7 +948,7 @@ html, body {
   scroll-snap-align: start;
   flex: 0 0 86%;
   position: relative;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 1.15 / 1; /* Modificado de retrato para paisagem compacta para liberar 130px+ verticais */
   border-radius: 20px;
   overflow: hidden;
   border: 1px solid rgba(191, 168, 126, 0.15);
@@ -1117,7 +1116,7 @@ html, body {
 @media (min-width: 640px) {
   .service-explorer-card-item {
     flex: 0 0 47%;
-    aspect-ratio: 3.4 / 4;
+    aspect-ratio: 1.2 / 1; /* Aspect-ratio paisagem para desktop */
   }
 }
 
