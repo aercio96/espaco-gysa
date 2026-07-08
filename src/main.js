@@ -12,15 +12,61 @@ const isMobileDevice = () => mobileMedia.matches;
 
 function tuneCanvasQuality() {
   context.imageSmoothingEnabled = true;
-  context.imageSmoothingQuality = "high";
+  context.imageSmoothingQuality = isMobileDevice() ? "medium" : "high";
+}
+
+// Detect WebP support (cached)
+let supportsWebP = null;
+function checkWebPSupport() {
+  if (supportsWebP !== null) return supportsWebP;
+  const testCanvas = document.createElement("canvas");
+  if (testCanvas.toDataURL) {
+    supportsWebP = testCanvas.toDataURL("image/webp").indexOf("image/webp") === 0;
+  } else {
+    supportsWebP = false;
+  }
+  return supportsWebP;
+}
+
+// Lazy load Elfsight Instagram (inject script only when gallery slide is active)
+let elfsightScriptInjected = false;
+function injectElfsightScript() {
+  if (elfsightScriptInjected) return;
+  const existingScript = document.querySelector('script[src="https://elfsightcdn.com/platform.js"]');
+  if (existingScript) {
+    elfsightScriptInjected = true;
+    return;
+  }
+  const script = document.createElement("script");
+  script.src = "https://elfsightcdn.com/platform.js";
+  script.async = true;
+  script.defer = true;
+  document.body.appendChild(script);
+  elfsightScriptInjected = true;
+}
+
+// Lazy load Google Maps iframe (data-src -> src when final slide appears)
+let mapsLoaded = false;
+function loadGoogleMapsIframe() {
+  if (mapsLoaded) return;
+  const mapIframe = document.querySelector('.map-card iframe[data-src]');
+  if (mapIframe) {
+    const dataSrc = mapIframe.getAttribute("data-src");
+    if (dataSrc) {
+      mapIframe.setAttribute("src", dataSrc);
+      mapIframe.removeAttribute("data-src");
+    }
+  }
+  mapsLoaded = true;
 }
 
 tuneCanvasQuality();
 
-// Configurações da sequência de frames
+  // Configurações da sequência de frames
 const frameCount = 568;
 const frameBasePath = isMobileDevice() ? "frames60" : "frames60hd";
-const getFramePath = (index) => `/${frameBasePath}/frame_${index.toString().padStart(4, "0")}.jpg`;
+const useWebP = checkWebPSupport();
+const getFramePath = (index) => `/${frameBasePath}/frame_${index.toString().padStart(4, "0")}.${useWebP ? "webp" : "jpg"}`;
 
 // Pré-carregamento de Imagens
 const images = new Array(frameCount);
@@ -512,6 +558,16 @@ function initAnimations() {
     updateHoverRescueCandidates(progress);
     updateWhatsAppPromptVisibility(progress);
     updateWarpBackgroundVisibility(progress);
+    
+    // Lazy load Elfsight when gallery slide is active
+    if (progress >= timelinePoints.galleryIn && progress <= timelinePoints.galleryOut) {
+      injectElfsightScript();
+    }
+    
+    // Lazy load Google Maps when final slide is active
+    if (progress >= 0.89) {
+      loadGoogleMapsIframe();
+    }
   });
   updateInteractiveSlides(0);
   updateHoverRescueCandidates(0);
