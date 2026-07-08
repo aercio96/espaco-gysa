@@ -229,7 +229,7 @@ function initAnimations() {
   const sceneButtons = document.querySelectorAll(".scene-toggle-btn");
   const menuToggle = document.querySelector(".menu-toggle-btn");
   const sideMenu = document.getElementById("side-menu");
-  const sceneProgressMap = [0, 0.16, 0.31, 0.45, 0.65, 0.83, 0.95];
+  const sceneProgressMap = [0, 0.16, 0.31, 0.49, 0.65, 0.83, 0.95];
 
   window.toggleSideMenu = function toggleSideMenu(open = true) {
     document.body.classList.toggle("side-menu-open", open);
@@ -268,6 +268,57 @@ function initAnimations() {
     });
   }
 
+  const hoverRescueSlides = [
+    { element: document.getElementById("slide-sobre"), start: 0.29, end: 0.47 },
+    { element: document.getElementById("slide-pilares"), start: 0.47, end: 0.62 }
+  ].filter(({ element }) => Boolean(element));
+
+  hoverRescueSlides.forEach(({ element }) => {
+    const rescueTarget = element.querySelector(".slide-body") || element;
+
+    rescueTarget.addEventListener("mouseenter", () => {
+      element.classList.add("is-hover-rescued");
+    });
+
+    rescueTarget.addEventListener("mouseleave", () => {
+      element.classList.remove("is-hover-rescued");
+    });
+
+    rescueTarget.addEventListener("focusin", () => {
+      element.classList.add("is-hover-rescued");
+    });
+
+    rescueTarget.addEventListener("focusout", () => {
+      requestAnimationFrame(() => {
+        if (!rescueTarget.contains(document.activeElement)) {
+          element.classList.remove("is-hover-rescued");
+        }
+      });
+    });
+  });
+
+  function updateHoverRescueCandidates(progress) {
+    hoverRescueSlides.forEach(({ element, start, end }) => {
+      const isCandidate = progress >= start && progress <= end;
+      element.classList.toggle("hover-rescue-candidate", isCandidate);
+
+      if (!isCandidate) {
+        element.classList.remove("is-hover-rescued");
+      }
+    });
+  }
+
+  document.querySelectorAll(".sobre-card, .pilar-card").forEach((card) => {
+    card.setAttribute("role", "button");
+    card.setAttribute("tabindex", "0");
+    card.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        card.click();
+      }
+    });
+  });
+
   // Timeline unificada para controlar a sequência de frames e fades de texto
   const mainTimeline = gsap.timeline({
     scrollTrigger: {
@@ -281,6 +332,8 @@ function initAnimations() {
   // Controla dinamicamente a execução do WebGL do Vanta de acordo com o progresso do Scroll
   mainTimeline.eventCallback("onUpdate", () => {
     const progress = mainTimeline.progress();
+    updateHoverRescueCandidates(progress);
+
     if (progress >= 0.50) {
       if (vantaEffect && !vantaEffect.req) {
         vantaEffect.animationLoop();
@@ -292,12 +345,13 @@ function initAnimations() {
       }
     }
   });
+  updateHoverRescueCandidates(0);
 
   // Vincula ativação dos indicadores para 7 slides
   mainTimeline.call(setActiveIndicator, [0], 0.0)
               .call(setActiveIndicator, [1], 0.15)
               .call(setActiveIndicator, [2], 0.29)
-              .call(setActiveIndicator, [3], 0.40)
+              .call(setActiveIndicator, [3], 0.47)
               .call(setActiveIndicator, [4], 0.60)
               .call(setActiveIndicator, [5], 0.75)
               .call(setActiveIndicator, [6], 0.90);
@@ -326,17 +380,19 @@ function initAnimations() {
               .to("#slide-manifesto", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.06 }, 0.24)
               .to("#slide-manifesto .slide-body", { y: -40, duration: 0.06 }, 0.24);
 
-  // Slide 3 (Sobre Nós) surge e desaparece (bloco completo surge junto)
+  // Slide 3 (Sobre Nós) surge e desaparece com margem maior para clique/hover
   mainTimeline.to("#slide-sobre", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.05 }, 0.29)
               .to("#slide-sobre .slide-body", { y: 0, duration: 0.05 }, 0.29)
-              .to("#slide-sobre", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.05 }, 0.34)
-              .to("#slide-sobre .slide-body", { y: -40, duration: 0.05 }, 0.34);
+              .to("#slide-sobre", { opacity: 0, autoAlpha: 0, pointerEvents: "auto", duration: 0.06 }, 0.37)
+              .to("#slide-sobre .slide-body", { y: -40, duration: 0.06 }, 0.37)
+              .set("#slide-sobre", { pointerEvents: "none" }, 0.43);
 
-  // Slide 4 (Pilares) surge e desaparece (bloco completo surge junto)
-  mainTimeline.to("#slide-pilares", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.05 }, 0.43)
-              .to("#slide-pilares .slide-body", { y: 0, duration: 0.05 }, 0.43)
-              .to("#slide-pilares", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.05 }, 0.49)
-              .to("#slide-pilares .slide-body", { y: -40, duration: 0.05 }, 0.49);
+  // Slide 4 (Pilares) surge e desaparece com margem maior para clique/hover
+  mainTimeline.to("#slide-pilares", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.05 }, 0.47)
+              .to("#slide-pilares .slide-body", { y: 0, duration: 0.05 }, 0.47)
+              .to("#slide-pilares", { opacity: 0, autoAlpha: 0, pointerEvents: "auto", duration: 0.06 }, 0.56)
+              .to("#slide-pilares .slide-body", { y: -40, duration: 0.06 }, 0.56)
+              .set("#slide-pilares", { pointerEvents: "none" }, 0.62);
 
   // Transição do Vídeo para o Vanta.js Clouds background
   mainTimeline.to("#vanta-bg", { opacity: 1, autoAlpha: 1, duration: 0.12, ease: "power2.inOut" }, 0.52)
