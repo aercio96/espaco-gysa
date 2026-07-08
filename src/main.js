@@ -397,28 +397,14 @@ function initAnimations() {
       card.addEventListener("click", (event) => {
         if (event.target.closest(buttonSelector)) return;
 
-        if (event.target.closest(".story-hint")) {
-          event.stopPropagation();
-          openStory(storyIndex, event);
-          return;
-        }
-
-        if (isMobileDevice()) {
-          toggleStoryCardAccordion(cards, card, buttonSelector);
-        } else {
-          openStory(storyIndex, event);
-        }
+        openStory(storyIndex, event);
       });
 
       card.addEventListener("keydown", (event) => {
         if (event.key !== "Enter" && event.key !== " ") return;
 
         event.preventDefault();
-        if (isMobileDevice()) {
-          toggleStoryCardAccordion(cards, card, buttonSelector);
-        } else {
-          openStory(storyIndex, event);
-        }
+        openStory(storyIndex, event);
       });
 
       expandButton?.addEventListener("click", (event) => {
@@ -454,7 +440,7 @@ function initAnimations() {
       trigger: ".scroll-tracker",
       start: "top top",
       end: "bottom bottom",
-      scrub: true // Sincroniza exatamente com o scroll e evita slides atrasados/sobrepostos.
+      scrub: 0.08 // Mantém resposta quase direta, com um micro-amortecimento para o mobile.
     }
   });
 
@@ -993,7 +979,7 @@ function renderSlides() {
   slider.innerHTML = list.map((item, idx) => {
     const imageLoading = idx < 3 ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"';
     return `
-      <div onclick="openServiceModal(${idx})" class="service-explorer-card-item animate-fade-up">
+      <div class="service-explorer-card-item animate-fade-up" data-service-idx="${idx}" role="button" tabindex="0" aria-label="Ver detalhes de ${item.title}">
         <div class="explorer-card-bg-container">
           <img src="${item.image}" alt="${item.imageAlt}" class="explorer-card-image" ${imageLoading} decoding="async">
           <div class="explorer-card-overlay"></div>
@@ -1013,6 +999,7 @@ function renderSlides() {
       </div>
     `;
   }).join("");
+  bindServiceCards();
 }
 
 // Renderiza dots
@@ -1058,6 +1045,63 @@ function prevSlide() {
   if (!list.length) return;
   currentSlideIdx = (currentSlideIdx - 1 + list.length) % list.length;
   goToSlide(currentSlideIdx);
+}
+
+let sliderGestureState = null;
+let lastSliderSwipeAt = 0;
+
+function bindServiceCards() {
+  const slider = document.getElementById("explorer-slider");
+  if (!slider || slider.dataset.gestureBound === "true") return;
+
+  slider.dataset.gestureBound = "true";
+
+  slider.addEventListener("pointerdown", (event) => {
+    if (event.target.closest("a, button")) return;
+
+    sliderGestureState = {
+      x: event.clientX,
+      y: event.clientY,
+      time: Date.now()
+    };
+  }, { passive: true });
+
+  slider.addEventListener("pointerup", (event) => {
+    if (!sliderGestureState || event.target.closest("a, button")) {
+      sliderGestureState = null;
+      return;
+    }
+
+    const deltaX = event.clientX - sliderGestureState.x;
+    const deltaY = event.clientY - sliderGestureState.y;
+    const elapsed = Date.now() - sliderGestureState.time;
+    sliderGestureState = null;
+
+    if (Math.abs(deltaX) > 36 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2 && elapsed < 900) {
+      lastSliderSwipeAt = Date.now();
+      if (deltaX < 0) nextSlide();
+      else prevSlide();
+    }
+  }, { passive: true });
+
+  slider.addEventListener("click", (event) => {
+    const card = event.target.closest(".service-explorer-card-item");
+    if (!card || event.target.closest("a, button")) return;
+    if (Date.now() - lastSliderSwipeAt < 260) return;
+
+    const idx = Number(card.dataset.serviceIdx);
+    if (Number.isFinite(idx)) openServiceModal(idx);
+  });
+
+  slider.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    const card = event.target.closest(".service-explorer-card-item");
+    if (!card) return;
+
+    event.preventDefault();
+    const idx = Number(card.dataset.serviceIdx);
+    if (Number.isFinite(idx)) openServiceModal(idx);
+  });
 }
 
 // ---------- CONTROLE DO MODAL DE DETALHES ----------
@@ -1125,16 +1169,6 @@ let isStoryMuted = false;
 let storyCurrentDuration = 8000;
 let storyTimerElapsed = 0;
 let storyTimerLastTick = 0;
-
-// Mapeamento dos links reais de posts do Instagram do cliente correspondentes
-const storyInstagramLinks = [
-  "https://www.instagram.com/reel/DadMNxkMVON/", // Inauguração
-  "https://www.instagram.com/espacogysadf/",  // Localização
-  "https://www.instagram.com/reel/DaFy4SNRjEJ/",  // Essência
-  "https://www.instagram.com/espacogysadf/",  // Equipe
-  "https://www.instagram.com/espacogysadf/",  // Produtos
-  "https://www.instagram.com/reel/DagDg1yRdZ7/" // Reels do Ambiente
-];
 
 const storyDurations = [40000, 23000, 40000, 8000, 8000, 18000];
 
@@ -1245,12 +1279,6 @@ function openStory(index, event) {
   if (!modal) return;
   modal.classList.add("active");
 
-  // Ajusta o link da ação do Instagram
-  const instaLinkBtn = modal.querySelector(".story-insta-btn");
-  if (instaLinkBtn && storyInstagramLinks[activeStoryIndex]) {
-    instaLinkBtn.href = storyInstagramLinks[activeStoryIndex];
-  }
-
   updateSoundUI();
   updateStoryVideos();
   updateStorySlides();
@@ -1277,13 +1305,6 @@ function nextStory() {
     activeStoryIndex++;
     isStoryPaused = false;
 
-    // Atualiza link do Insta do botão correspondente
-    const modal = document.getElementById("story-modal");
-    const instaLinkBtn = modal?.querySelector(".story-insta-btn");
-    if (instaLinkBtn && storyInstagramLinks[activeStoryIndex]) {
-      instaLinkBtn.href = storyInstagramLinks[activeStoryIndex];
-    }
-
     updateStoryVideos();
     updateStorySlides();
     resetStoryProgress();
@@ -1297,12 +1318,6 @@ function prevStory() {
   if (activeStoryIndex > 0) {
     activeStoryIndex--;
     isStoryPaused = false;
-
-    const modal = document.getElementById("story-modal");
-    const instaLinkBtn = modal?.querySelector(".story-insta-btn");
-    if (instaLinkBtn && storyInstagramLinks[activeStoryIndex]) {
-      instaLinkBtn.href = storyInstagramLinks[activeStoryIndex];
-    }
 
     updateStoryVideos();
     updateStorySlides();

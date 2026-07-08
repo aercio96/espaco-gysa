@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+  <url>
+    <loc>https://espaco-gysa.vercel.app/</loc>
+    <lastmod>2026-07-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://espaco-gysa.vercel.app/og-espaco-gysa.jpg</image:loc>
+      <image:title>Espaço Gysa em Brasília</image:title>
+      <image:caption>Salão de beleza e bem-estar no Setor Hoteleiro Norte, Brasília/DF.</image:caption>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://espaco-gysa.vercel.app/story-reel-inauguracao.webp</video:thumbnail_loc>
+      <video:title>Espaço Gysa - experiência de beleza em Brasília</video:title>
+      <video:description>Story vertical com a experiência do Espaço Gysa, salão de beleza e bem-estar em Brasília.</video:description>
+      <video:content_loc>https://espaco-gysa.vercel.app/story-reel-inauguracao.mp4</video:content_loc>
+    </video:video>
+  </url>
+</urlset>

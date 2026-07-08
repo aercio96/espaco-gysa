@@ -7,11 +7,28 @@
   <meta name="description" content="Agende online no Espaço Gysa, salão de beleza e bem-estar na Asa Norte, Brasília. Cabelo, coloração, cachos, estética facial, harmonização, unhas, podologia, depilação, maquiagem, sobrancelhas e cílios.">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#8C4558">
+  <meta name="format-detection" content="telephone=yes">
+  <meta name="geo.region" content="BR-DF">
+  <meta name="geo.placename" content="Brasília">
+  <meta name="geo.position" content="-15.7909389;-47.8893112">
+  <meta name="ICBM" content="-15.7909389, -47.8893112">
+  <link rel="canonical" href="https://espaco-gysa.vercel.app/">
   <meta property="og:type" content="business.business">
   <meta property="og:title" content="Espaço Gysa | Beleza e Bem-Estar em Brasília">
   <meta property="og:description" content="Cabelo, estética facial, harmonização, unhas, podologia, maquiagem, sobrancelhas e cílios com agendamento online por serviço.">
-  <meta property="og:image" content="/logo/715079342_18105654004890053_2049181529465052405_n-removebg-preview.png">
+  <meta property="og:url" content="https://espaco-gysa.vercel.app/">
+  <meta property="og:site_name" content="Espaço Gysa">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:image" content="https://espaco-gysa.vercel.app/og-espaco-gysa.jpg">
+  <meta property="og:image:secure_url" content="https://espaco-gysa.vercel.app/og-espaco-gysa.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Espaço Gysa, salão de beleza e bem-estar no Setor Hoteleiro Norte, Brasília.">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Espaço Gysa | Salão de Beleza em Brasília">
+  <meta name="twitter:description" content="Agendamento online para cabelo, estética, unhas, sobrancelhas, podologia e bem-estar na Asa Norte.">
+  <meta name="twitter:image" content="https://espaco-gysa.vercel.app/og-espaco-gysa.jpg">
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,35 +44,118 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "BeautySalon",
-    "name": "Espaço Gysa",
-    "description": "Salão de beleza e bem-estar em Brasília com serviços de cabelo, estética facial, harmonização, unhas, podologia, depilação, maquiagem, sobrancelhas e cílios.",
-    "url": "https://agendeonline.salonsoft.com.br/espacogysa",
-    "telephone": "+5561998461559",
-    "priceRange": "R$ 10 - R$ 899",
-    "sameAs": ["https://www.instagram.com/espacogysadf/"],
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "SHN Q.2 Bloco J, Área Externa, Garvey Park Hotel",
-      "addressLocality": "Brasília",
-      "addressRegion": "DF",
-      "addressCountry": "BR"
-    },
-    "areaServed": "Brasília, Distrito Federal",
-    "hasOfferCatalog": {
-      "@type": "OfferCatalog",
-      "name": "Serviços Espaço Gysa",
-      "itemListElement": [
-        { "@type": "OfferCatalog", "name": "Cabelo", "url": "https://agendeonline.salonsoft.com.br/espacogysa" },
-        { "@type": "OfferCatalog", "name": "Estética Facial", "url": "https://agendeonline.salonsoft.com.br/espacogysa" },
-        { "@type": "OfferCatalog", "name": "Harmonização Facial", "url": "https://agendeonline.salonsoft.com.br/espacogysa" },
-        { "@type": "OfferCatalog", "name": "Mãos e Pés", "url": "https://agendeonline.salonsoft.com.br/espacogysa" },
-        { "@type": "OfferCatalog", "name": "Nail Designer", "url": "https://agendeonline.salonsoft.com.br/espacogysa" },
-        { "@type": "OfferCatalog", "name": "Podologia", "url": "https://agendeonline.salonsoft.com.br/espacogysa" },
-        { "@type": "OfferCatalog", "name": "Maquiagem", "url": "https://agendeonline.salonsoft.com.br/espacogysa" },
-        { "@type": "OfferCatalog", "name": "Sobrancelhas e Cílios", "url": "https://agendeonline.salonsoft.com.br/espacogysa" }
-      ]
-    }
+    "@graph": [
+      {
+        "@type": "BeautySalon",
+        "@id": "https://espaco-gysa.vercel.app/#beauty-salon",
+        "name": "Espaço Gysa",
+        "alternateName": "Espaço Gysa Beleza e Bem-Estar",
+        "description": "Salão de beleza e bem-estar em Brasília com serviços de cabelo, estética facial, harmonização, unhas, podologia, depilação, maquiagem, sobrancelhas e cílios.",
+        "url": "https://espaco-gysa.vercel.app/",
+        "telephone": "+5561998461559",
+        "priceRange": "R$ 10 - R$ 899",
+        "logo": "https://espaco-gysa.vercel.app/logo/715079342_18105654004890053_2049181529465052405_n-removebg-preview.png",
+        "image": "https://espaco-gysa.vercel.app/og-espaco-gysa.jpg",
+        "sameAs": ["https://www.instagram.com/espacogysadf/"],
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "SHN Q.2 Bloco J, Área Externa, Garvey Park Hotel",
+          "addressLocality": "Brasília",
+          "addressRegion": "DF",
+          "addressCountry": "BR"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": -15.7909389,
+          "longitude": -47.8893112
+        },
+        "hasMap": "https://www.google.com/maps/search/?api=1&query=Espa%C3%A7o%20Gysa%20Garvey%20Park%20Hotel%20Bras%C3%ADlia",
+        "areaServed": [
+          { "@type": "City", "name": "Brasília" },
+          { "@type": "AdministrativeArea", "name": "Distrito Federal" },
+          { "@type": "Place", "name": "Asa Norte" },
+          { "@type": "Place", "name": "Setor Hoteleiro Norte" }
+        ],
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            "opens": "09:00",
+            "closes": "19:00"
+          }
+        ],
+        "knowsAbout": [
+          "salão de beleza em Brasília",
+          "cabelo",
+          "coloração",
+          "cachos",
+          "estética facial",
+          "harmonização facial",
+          "unhas",
+          "podologia",
+          "depilação",
+          "maquiagem",
+          "sobrancelhas",
+          "cílios"
+        ],
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Serviços Espaço Gysa",
+          "url": "https://agendeonline.salonsoft.com.br/espacogysa",
+          "itemListElement": [
+            { "@type": "OfferCatalog", "name": "Cabelo", "url": "https://agendeonline.salonsoft.com.br/espacogysa" },
+            { "@type": "OfferCatalog", "name": "Estética Facial", "url": "https://agendeonline.salonsoft.com.br/espacogysa" },
+            { "@type": "OfferCatalog", "name": "Harmonização Facial", "url": "https://agendeonline.salonsoft.com.br/espacogysa" },
+            { "@type": "OfferCatalog", "name": "Mãos e Pés", "url": "https://agendeonline.salonsoft.com.br/espacogysa" },
+            { "@type": "OfferCatalog", "name": "Nail Designer", "url": "https://agendeonline.salonsoft.com.br/espacogysa" },
+            { "@type": "OfferCatalog", "name": "Podologia", "url": "https://agendeonline.salonsoft.com.br/espacogysa" },
+            { "@type": "OfferCatalog", "name": "Maquiagem", "url": "https://agendeonline.salonsoft.com.br/espacogysa" },
+            { "@type": "OfferCatalog", "name": "Sobrancelhas e Cílios", "url": "https://agendeonline.salonsoft.com.br/espacogysa" }
+          ]
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://espaco-gysa.vercel.app/#website",
+        "url": "https://espaco-gysa.vercel.app/",
+        "name": "Espaço Gysa",
+        "inLanguage": "pt-BR",
+        "publisher": { "@id": "https://espaco-gysa.vercel.app/#beauty-salon" },
+        "potentialAction": {
+          "@type": "ReserveAction",
+          "target": "https://agendeonline.salonsoft.com.br/espacogysa",
+          "name": "Agendar online no Espaço Gysa"
+        }
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://espaco-gysa.vercel.app/#webpage",
+        "url": "https://espaco-gysa.vercel.app/",
+        "name": "Espaço Gysa | Salão de Beleza, Estética e Agendamento Online em Brasília",
+        "description": "Agende online no Espaço Gysa, salão de beleza e bem-estar na Asa Norte, Brasília.",
+        "isPartOf": { "@id": "https://espaco-gysa.vercel.app/#website" },
+        "about": { "@id": "https://espaco-gysa.vercel.app/#beauty-salon" },
+        "primaryImageOfPage": {
+          "@type": "ImageObject",
+          "url": "https://espaco-gysa.vercel.app/og-espaco-gysa.jpg",
+          "width": 1200,
+          "height": 630
+        },
+        "inLanguage": "pt-BR"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://espaco-gysa.vercel.app/#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Início",
+            "item": "https://espaco-gysa.vercel.app/"
+          }
+        ]
+      }
+    ]
   }
   </script>
   <script type="application/ld+json">
@@ -77,6 +177,22 @@
         "acceptedAnswer": {
           "@type": "Answer",
           "text": "O Espaço Gysa fica no SHN Q.2 Bloco J, Área Externa, Garvey Park Hotel, Asa Norte, Brasília/DF."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Quais serviços o Espaço Gysa oferece?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "O Espaço Gysa oferece serviços de cabelo, coloração, cachos, estética facial, harmonização facial, mãos e pés, nail designer, podologia, depilação, maquiagem, sobrancelhas, cílios e spa para os pés."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "O Espaço Gysa atende no Setor Hoteleiro Norte?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sim. O Espaço Gysa está localizado no Garvey Park Hotel, no Setor Hoteleiro Norte, região central de Brasília."
         }
       }
     ]
@@ -210,7 +326,7 @@
               </button>
             </div>
             <p>
-              Chegou em Brasília e precisa ir no salão? Aqui é o lugar certo! Estamos localizados no <strong>Garvey Park Hotel, no Setor Hoteleiro Norte, região central de Brasília</strong>. A melhor opção custo-benefício para quem quer praticidade, qualidade e experiência de atendimento.
+              Estamos no <strong>Garvey Park Hotel, no Setor Hoteleiro Norte, região central de Brasília</strong>. Um ponto prático para quem busca atendimento de beleza com qualidade, conforto e fácil acesso.
             </p>
             <span class="story-hint">ASSISTIR AO STORY ✦</span>
           </div>
@@ -538,10 +654,6 @@
             <svg class="icon-volume-off" viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M16.5 12c0-1.77-1-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63Zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.8 8.8 0 0 0 21 12c0-4.28-2.99-7.86-7-8.77v2.06A6.99 6.99 0 0 1 19 12ZM4.27 3 3 4.27 7.73 9H3v6h4l5 5v-6.73L16.25 17.52c-.67.51-1.42.9-2.25 1.09v2.06a8.97 8.97 0 0 0 3.69-1.73L19.73 21 21 19.73 4.27 3ZM12 4 9.91 6.09 12 8.18V4Z"/></svg>
             <svg class="icon-volume-on" viewBox="0 0 24 24" fill="currentColor" width="13" height="13" style="display: none;"><path d="M3 9v6h4l5 5V4L7 9H3Zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05A4.49 4.49 0 0 0 16.5 12ZM14 3.23v2.06A7 7 0 0 1 19 12a7 7 0 0 1-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77Z"/></svg>
           </button>
-          <a class="story-action-btn story-insta-btn" href="https://www.instagram.com/espacogysadf/" target="_blank" rel="noopener" aria-label="Visitar Instagram">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-            <span>Insta</span>
-          </a>
         </div>
       </div>
 

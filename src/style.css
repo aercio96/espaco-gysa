@@ -35,7 +35,14 @@ html, body {
   font-family: var(--font-body);
   overflow-x: hidden;
   height: 100%;
-  overscroll-behavior-y: none;
+  overscroll-behavior-y: contain;
+}
+
+@supports (overflow: clip) {
+  html,
+  body {
+    overflow-x: clip;
+  }
 }
 
 /* Fixed Background Video Canvas */
@@ -2178,6 +2185,10 @@ body.side-menu-open .side-menu-backdrop {
   padding: 0 2.8rem 0.35rem 0;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE e Edge */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x;
+  cursor: grab;
 }
 
 .explorer-slider::-webkit-scrollbar {
@@ -2195,6 +2206,7 @@ body.side-menu-open .side-menu-backdrop {
   border: 1px solid rgba(191, 168, 126, 0.25);
   background: rgba(20, 10, 15, 0.72);
   cursor: pointer;
+  user-select: none;
   box-shadow: 0 22px 44px rgba(0, 0, 0, 0.4);
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, box-shadow 0.4s ease;
 }
@@ -3228,7 +3240,7 @@ body.side-menu-open .side-menu-backdrop {
 
   .sobre-card.is-expanded p,
   .pilar-card.is-expanded p {
-    max-height: 9rem;
+    max-height: 16rem;
     opacity: 0.96;
     visibility: visible;
     margin-top: 0.68rem;
@@ -3249,7 +3261,7 @@ body.side-menu-open .side-menu-backdrop {
 
   #slide-atmosfera {
     justify-content: flex-start;
-    padding: calc(4.85rem + env(safe-area-inset-top)) 0.82rem calc(4.5rem + env(safe-area-inset-bottom));
+    padding: calc(4.85rem + env(safe-area-inset-top)) 1rem calc(4.5rem + env(safe-area-inset-bottom));
   }
 
   #slide-atmosfera .slide-body {
@@ -3272,7 +3284,7 @@ body.side-menu-open .side-menu-backdrop {
   }
 
   #slide-atmosfera .services-explorer-card {
-    padding: 0.7rem;
+    padding: 0.86rem;
     border-radius: 18px;
     max-height: calc(100svh - 14.1rem);
     overflow: hidden;
@@ -3300,7 +3312,7 @@ body.side-menu-open .side-menu-backdrop {
 
   #slide-atmosfera .explorer-slider {
     gap: 0.68rem;
-    padding-right: 2.15rem;
+    padding: 0 2.6rem 0.25rem 0;
   }
 
   #slide-atmosfera .service-explorer-card-item {
@@ -3310,7 +3322,7 @@ body.side-menu-open .side-menu-backdrop {
   }
 
   #slide-atmosfera .explorer-card-content {
-    padding: 0.86rem;
+    padding: 1rem 0.95rem 1.05rem;
   }
 
   #slide-atmosfera .explorer-card-badge {
@@ -3340,9 +3352,10 @@ body.side-menu-open .side-menu-backdrop {
   }
 
   #slide-atmosfera .explorer-card-btn {
-    min-height: 2rem;
-    padding: 0.42rem 0.8rem;
-    font-size: 0.66rem;
+    min-height: 2.18rem;
+    min-width: 8.6rem;
+    padding: 0.52rem 0.95rem;
+    font-size: 0.68rem;
     border-radius: 7px;
   }
 
