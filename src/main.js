@@ -5,10 +5,17 @@ gsap.registerPlugin(ScrollTrigger);
 
 // Seletores DOM
 const canvas = document.getElementById("video-canvas");
-const context = canvas.getContext("2d");
+const context = canvas.getContext("2d", { alpha: false, desynchronized: true }) || canvas.getContext("2d");
 const slides = document.querySelectorAll(".text-slide");
-context.imageSmoothingEnabled = true;
-context.imageSmoothingQuality = "high";
+const mobileMedia = window.matchMedia("(max-width: 768px), (pointer: coarse)");
+const isMobileDevice = () => mobileMedia.matches;
+
+function tuneCanvasQuality() {
+  context.imageSmoothingEnabled = true;
+  context.imageSmoothingQuality = "high";
+}
+
+tuneCanvasQuality();
 
 // Configurações da sequência de frames
 const frameCount = 286;
@@ -18,17 +25,17 @@ const getFramePath = (index) => `/frames/frame_${index.toString().padStart(4, "0
 const images = new Array(frameCount);
 const frameLoadState = new Array(frameCount).fill("idle");
 const airplay = { frame: 0 };
-const initialFramePreload = 48;
-const framePreloadBatchSize = 32;
-const framePreloadConcurrency = 8;
-const frameLookAhead = 12;
+const initialFramePreload = isMobileDevice() ? 34 : 48;
+const framePreloadBatchSize = isMobileDevice() ? 20 : 32;
+const framePreloadConcurrency = isMobileDevice() ? 5 : 8;
+const frameLookAhead = isMobileDevice() ? 8 : 12;
 
 let loadedImagesCount = 0;
 let isLoaded = false;
 let activeFrameLoads = 0;
 let nextSequentialFrame = 0;
 let renderScheduled = false;
-let vantaEffect = null;
+let resizeScheduled = false;
 const frameLoadQueue = [];
 
 const scheduleIdleWork = (callback) => {
@@ -74,6 +81,20 @@ function prioritizeNearbyFrames(frameIndex) {
   }
 }
 
+function getRenderableFrame(targetFrame) {
+  if (images[targetFrame]?.complete) return targetFrame;
+
+  for (let offset = 1; offset <= frameLookAhead * 2; offset++) {
+    const previousFrame = targetFrame - offset;
+    const nextFrame = targetFrame + offset;
+
+    if (previousFrame >= 0 && images[previousFrame]?.complete) return previousFrame;
+    if (nextFrame < frameCount && images[nextFrame]?.complete) return nextFrame;
+  }
+
+  return null;
+}
+
 function pumpFrameQueue() {
   while (activeFrameLoads < framePreloadConcurrency && frameLoadQueue.length) {
     const frameIndex = frameLoadQueue.shift();
@@ -107,7 +128,6 @@ function loadFrame(frameIndex) {
     }
     if (loadedImagesCount === frameCount) {
       isLoaded = true;
-      console.log("Todos os frames foram pré-carregados e decodificados.");
     }
     pumpFrameQueue();
   };
@@ -127,13 +147,29 @@ scheduleIdleWork(scheduleRemainingFrames);
 
 // Redimensionamento do canvas com lógica 'object-fit: cover' otimizado para performance máxima (60fps)
 function resizeCanvas() {
-  const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
-  canvas.width = Math.round(window.innerWidth * pixelRatio);
-  canvas.height = Math.round(window.innerHeight * pixelRatio);
+  const maxPixelRatio = isMobileDevice() ? 1.35 : 1.85;
+  const pixelRatio = Math.min(window.devicePixelRatio || 1, maxPixelRatio);
+  const nextWidth = Math.round(window.innerWidth * pixelRatio);
+  const nextHeight = Math.round(window.innerHeight * pixelRatio);
+
+  if (canvas.width === nextWidth && canvas.height === nextHeight) return;
+
+  canvas.width = nextWidth;
+  canvas.height = nextHeight;
+  tuneCanvasQuality();
   canvas.style.width = `${window.innerWidth}px`;
   canvas.style.height = `${window.innerHeight}px`;
   lastRenderedFrame = -1; // Força re-renderização imediata
   requestRender();
+}
+
+function requestResizeCanvas() {
+  if (resizeScheduled) return;
+  resizeScheduled = true;
+  requestAnimationFrame(() => {
+    resizeScheduled = false;
+    resizeCanvas();
+  });
 }
 
 let lastRenderedFrame = -1;
@@ -148,11 +184,11 @@ function requestRender() {
 }
 
 function render() {
-  const currentFrame = Math.round(airplay.frame);
-  if (currentFrame === lastRenderedFrame) return;
+  const targetFrame = Math.round(airplay.frame);
+  const currentFrame = getRenderableFrame(targetFrame);
+  if (currentFrame === null || currentFrame === lastRenderedFrame) return;
 
   const img = images[currentFrame];
-  if (!img || !img.complete) return;
 
   const canvasWidth = canvas.width;
   const canvasHeight = canvas.height;
@@ -182,37 +218,10 @@ function render() {
   lastRenderedFrame = currentFrame;
 }
 
-window.addEventListener("resize", resizeCanvas);
-
-// Inicializa o efeito de nuvens do Vanta.js
-function initVanta() {
-  if (typeof VANTA !== "undefined" && !vantaEffect) {
-    vantaEffect = VANTA.CLOUDS({
-      el: "#vanta-bg",
-      mouseControls: true,
-      touchControls: true,
-      gyroControls: false,
-      minHeight: 200.00,
-      minWidth: 200.00,
-      skyColor: 0x2b1a20,      /* Cinza-ameixa escuro com subtom rosa quente */
-      cloudColor: 0xa65170,    /* Rosa musa / rosa queimado oficial (Combina com o primeiro bloco) */
-      sunColor: 0xbfa87e,      /* Dourado champanhe */
-      sunGlareColor: 0xa65170, /* Brilho solar em tom rosa musa */
-      sunlightColor: 0xbfa87e  /* Luz dourada suave */
-    });
-  }
-}
+window.addEventListener("resize", requestResizeCanvas, { passive: true });
 
 // Inicializa as animações
 function initAnimations() {
-  // Inicializa o background tridimensional Vanta Clouds de uma vez
-  // Isso compila os shaders, mas vamos pausá-lo imediatamente para não consumir GPU durante o vídeo
-  initVanta();
-  if (vantaEffect && vantaEffect.req) {
-    cancelAnimationFrame(vantaEffect.req);
-    vantaEffect.req = null;
-  }
-
   // Ajusta o tamanho inicial do canvas
   resizeCanvas();
 
@@ -229,7 +238,10 @@ function initAnimations() {
   const sceneButtons = document.querySelectorAll(".scene-toggle-btn");
   const menuToggle = document.querySelector(".menu-toggle-btn");
   const sideMenu = document.getElementById("side-menu");
-  const sceneProgressMap = [0, 0.16, 0.31, 0.49, 0.65, 0.83, 0.95];
+  const isMobileTimeline = isMobileDevice();
+  const sceneProgressMap = isMobileTimeline
+    ? [0, 0.16, 0.31, 0.49, 0.65, 0.75, 0.84, 0.90]
+    : [0, 0.16, 0.31, 0.49, 0.65, 0.75, 0.84, 0.84];
 
   window.toggleSideMenu = function toggleSideMenu(open = true) {
     document.body.classList.toggle("side-menu-open", open);
@@ -268,14 +280,31 @@ function initAnimations() {
     });
   }
 
+  const servicesInPoint = isMobileTimeline ? 0.615 : 0.60;
+  const reviewsInPoint = 0.84;
+  const reviewsOutPoint = 0.875;
+  const finalInPoint = isMobileTimeline ? 0.90 : 0.84;
+  const timelinePoints = {
+    sobreIn: isMobileTimeline ? 0.33 : 0.29,
+    sobreOut: isMobileTimeline ? 0.42 : 0.37,
+    sobreOff: isMobileTimeline ? 0.48 : 0.43,
+    pilaresIn: isMobileTimeline ? 0.50 : 0.47,
+    pilaresOut: isMobileTimeline ? 0.555 : 0.54,
+    pilaresOff: 0.60,
+    servicesIn: servicesInPoint,
+    vantaIn: servicesInPoint,
+    videoOut: servicesInPoint + 0.012
+  };
+
   const hoverRescueSlides = [
     { element: document.getElementById("slide-despertar"), start: 0.00, end: 0.15 },
     { element: document.getElementById("slide-manifesto"), start: 0.15, end: 0.29 },
-    { element: document.getElementById("slide-sobre"), start: 0.29, end: 0.47 },
-    { element: document.getElementById("slide-pilares"), start: 0.47, end: 0.62 },
-    { element: document.getElementById("slide-atmosfera"), start: 0.60, end: 0.75 },
-    { element: document.getElementById("slide-galeria"), start: 0.75, end: 0.90 },
-    { element: document.getElementById("slide-convite"), start: 0.90, end: 1.00 }
+    { element: document.getElementById("slide-sobre"), start: timelinePoints.sobreIn, end: timelinePoints.pilaresIn },
+    { element: document.getElementById("slide-pilares"), start: timelinePoints.pilaresIn, end: timelinePoints.pilaresOff },
+    { element: document.getElementById("slide-atmosfera"), start: timelinePoints.servicesIn, end: 0.75 },
+    { element: document.getElementById("slide-galeria"), start: 0.75, end: reviewsInPoint },
+    ...(isMobileTimeline ? [{ element: document.getElementById("slide-reviews"), start: reviewsInPoint, end: finalInPoint }] : []),
+    { element: document.getElementById("slide-convite"), start: finalInPoint, end: 1.00 }
   ].filter(({ element }) => Boolean(element));
 
   hoverRescueSlides.forEach(({ element }) => {
@@ -314,20 +343,100 @@ function initAnimations() {
   }
 
   const whatsappPrompt = document.querySelector(".hero-whatsapp-popover");
-  const servicesSlideStart = 0.60;
+  const servicesSlideStart = timelinePoints.servicesIn;
 
   function updateWhatsAppPromptVisibility(progress) {
     whatsappPrompt?.classList.toggle("is-hidden-after-services", progress >= servicesSlideStart);
   }
 
-  document.querySelectorAll(".sobre-card, .pilar-card").forEach((card) => {
-    card.setAttribute("role", "button");
-    card.setAttribute("tabindex", "0");
-    card.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" || event.key === " ") {
+  const accordionCardGroups = [];
+
+  function setStoryCardExpanded(card, expanded, buttonSelector) {
+    card.classList.toggle("is-expanded", expanded);
+    const button = card.querySelector(buttonSelector);
+    button?.setAttribute("aria-expanded", String(expanded));
+    const symbol = button?.querySelector("span");
+    if (symbol) symbol.textContent = expanded ? "−" : "+";
+    const storyHint = card.querySelector(".story-hint");
+    storyHint?.setAttribute("tabindex", expanded || !isMobileDevice() ? "0" : "-1");
+  }
+
+  function toggleStoryCardAccordion(cards, card, buttonSelector) {
+    const shouldExpand = !card.classList.contains("is-expanded");
+
+    cards.forEach((candidate) => {
+      setStoryCardExpanded(candidate, candidate === card && shouldExpand, buttonSelector);
+    });
+  }
+
+  function setupStoryAccordionCards(cardSelector, buttonSelector) {
+    const cards = Array.from(document.querySelectorAll(cardSelector));
+    if (!cards.length) return;
+
+    accordionCardGroups.push({ cards, buttonSelector });
+
+    cards.forEach((card) => {
+      const storyIndex = Number(card.dataset.storyIndex);
+      const expandButton = card.querySelector(buttonSelector);
+      const storyHint = card.querySelector(".story-hint");
+
+      card.setAttribute("role", "button");
+      card.setAttribute("tabindex", "0");
+
+      storyHint?.setAttribute("role", "button");
+      storyHint?.setAttribute("tabindex", "0");
+
+      card.addEventListener("click", (event) => {
+        if (event.target.closest(buttonSelector)) return;
+
+        if (event.target.closest(".story-hint")) {
+          event.stopPropagation();
+          openStory(storyIndex, event);
+          return;
+        }
+
+        if (isMobileDevice()) {
+          toggleStoryCardAccordion(cards, card, buttonSelector);
+        } else {
+          openStory(storyIndex, event);
+        }
+      });
+
+      card.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+
         event.preventDefault();
-        card.click();
-      }
+        if (isMobileDevice()) {
+          toggleStoryCardAccordion(cards, card, buttonSelector);
+        } else {
+          openStory(storyIndex, event);
+        }
+      });
+
+      expandButton?.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        toggleStoryCardAccordion(cards, card, buttonSelector);
+      });
+
+      storyHint?.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+
+        event.preventDefault();
+        event.stopPropagation();
+        openStory(storyIndex, event);
+      });
+
+      setStoryCardExpanded(card, false, buttonSelector);
+    });
+  }
+
+  setupStoryAccordionCards(".sobre-card", ".card-expand-btn");
+  setupStoryAccordionCards(".pilar-card", ".pilar-expand-btn");
+
+  mobileMedia.addEventListener?.("change", () => {
+    accordionCardGroups.forEach(({ cards, buttonSelector }) => {
+      cards.forEach((card) => setStoryCardExpanded(card, false, buttonSelector));
     });
   });
 
@@ -341,34 +450,30 @@ function initAnimations() {
     }
   });
 
-  // Controla dinamicamente a execução do WebGL do Vanta de acordo com o progresso do Scroll
+  function updateWarpBackgroundVisibility(progress) {
+    document.body.classList.toggle("is-warp-active", progress >= timelinePoints.vantaIn);
+  }
+
+  // Controla dinamicamente o background leve de transição.
   mainTimeline.eventCallback("onUpdate", () => {
     const progress = mainTimeline.progress();
     updateHoverRescueCandidates(progress);
     updateWhatsAppPromptVisibility(progress);
-
-    if (progress >= 0.50) {
-      if (vantaEffect && !vantaEffect.req) {
-        vantaEffect.animationLoop();
-      }
-    } else {
-      if (vantaEffect && vantaEffect.req) {
-        cancelAnimationFrame(vantaEffect.req);
-        vantaEffect.req = null;
-      }
-    }
+    updateWarpBackgroundVisibility(progress);
   });
   updateHoverRescueCandidates(0);
   updateWhatsAppPromptVisibility(0);
+  updateWarpBackgroundVisibility(0);
 
-  // Vincula ativação dos indicadores para 7 slides
+  // Vincula ativação dos indicadores para 8 slides
   mainTimeline.call(setActiveIndicator, [0], 0.0)
               .call(setActiveIndicator, [1], 0.15)
-              .call(setActiveIndicator, [2], 0.29)
-              .call(setActiveIndicator, [3], 0.47)
-              .call(setActiveIndicator, [4], 0.60)
+              .call(setActiveIndicator, [2], timelinePoints.sobreIn)
+              .call(setActiveIndicator, [3], timelinePoints.pilaresIn)
+              .call(setActiveIndicator, [4], timelinePoints.servicesIn)
               .call(setActiveIndicator, [5], 0.75)
-              .call(setActiveIndicator, [6], 0.90);
+              .call(setActiveIndicator, [6], reviewsInPoint)
+              .call(setActiveIndicator, [7], finalInPoint);
 
   // 1. Scrubbing do Vídeo (Sequência de Imagens)
   // O vídeo roda até o final (frame 285) mais rápido para liberar o fundo de nuvens
@@ -395,38 +500,46 @@ function initAnimations() {
               .to("#slide-manifesto .slide-body", { y: -40, duration: 0.06 }, 0.24);
 
   // Slide 3 (Sobre Nós) surge e desaparece com margem maior para clique/hover
-  mainTimeline.to("#slide-sobre", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.05 }, 0.29)
-              .to("#slide-sobre .slide-body", { y: 0, duration: 0.05 }, 0.29)
-              .to("#slide-sobre", { opacity: 0, autoAlpha: 0, pointerEvents: "auto", duration: 0.06 }, 0.37)
-              .to("#slide-sobre .slide-body", { y: -40, duration: 0.06 }, 0.37)
-              .set("#slide-sobre", { pointerEvents: "none" }, 0.43);
+  mainTimeline.to("#slide-sobre", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.05 }, timelinePoints.sobreIn)
+              .to("#slide-sobre .slide-body", { y: 0, duration: 0.05 }, timelinePoints.sobreIn)
+              .to("#slide-sobre", { opacity: 0, autoAlpha: 0, pointerEvents: "auto", duration: 0.06 }, timelinePoints.sobreOut)
+              .to("#slide-sobre .slide-body", { y: -40, duration: 0.06 }, timelinePoints.sobreOut)
+              .set("#slide-sobre", { pointerEvents: "none" }, timelinePoints.sobreOff);
 
   // Slide 4 (Pilares) surge e desaparece com margem maior para clique/hover
-  mainTimeline.to("#slide-pilares", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.05 }, 0.47)
-              .to("#slide-pilares .slide-body", { y: 0, duration: 0.05 }, 0.47)
-              .to("#slide-pilares", { opacity: 0, autoAlpha: 0, pointerEvents: "auto", duration: 0.06 }, 0.56)
-              .to("#slide-pilares .slide-body", { y: -40, duration: 0.06 }, 0.56)
-              .set("#slide-pilares", { pointerEvents: "none" }, 0.62);
+  mainTimeline.to("#slide-pilares", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.05 }, timelinePoints.pilaresIn)
+              .to("#slide-pilares .slide-body", { y: 0, duration: 0.05 }, timelinePoints.pilaresIn)
+              .to("#slide-pilares", { opacity: 0, autoAlpha: 0, pointerEvents: "auto", duration: 0.05 }, timelinePoints.pilaresOut)
+              .to("#slide-pilares .slide-body", { y: -40, duration: 0.05 }, timelinePoints.pilaresOut)
+              .set("#slide-pilares", { pointerEvents: "none" }, timelinePoints.pilaresOff);
 
-  // Transição do Vídeo para o Vanta.js Clouds background
-  mainTimeline.to("#vanta-bg", { opacity: 1, autoAlpha: 1, duration: 0.12, ease: "power2.inOut" }, 0.52)
-              .to(".video-container", { opacity: 0, duration: 0.14, ease: "power2.inOut" }, 0.54);
+  // Transição do vídeo para o background CSS leve
+  mainTimeline.to("#vanta-bg", { opacity: 1, autoAlpha: 1, duration: 0.12, ease: "power2.inOut" }, timelinePoints.vantaIn)
+              .to(".video-container", { opacity: 0, duration: 0.14, ease: "power2.inOut" }, timelinePoints.videoOut);
 
   // Slide 5 (Atmosfera Gysa - Nuvem Background) surge e desaparece
-  mainTimeline.to("#slide-atmosfera", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.06 }, 0.60)
-              .to("#slide-atmosfera .slide-body", { y: 0, duration: 0.06 }, 0.60)
+  mainTimeline.to("#slide-atmosfera", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.06 }, timelinePoints.servicesIn)
+              .to("#slide-atmosfera .slide-body", { y: 0, duration: 0.06 }, timelinePoints.servicesIn)
               .to("#slide-atmosfera", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.06 }, 0.69)
               .to("#slide-atmosfera .slide-body", { y: -40, duration: 0.06 }, 0.69);
 
   // Slide 6 (Galeria) surge e desaparece
   mainTimeline.to("#slide-galeria", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.06 }, 0.75)
               .to("#slide-galeria .slide-body", { y: 0, duration: 0.06 }, 0.75)
-              .to("#slide-galeria", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.06 }, 0.84)
-              .to("#slide-galeria .slide-body", { y: -40, duration: 0.06 }, 0.84);
+              .to("#slide-galeria", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.06 }, 0.82)
+              .to("#slide-galeria .slide-body", { y: -40, duration: 0.06 }, 0.82);
 
-  // Slide 7 (Convite/Rodapé - Nuvem Background) surge e permanece ativo
-  mainTimeline.to("#slide-convite", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.06 }, 0.90)
-              .to("#slide-convite .slide-body", { y: 0, duration: 0.06 }, 0.90);
+  // Slide 7 (Reviews Google) surge e desaparece
+  if (isMobileTimeline) {
+    mainTimeline.to("#slide-reviews", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.06 }, reviewsInPoint)
+                .to("#slide-reviews .slide-body", { y: 0, duration: 0.06 }, reviewsInPoint)
+                .to("#slide-reviews", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.05 }, reviewsOutPoint)
+                .to("#slide-reviews .slide-body", { y: -40, duration: 0.05 }, reviewsOutPoint);
+  }
+
+  // Slide 8 (Convite/Rodapé - Background leve) surge e permanece ativo
+  mainTimeline.to("#slide-convite", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.06 }, finalInPoint)
+              .to("#slide-convite .slide-body", { y: 0, duration: 0.06 }, finalInPoint);
 
   // Inicializa o painel explorador de serviços
   renderTabs();
@@ -544,18 +657,238 @@ const rawServices = [
 ];
 
 const serviceCopyByCategory = {
-  "Cabelo": "Agenda online para cortes, escovas, coloração, mechas e tratamentos capilares com atendimento especializado.",
+  "Cabelo": "Atendimento capilar com avaliação do fio, técnica profissional e acabamento alinhado ao serviço escolhido.",
   "Depilação": "Depilação com técnica cuidadosa, higiene e conforto para rosto e corpo.",
-  "Estética Facial": "Protocolos faciais para limpeza, renovação, viço e pele bem cuidada.",
-  "Harmonização Facial": "Procedimentos estéticos avançados com avaliação profissional e foco em naturalidade.",
-  "Lash Designer": "Cílios com acabamento delicado para valorizar o olhar com leveza.",
-  "Mãos e Pés": "Manicure, pedicure e esmaltação com acabamento preciso para o dia a dia.",
+  "Estética Facial": "Protocolos faciais estéticos para limpeza, cuidado e viço da pele.",
+  "Harmonização Facial": "Atendimento estético com avaliação profissional e foco em indicação adequada.",
+  "Lash Designer": "Serviços para cílios com acabamento delicado e valorização do olhar.",
+  "Mãos e Pés": "Manicure, pedicure e esmaltação com acabamento limpo e cuidadoso.",
   "Maquiagem": "Maquiagem profissional para rotina, eventos, formaturas e noivas.",
-  "Nail Designer": "Alongamentos, gel, blindagem e manutenção para unhas resistentes e elegantes.",
-  "Podologia": "Cuidados técnicos para conforto, saúde e bem-estar dos pés.",
-  "Sobrancelhas": "Design, brow lamination e pintura para harmonizar o olhar.",
+  "Nail Designer": "Alongamentos, gel, blindagem e manutenção para unhas com acabamento elegante.",
+  "Podologia": "Cuidados técnicos para conforto e bem-estar dos pés.",
+  "Sobrancelhas": "Serviços para sobrancelhas com desenho, acabamento e harmonia do olhar.",
   "SPA para os Pés": "Rituais relaxantes para pés com toque sensorial e aromático."
 };
+
+function normalizeServiceText(value) {
+  return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}
+
+function getHairLengthLabel(title) {
+  if (title.includes("curto")) return "curto";
+  if (title.includes("medio")) return "medio";
+  if (title.includes("longo")) return "longo";
+  return "";
+}
+
+function describeHairService(service, title) {
+  const lengthLabel = getHairLengthLabel(title);
+  if (title.includes("tintura")) {
+    return "Aplicação de tintura trazida pela cliente, com cuidado na preparação e no acabamento dos fios.";
+  }
+  if (title.includes("coloracao")) {
+    return `Coloração${lengthLabel ? ` para cabelo ${lengthLabel}` : ""} com tinta do salão, alinhando tom, cobertura e acabamento.`;
+  }
+  if (title.includes("crespo") || title.includes("cacheado")) {
+    return "Corte pensado para cabelos crespos e cacheados, respeitando curvatura, volume e caimento.";
+  }
+  if (title.includes("corte")) {
+    return "Corte de cabelo com escuta do estilo desejado, proporção e acabamento profissional.";
+  }
+  if (title.includes("escova")) {
+    return `Escova${lengthLabel ? ` para cabelo ${lengthLabel}` : ""} com finalização polida e movimento natural.`;
+  }
+  if (title.includes("hidratacao")) {
+    return "Hidratação capilar para cuidado dos fios, maciez e aparência bem tratada.";
+  }
+  if (title.includes("higienizacao")) {
+    return "Higienização capilar com lavagem cuidadosa e preparo dos fios para o atendimento.";
+  }
+  if (title.includes("lavagem")) {
+    return "Lavagem especial com ritual capilar técnico e acabamento adequado ao fio.";
+  }
+  if (title.includes("mechas")) {
+    return "Mechas com planejamento de luminosidade, tom e cuidado com a saúde dos fios.";
+  }
+  if (title.includes("penteado noiva")) {
+    return "Penteado para noiva com acabamento elegante e alinhado ao momento da cerimônia.";
+  }
+  if (title.includes("penteado formanda")) {
+    return "Penteado para formatura com estrutura, acabamento e presença para evento.";
+  }
+  if (title.includes("realinhamento")) {
+    return "Realinhamento capilar com avaliação do fio e execução técnica cuidadosa.";
+  }
+  if (title.includes("tratamento")) {
+    return `Tratamento capilar ${service.title.replace(/^TRATAMENTO\s*/i, "")} com protocolo profissional e cuidado dos fios.`;
+  }
+  return serviceCopyByCategory.Cabelo;
+}
+
+function describeWaxingService(service, title) {
+  const area = service.title
+    .replace(/^Depilação\s+de\s+/i, "")
+    .replace(/^Depilação\s+/i, "")
+    .replace(/\s+-\s+.*/i, "")
+    .trim();
+  if (title.includes("linha")) {
+    return `Depilação de ${area.replace(/ com Linha$/i, "")} com linha, feita com precisão e cuidado para a pele.`;
+  }
+  return `Depilação de ${area} com técnica cuidadosa, higiene e conforto em cada etapa.`;
+}
+
+function describeFacialService(service, title) {
+  if (title.includes("dermaplaning")) {
+    return "Dermaplaning estético para renovação superficial e acabamento suave da pele.";
+  }
+  if (title.includes("hydra")) {
+    return "Hydra Gloss para cuidado facial com foco em hidratação, brilho e toque viçoso.";
+  }
+  if (title.includes("limpeza")) {
+    return "Limpeza de pele com protocolo estético para higienização, cuidado e preparo da pele.";
+  }
+  return serviceCopyByCategory["Estética Facial"];
+}
+
+function describeHarmonizationService(service, title) {
+  if (title.includes("toxina") || title.includes("botox")) {
+    return "Toxina botulínica com avaliação profissional, indicação adequada e foco em naturalidade.";
+  }
+  if (title.includes("pdo")) {
+    return "Avaliação para fios de PDO, com indicação definida em consulta profissional.";
+  }
+  return serviceCopyByCategory["Harmonização Facial"];
+}
+
+function describeLashService(service, title) {
+  if (title.includes("extensao")) {
+    return "Extensão de cílios para valorizar o olhar com curadoria de volume e acabamento.";
+  }
+  if (title.includes("lifting")) {
+    return "Lash lifting para curvar e destacar os cílios naturais com acabamento leve.";
+  }
+  if (title.includes("manutencao")) {
+    return "Manutenção de cílios para preservar o desenho e o acabamento da extensão.";
+  }
+  return serviceCopyByCategory["Lash Designer"];
+}
+
+function describeHandsFeetService(service, title) {
+  if (title.includes("francesinha")) {
+    return "Esmaltação francesinha com acabamento clássico, delicado e preciso.";
+  }
+  if (title.includes("gel top")) {
+    return "Esmaltação em gel top gloss com brilho intenso e acabamento polido.";
+  }
+  if (title.includes("infantil")) {
+    return "Esmaltação infantil com proposta leve, cuidadosa e acabamento delicado.";
+  }
+  if (title.includes("top coat")) {
+    return "Top coat para finalização de brilho e proteção do acabamento.";
+  }
+  if (title.includes("maos") && title.includes("pes")) {
+    return "Manicure e pedicure tradicionais com cuidado completo de mãos e pés.";
+  }
+  if (title.includes("manicure")) {
+    return "Manicure tradicional com cuidado das mãos, cutículas e esmaltação.";
+  }
+  if (title.includes("pedicure")) {
+    return "Pedicure tradicional com cuidado dos pés, cutículas e esmaltação.";
+  }
+  if (title.includes("artistica") || title.includes("decoracao")) {
+    return "Unha artística com decoração personalizada e acabamento cuidadoso.";
+  }
+  return "Esmaltação com acabamento limpo, escolha de cor e cuidado das unhas.";
+}
+
+function describeMakeupService(service, title) {
+  if (title.includes("express")) {
+    return "Maquiagem express para o dia a dia, com acabamento leve e prático.";
+  }
+  if (title.includes("formatura")) {
+    return "Maquiagem para formatura com presença, durabilidade e acabamento fotográfico.";
+  }
+  if (title.includes("noiva")) {
+    return "Maquiagem para noiva com construção delicada, elegante e alinhada ao estilo pessoal.";
+  }
+  if (title.includes("social")) {
+    return "Maquiagem social para eventos, encontros e ocasiões especiais.";
+  }
+  return serviceCopyByCategory.Maquiagem;
+}
+
+function describeNailDesignService(service, title) {
+  if (title.includes("remocao")) {
+    return "Remoção técnica de acabamento artificial ou esmalte em gel, com cuidado das unhas naturais.";
+  }
+  if (title.includes("manutencao")) {
+    return "Manutenção de alongamento para preservar estrutura, acabamento e resistência.";
+  }
+  if (title.includes("acrilico")) {
+    return "Alongamento em acrílico com construção técnica e acabamento elegante.";
+  }
+  if (title.includes("fibra de vidro")) {
+    return "Alongamento em fibra de vidro com estrutura, naturalidade e acabamento refinado.";
+  }
+  if (title.includes("molde f1")) {
+    return "Alongamento com molde F1 para construção uniforme e acabamento polido.";
+  }
+  if (title.includes("tips")) {
+    return "Alongamento em tips com formato planejado e acabamento cuidadoso.";
+  }
+  if (title.includes("banho de gel")) {
+    return "Banho de gel para reforço, brilho e acabamento das unhas naturais.";
+  }
+  if (title.includes("blindagem")) {
+    return "Blindagem em gel para proteger e estruturar as unhas naturais.";
+  }
+  if (title.includes("unica")) {
+    return "Colocação de unha única para correção pontual e acabamento harmônico.";
+  }
+  if (title.includes("unha de gel")) {
+    return "Unha de gel com construção técnica, formato elegante e acabamento profissional.";
+  }
+  return serviceCopyByCategory["Nail Designer"];
+}
+
+function describePodologyService(service, title) {
+  if (title.includes("alta frequencia")) {
+    return "Aplicação de alta frequência dentro do atendimento de podologia.";
+  }
+  if (title.includes("assepsia")) {
+    return "Assepsia técnica com cuidado profissional e foco em higiene dos pés.";
+  }
+  if (title.includes("calosidade")) {
+    return "Atendimento para calosidade plantar com cuidado técnico e conforto.";
+  }
+  if (title.includes("ortese")) {
+    return "Manutenção de órtese com avaliação e ajuste durante o atendimento.";
+  }
+  return "Atendimento de podologia para cuidado técnico, conforto e bem-estar dos pés.";
+}
+
+function describeBrowsService(service, title) {
+  if (title.includes("brow lamination")) {
+    return "Brow lamination para alinhar os fios e valorizar o desenho natural das sobrancelhas.";
+  }
+  if (title.includes("cera fria")) {
+    return "Depilação de sobrancelhas com cera fria e acabamento cuidadoso.";
+  }
+  if (title.includes("pintura")) {
+    return "Pintura de sobrancelhas para realçar o olhar com acabamento equilibrado.";
+  }
+  if (title.includes("pinca")) {
+    return "Design de sobrancelhas na pinça, com precisão e acabamento natural.";
+  }
+  return serviceCopyByCategory.Sobrancelhas;
+}
+
+function describeSpaFeetService(service, title) {
+  if (title.includes("escalda")) {
+    return "Escalda-pés relaxante para pausa sensorial, conforto e cuidado dos pés.";
+  }
+  return "Spa dos pés aromático com óleo essencial, cuidado sensorial e momento de relaxamento.";
+}
 
 function formatDuration(minutes) {
   if (minutes < 60) return `${String(minutes).padStart(2, "0")}min`;
@@ -569,145 +902,30 @@ function formatPrice(price) {
   return `a partir de R$ ${price.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`;
 }
 
-const unsplashImage = (photoId, position = "center") =>
-  `https://images.unsplash.com/${photoId}?q=90&w=1100&h=1350&auto=format&fit=crop&crop=faces,edges&fm=webp&ixlib=rb-4.1.0&fp-y=${position}`;
-
-const serviceImageCollections = {
-  hairColor: [
-    unsplashImage("photo-1560066984-138dadb4c035", "0.42"),
-    unsplashImage("photo-1522337360788-8b13dee7a37e", "0.36"),
-    unsplashImage("photo-1595476108010-b4d1f102b1b1", "0.38"),
-    unsplashImage("photo-1527799820374-dcf8d9d4a388", "0.44")
-  ],
-  curlyHair: [
-    unsplashImage("photo-1519415510236-718bdfcd89c8", "0.34"),
-    unsplashImage("photo-1524504388940-b1c1722653e1", "0.35"),
-    unsplashImage("photo-1496440737103-cd596325d314", "0.33")
-  ],
-  hairTreatment: [
-    unsplashImage("photo-1522338242992-e1a54906a8da", "0.44"),
-    unsplashImage("photo-1521590832167-7bcbfaa6381f", "0.48"),
-    unsplashImage("photo-1596178065887-1198b6148b2b", "0.42"),
-    unsplashImage("photo-1516975080664-ed2fc6a32937", "0.36")
-  ],
-  hairStyling: [
-    unsplashImage("photo-1487412947147-5cebf100ffc2", "0.35"),
-    unsplashImage("photo-1487412912498-0447578fcca8", "0.36"),
-    unsplashImage("photo-1519699047748-de8e457a634e", "0.38"),
-    unsplashImage("photo-1509967419530-da38b4704bc6", "0.34")
-  ],
-  waxing: [
-    unsplashImage("photo-1570172619644-dfd03ed5d881", "0.45"),
-    unsplashImage("photo-1600334129128-685c5582fd35", "0.48"),
-    unsplashImage("photo-1540555700478-4be289fbecef", "0.42"),
-    unsplashImage("photo-1512290923902-8a9f81dc236c", "0.42")
-  ],
-  facial: [
-    unsplashImage("photo-1570172619644-dfd03ed5d881", "0.42"),
-    unsplashImage("photo-1512290923902-8a9f81dc236c", "0.42"),
-    unsplashImage("photo-1600334129128-685c5582fd35", "0.48"),
-    unsplashImage("photo-1596755389378-c31d21fd1273", "0.45")
-  ],
-  aesthetic: [
-    unsplashImage("photo-1556228720-195a672e8a03", "0.42"),
-    unsplashImage("photo-1570172619644-dfd03ed5d881", "0.44"),
-    unsplashImage("photo-1515377905703-c4788e51af15", "0.46")
-  ],
-  lashes: [
-    unsplashImage("photo-1522338242992-e1a54906a8da", "0.34"),
-    unsplashImage("photo-1512496015851-a90fb38ba796", "0.34"),
-    unsplashImage("photo-1487412947147-5cebf100ffc2", "0.34")
-  ],
-  manicure: [
-    unsplashImage("photo-1519014816548-bf5fe059798b", "0.43"),
-    unsplashImage("photo-1604654894610-df63bc536371", "0.43"),
-    unsplashImage("photo-1607779097040-26e80aa78e66", "0.44"),
-    unsplashImage("photo-1610992015732-2449b76344bc", "0.44")
-  ],
-  makeup: [
-    unsplashImage("photo-1487412947147-5cebf100ffc2", "0.34"),
-    unsplashImage("photo-1522338242992-e1a54906a8da", "0.34"),
-    unsplashImage("photo-1512496015851-a90fb38ba796", "0.35"),
-    unsplashImage("photo-1526045478516-99145907023c", "0.35")
-  ],
-  podology: [
-    unsplashImage("photo-1540555700478-4be289fbecef", "0.45"),
-    unsplashImage("photo-1515377905703-c4788e51af15", "0.44"),
-    unsplashImage("photo-1600334129128-685c5582fd35", "0.5"),
-    unsplashImage("photo-1521590832167-7bcbfaa6381f", "0.5")
-  ],
-  brows: [
-    unsplashImage("photo-1512496015851-a90fb38ba796", "0.34"),
-    unsplashImage("photo-1522338242992-e1a54906a8da", "0.35"),
-    unsplashImage("photo-1487412947147-5cebf100ffc2", "0.34")
-  ],
-  spaFeet: [
-    unsplashImage("photo-1540555700478-4be289fbecef", "0.45"),
-    unsplashImage("photo-1515377905703-c4788e51af15", "0.48"),
-    unsplashImage("photo-1521590832167-7bcbfaa6381f", "0.5")
-  ],
-  default: [
-    unsplashImage("photo-1522337360788-8b13dee7a37e", "0.38"),
-    unsplashImage("photo-1570172619644-dfd03ed5d881", "0.42"),
-    unsplashImage("photo-1519014816548-bf5fe059798b", "0.43")
-  ]
-};
-
-function selectServiceImage(service, collectionName, serviceIndex = 0) {
-  const collection = serviceImageCollections[collectionName] || serviceImageCollections.default;
-  const imageKey = `${service.id}-${service.category}-${service.title}`;
-  const hash = Array.from(imageKey).reduce((total, char) => total + char.charCodeAt(0), 0);
-  const index = (hash + serviceIndex) % collection.length;
-  return collection[index];
-}
-
-function getServiceImage(service, serviceIndex = 0) {
-  const title = service.title.toLowerCase();
-
-  if (title.includes("tintura") || title.includes("coloração") || title.includes("mechas") || title.includes("color")) {
-    return selectServiceImage(service, "hairColor", serviceIndex);
-  }
-  if (title.includes("crespo") || title.includes("cacheado")) {
-    return selectServiceImage(service, "curlyHair", serviceIndex);
-  }
-  if (title.includes("hidratação") || title.includes("tratamento") || title.includes("fusion") || title.includes("repair") || title.includes("metal") || title.includes("lavagem") || title.includes("higienização")) {
-    return selectServiceImage(service, "hairTreatment", serviceIndex);
-  }
-  if (title.includes("escova") || title.includes("penteado") || title.includes("corte")) {
-    return selectServiceImage(service, "hairStyling", serviceIndex);
-  }
-  if (title.includes("dermaplaning") || title.includes("hydra") || title.includes("limpeza de pele")) {
-    return selectServiceImage(service, "facial", serviceIndex);
-  }
-  if (title.includes("toxina") || title.includes("botox") || title.includes("pdo")) {
-    return selectServiceImage(service, "aesthetic", serviceIndex);
-  }
-  if (title.includes("alongamento") || title.includes("gel") || title.includes("tips") || title.includes("blindagem") || title.includes("unha") || title.includes("esmaltação") || title.includes("manicure") || title.includes("pedicure")) {
-    return selectServiceImage(service, "manicure", serviceIndex);
-  }
-  if (title.includes("podologia") || title.includes("calosidade") || title.includes("órtese") || title.includes("pés") || title.includes("escalda")) {
-    return selectServiceImage(service, service.category === "SPA para os Pés" ? "spaFeet" : "podology", serviceIndex);
-  }
-  if (title.includes("noiva") || title.includes("formatura") || title.includes("maquiagem")) {
-    return selectServiceImage(service, "makeup", serviceIndex);
-  }
-  if (title.includes("cílios") || title.includes("lash")) {
-    return selectServiceImage(service, "lashes", serviceIndex);
-  }
-  if (title.includes("sobrancelha") || title.includes("brow")) {
-    return selectServiceImage(service, "brows", serviceIndex);
-  }
-  if (service.category === "Depilação") {
-    return selectServiceImage(service, "waxing", serviceIndex);
-  }
-  if (service.category === "Mãos e Pés" || service.category === "Nail Designer") {
-    return selectServiceImage(service, "manicure", serviceIndex);
-  }
-  return selectServiceImage(service, "default", serviceIndex);
-}
-
 function getServiceDescription(service) {
+  const title = normalizeServiceText(service.title);
+
+  if (service.category === "Cabelo") return describeHairService(service, title);
+  if (service.category === "Depilação") return describeWaxingService(service, title);
+  if (service.category === "Estética Facial") return describeFacialService(service, title);
+  if (service.category === "Harmonização Facial") return describeHarmonizationService(service, title);
+  if (service.category === "Lash Designer") return describeLashService(service, title);
+  if (service.category === "Mãos e Pés") return describeHandsFeetService(service, title);
+  if (service.category === "Maquiagem") return describeMakeupService(service, title);
+  if (service.category === "Nail Designer") return describeNailDesignService(service, title);
+  if (service.category === "Podologia") return describePodologyService(service, title);
+  if (service.category === "Sobrancelhas") return describeBrowsService(service, title);
+  if (service.category === "SPA para os Pés") return describeSpaFeetService(service, title);
+
   return serviceCopyByCategory[service.category] || "Agende online seu atendimento no Espaço Gysa.";
+}
+
+function getServiceImage(service) {
+  return `/services/service-${service.id}.webp`;
+}
+
+function getServiceImageAlt(service) {
+  return `${service.category}: ${service.title} no Espaço Gysa`;
 }
 
 const services = rawServices.map((service, serviceIndex) => ({
@@ -717,7 +935,8 @@ const services = rawServices.map((service, serviceIndex) => ({
   priceLabel: formatPrice(service.price),
   link: `${bookingBaseUrl}/${service.id}`,
   cta: "Agendar online",
-  image: getServiceImage(service, serviceIndex)
+  image: getServiceImage(service, serviceIndex),
+  imageAlt: getServiceImageAlt(service)
 }));
 
 const categories = ["Todos", ...Array.from(new Set(services.map(service => service.category)))];
@@ -760,7 +979,7 @@ function renderSlides() {
     return `
       <div onclick="openServiceModal(${idx})" class="service-explorer-card-item animate-fade-up">
         <div class="explorer-card-bg-container">
-          <img src="${item.image}" alt="${item.title}" class="explorer-card-image" ${imageLoading} decoding="async">
+          <img src="${item.image}" alt="${item.imageAlt}" class="explorer-card-image" ${imageLoading} decoding="async">
           <div class="explorer-card-overlay"></div>
         </div>
         <div class="explorer-card-badge">
@@ -866,7 +1085,7 @@ function renderModalDetails() {
   const modalCta = document.getElementById("modal-booking-cta");
   
   if (modalImage) modalImage.src = item.image;
-  if (modalImage) modalImage.alt = item.title;
+  if (modalImage) modalImage.alt = item.imageAlt;
   if (modalCategory) modalCategory.innerHTML = `<span class="text-rose-400">✦</span> ${item.category}`;
   if (modalTitle) modalTitle.innerText = item.title;
   if (modalDesc) modalDesc.innerText = item.desc;
@@ -886,6 +1105,7 @@ function renderModalDetails() {
 let activeStoryIndex = 0;
 let storyTimer = null;
 let isStoryPaused = false;
+let isStoryMuted = false;
 let storyCurrentDuration = 8000;
 let storyTimerElapsed = 0;
 let storyTimerLastTick = 0;
@@ -900,8 +1120,7 @@ const storyInstagramLinks = [
   "https://www.instagram.com/reel/DagDg1yRdZ7/" // Reels do Ambiente
 ];
 
-const instagramEmbedStoryIndexes = new Set([0, 2]);
-const storyDurations = [18000, 23000, 18000, 8000, 8000, 18000];
+const storyDurations = [40000, 23000, 40000, 8000, 8000, 18000];
 
 function getStoryCount() {
   return document.querySelectorAll(".story-slide").length;
@@ -911,18 +1130,28 @@ function getActiveStoryVideo() {
   return document.querySelector(`#story-slide-${activeStoryIndex} .story-video-player`);
 }
 
-function processInstagramEmbeds() {
-  if (window.instgrm?.Embeds?.process) {
-    window.instgrm.Embeds.process();
-  }
+function applyStoryAudioState() {
+  document.querySelectorAll(".story-video-player").forEach((video) => {
+    video.muted = isStoryMuted;
+    video.volume = isStoryMuted ? 0 : 1;
+  });
 }
 
-function updateStoryEmbedMode() {
-  const modal = document.getElementById("story-modal");
-  modal?.classList.toggle("embed-active", instagramEmbedStoryIndexes.has(activeStoryIndex));
-  if (instagramEmbedStoryIndexes.has(activeStoryIndex)) {
-    window.setTimeout(processInstagramEmbeds, 60);
-  }
+function playActiveStoryVideo() {
+  const activeVideo = getActiveStoryVideo();
+  if (!activeVideo || isStoryPaused) return;
+
+  activeVideo.muted = isStoryMuted;
+  activeVideo.volume = isStoryMuted ? 0 : 1;
+  activeVideo.play().catch((err) => {
+    if (!isStoryMuted) {
+      isStoryMuted = true;
+      applyStoryAudioState();
+      updateSoundUI();
+      activeVideo.play().catch(() => {});
+      return;
+    }
+  });
 }
 
 function updateStoryVideos() {
@@ -931,10 +1160,8 @@ function updateStoryVideos() {
     video.currentTime = 0;
   });
 
-  const activeVideo = getActiveStoryVideo();
-  if (!isStoryPaused) {
-    activeVideo?.play().catch(err => console.log("Video playback blocked:", err));
-  }
+  applyStoryAudioState();
+  playActiveStoryVideo();
 }
 
 function updatePlayPauseUI() {
@@ -954,21 +1181,49 @@ function updatePlayPauseUI() {
   }
 }
 
-window.toggleStoryPlay = function() {
+function updateSoundUI() {
+  const btn = document.getElementById("story-sound-btn");
+  if (!btn) return;
+  const iconVolumeOff = btn.querySelector(".icon-volume-off");
+  const iconVolumeOn = btn.querySelector(".icon-volume-on");
+
+  if (isStoryMuted) {
+    if (iconVolumeOff) iconVolumeOff.style.display = "block";
+    if (iconVolumeOn) iconVolumeOn.style.display = "none";
+    btn.classList.remove("is-sound-on");
+    btn.setAttribute("aria-label", "Ativar som do Story");
+  } else {
+    if (iconVolumeOff) iconVolumeOff.style.display = "none";
+    if (iconVolumeOn) iconVolumeOn.style.display = "block";
+    btn.classList.add("is-sound-on");
+    btn.setAttribute("aria-label", "Silenciar Story");
+  }
+}
+
+function toggleStorySound(event) {
+  if (event) event.stopPropagation();
+  isStoryMuted = !isStoryMuted;
+  applyStoryAudioState();
+  updateSoundUI();
+  playActiveStoryVideo();
+}
+
+function toggleStoryPlay() {
   isStoryPaused = !isStoryPaused;
   updatePlayPauseUI();
 
   const activeVideo = getActiveStoryVideo();
   if (activeVideo) {
     if (isStoryPaused) activeVideo.pause();
-    else activeVideo.play().catch(err => console.log(err));
+    else playActiveStoryVideo();
   }
-};
+}
 
-window.openStory = function(index, event) {
+function openStory(index, event) {
   if (event) event.stopPropagation();
   activeStoryIndex = index;
   isStoryPaused = false;
+  isStoryMuted = false;
   
   const modal = document.getElementById("story-modal");
   if (!modal) return;
@@ -980,15 +1235,16 @@ window.openStory = function(index, event) {
     instaLinkBtn.href = storyInstagramLinks[activeStoryIndex];
   }
 
+  updateSoundUI();
   updateStoryVideos();
   updateStorySlides();
   resetStoryProgress();
   startStoryTimer();
-};
+}
 
-window.closeStory = function() {
+function closeStory() {
   const modal = document.getElementById("story-modal");
-  if (modal) modal.classList.remove("active", "embed-active");
+  if (modal) modal.classList.remove("active");
   
   isStoryPaused = false;
 
@@ -998,9 +1254,9 @@ window.closeStory = function() {
     clearInterval(storyTimer);
     storyTimer = null;
   }
-};
+}
 
-window.nextStory = function() {
+function nextStory() {
   if (activeStoryIndex < getStoryCount() - 1) {
     activeStoryIndex++;
     isStoryPaused = false;
@@ -1019,9 +1275,9 @@ window.nextStory = function() {
   } else {
     closeStory();
   }
-};
+}
 
-window.prevStory = function() {
+function prevStory() {
   if (activeStoryIndex > 0) {
     activeStoryIndex--;
     isStoryPaused = false;
@@ -1037,7 +1293,7 @@ window.prevStory = function() {
     resetStoryProgress();
     startStoryTimer();
   }
-};
+}
 
 function updateStorySlides() {
   const slides = document.querySelectorAll(".story-slide");
@@ -1049,8 +1305,6 @@ function updateStorySlides() {
     }
   });
 
-  updateStoryEmbedMode();
-  
   // Preenche barras anteriores e limpa posteriores
   const fills = document.querySelectorAll(".story-progress-fill");
   fills.forEach((fill, idx) => {
@@ -1073,6 +1327,7 @@ function startStoryTimer() {
   if (storyTimer) clearInterval(storyTimer);
   isStoryPaused = false;
   updatePlayPauseUI();
+  updateSoundUI();
   
   storyCurrentDuration = storyDurations[activeStoryIndex] || 8000;
   storyTimerElapsed = 0;
@@ -1111,6 +1366,10 @@ function runStoryTick() {
 // Binda métodos no escopo global para onclick no HTML
 window.nextStory = nextStory;
 window.prevStory = prevStory;
+window.openStory = openStory;
+window.closeStory = closeStory;
+window.toggleStoryPlay = toggleStoryPlay;
+window.toggleStorySound = toggleStorySound;
 window.selectCategory = selectCategory;
 window.goToSlide = goToSlide;
 window.openServiceModal = openServiceModal;
