@@ -204,6 +204,32 @@ body.is-warp-active .vanta-container {
   will-change: transform, opacity;
 }
 
+.text-slide:not(.is-interactive-slide):not(.is-hover-rescued) a,
+.text-slide:not(.is-interactive-slide):not(.is-hover-rescued) button,
+.text-slide:not(.is-interactive-slide):not(.is-hover-rescued) iframe,
+.text-slide:not(.is-interactive-slide):not(.is-hover-rescued) [onclick],
+.text-slide:not(.is-interactive-slide):not(.is-hover-rescued) [role="button"] {
+  pointer-events: none !important;
+}
+
+.text-slide:not(.is-interactive-slide):not(.is-hover-rescued) .slide-body,
+.text-slide:not(.is-interactive-slide):not(.is-hover-rescued) .instagram-preview-card,
+.text-slide:not(.is-interactive-slide):not(.is-hover-rescued) .instagram-widget-card {
+  pointer-events: none !important;
+}
+
+.text-slide.is-interactive-slide a,
+.text-slide.is-interactive-slide button,
+.text-slide.is-interactive-slide iframe,
+.text-slide.is-interactive-slide [onclick],
+.text-slide.is-interactive-slide [role="button"],
+.text-slide.is-hover-rescued a,
+.text-slide.is-hover-rescued button,
+.text-slide.is-hover-rescued [onclick],
+.text-slide.is-hover-rescued [role="button"] {
+  pointer-events: auto;
+}
+
 .slide-body {
   width: 100%;
   max-width: 650px;
@@ -893,6 +919,17 @@ body.side-menu-open .side-menu-backdrop {
   pointer-events: auto;
 }
 
+.text-slide.hover-rescue-candidate .sobre-grid a,
+.text-slide.hover-rescue-candidate .sobre-grid button,
+.text-slide.hover-rescue-candidate .sobre-grid [onclick],
+.text-slide.hover-rescue-candidate .sobre-grid [role="button"],
+.text-slide.hover-rescue-candidate .pilares-grid a,
+.text-slide.hover-rescue-candidate .pilares-grid button,
+.text-slide.hover-rescue-candidate .pilares-grid [onclick],
+.text-slide.hover-rescue-candidate .pilares-grid [role="button"] {
+  pointer-events: auto;
+}
+
 .text-slide.is-hover-rescued {
   opacity: 1 !important;
   visibility: visible !important;
@@ -1320,6 +1357,17 @@ body.side-menu-open .side-menu-backdrop {
   height: 100% !important;
   min-height: 500px;
   border: 0 !important;
+}
+
+body:not(.instagram-feed-active) .instagram-embed-shell,
+body:not(.instagram-feed-active) .instagram-embed-shell *,
+body:not(.instagram-feed-active) .elfsight-app-2dd7f188-0c2d-48e4-a066-e989c659f448,
+body:not(.instagram-feed-active) .elfsight-app-2dd7f188-0c2d-48e4-a066-e989c659f448 *,
+body:not(.instagram-feed-active) [class*="eapps-instagram"],
+body:not(.instagram-feed-active) [class*="eapps-instagram"] *,
+body:not(.instagram-feed-active) [id*="eapps-instagram"],
+body:not(.instagram-feed-active) [id*="eapps-instagram"] * {
+  pointer-events: none !important;
 }
 
 .instagram-live-frame {

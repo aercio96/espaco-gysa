@@ -322,6 +322,46 @@ function initAnimations() {
     { element: document.getElementById("slide-pilares"), targetSelector: ".pilares-grid", start: timelinePoints.pilaresIn, end: timelinePoints.pilaresOff }
   ].filter(({ element }) => Boolean(element));
 
+  const slideInteractionWindows = [
+    { id: "slide-despertar", start: 0, end: 0.105 },
+    { id: "slide-manifesto", start: 0.145, end: 0.245 },
+    { id: "slide-sobre", start: timelinePoints.sobreIn, end: timelinePoints.sobreOff },
+    { id: "slide-pilares", start: timelinePoints.pilaresIn, end: timelinePoints.pilaresOff },
+    { id: "slide-atmosfera", start: timelinePoints.servicesIn, end: timelinePoints.servicesOut },
+    { id: "slide-galeria", start: timelinePoints.galleryIn, end: timelinePoints.galleryOut },
+    { id: "slide-reviews", start: reviewsInPoint, end: isMobileTimeline ? reviewsOutPoint : 1 },
+    { id: "slide-convite", start: finalInPoint, end: 1 }
+  ]
+    .map((item) => ({ ...item, element: document.getElementById(item.id) }))
+    .filter(({ element }) => Boolean(element));
+
+  function updateInteractiveSlides(progress) {
+    slideInteractionWindows.forEach(({ element, start, end }) => {
+      const isInteractive = progress >= start && progress <= end;
+      element.classList.toggle("is-interactive-slide", isInteractive);
+    });
+
+    const instagramFeedActive = progress >= timelinePoints.galleryIn && progress <= timelinePoints.galleryOut;
+    document.body.classList.toggle("instagram-feed-active", instagramFeedActive);
+  }
+
+  const instagramWidgetSelector = [
+    ".instagram-preview-card",
+    ".instagram-widget-card",
+    ".instagram-embed-shell",
+    ".elfsight-app-2dd7f188-0c2d-48e4-a066-e989c659f448",
+    "[class*='eapps-instagram']",
+    "[id*='eapps-instagram']"
+  ].join(",");
+
+  document.addEventListener("click", (event) => {
+    if (document.body.classList.contains("instagram-feed-active")) return;
+    if (!event.target.closest?.(instagramWidgetSelector)) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+  }, true);
+
   hoverRescueSlides.forEach(({ element, targetSelector }) => {
     const rescueTarget = element.querySelector(targetSelector) || element.querySelector(".slide-body") || element;
 
@@ -468,10 +508,12 @@ function initAnimations() {
   // Controla dinamicamente o background leve de transição.
   mainTimeline.eventCallback("onUpdate", () => {
     const progress = mainTimeline.progress();
+    updateInteractiveSlides(progress);
     updateHoverRescueCandidates(progress);
     updateWhatsAppPromptVisibility(progress);
     updateWarpBackgroundVisibility(progress);
   });
+  updateInteractiveSlides(0);
   updateHoverRescueCandidates(0);
   updateWhatsAppPromptVisibility(0);
   updateWarpBackgroundVisibility(0);
