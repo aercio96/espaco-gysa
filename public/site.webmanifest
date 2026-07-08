@@ -1,0 +1,23 @@
+{
+  "name": "Espaco Gysa",
+  "short_name": "Espaco Gysa",
+  "description": "Salao de beleza e bem-estar em Brasilia/DF.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#2a121b",
+  "theme_color": "#8C4558",
+  "icons": [
+    {
+      "src": "/logo/715079342_18105654004890053_2049181529465052405_n-removebg-preview.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo/715079342_18105654004890053_2049181529465052405_n-removebg-preview.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

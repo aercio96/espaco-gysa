@@ -18,17 +18,18 @@ function tuneCanvasQuality() {
 tuneCanvasQuality();
 
 // Configurações da sequência de frames
-const frameCount = 286;
-const getFramePath = (index) => `/frames/frame_${index.toString().padStart(4, "0")}.jpg`;
+const frameCount = 568;
+const frameBasePath = isMobileDevice() ? "frames60" : "frames60hd";
+const getFramePath = (index) => `/${frameBasePath}/frame_${index.toString().padStart(4, "0")}.jpg`;
 
 // Pré-carregamento de Imagens
 const images = new Array(frameCount);
 const frameLoadState = new Array(frameCount).fill("idle");
 const airplay = { frame: 0 };
-const initialFramePreload = isMobileDevice() ? 34 : 48;
-const framePreloadBatchSize = isMobileDevice() ? 20 : 32;
-const framePreloadConcurrency = isMobileDevice() ? 5 : 8;
-const frameLookAhead = isMobileDevice() ? 8 : 12;
+const initialFramePreload = isMobileDevice() ? 72 : 96;
+const framePreloadBatchSize = isMobileDevice() ? 32 : 48;
+const framePreloadConcurrency = isMobileDevice() ? 6 : 10;
+const frameLookAhead = isMobileDevice() ? 18 : 28;
 
 let loadedImagesCount = 0;
 let isLoaded = false;
@@ -240,8 +241,8 @@ function initAnimations() {
   const sideMenu = document.getElementById("side-menu");
   const isMobileTimeline = isMobileDevice();
   const sceneProgressMap = isMobileTimeline
-    ? [0, 0.16, 0.31, 0.49, 0.65, 0.75, 0.84, 0.90]
-    : [0, 0.16, 0.31, 0.49, 0.65, 0.75, 0.84, 0.84];
+    ? [0, 0.16, 0.31, 0.49, 0.67, 0.835, 0.878, 0.94]
+    : [0, 0.16, 0.31, 0.49, 0.66, 0.84, 0.895, 0.895];
 
   window.toggleSideMenu = function toggleSideMenu(open = true) {
     document.body.classList.toggle("side-menu-open", open);
@@ -280,10 +281,15 @@ function initAnimations() {
     });
   }
 
-  const servicesInPoint = isMobileTimeline ? 0.615 : 0.60;
-  const reviewsInPoint = 0.84;
-  const reviewsOutPoint = 0.875;
-  const finalInPoint = isMobileTimeline ? 0.90 : 0.84;
+  const backgroundInPoint = isMobileTimeline ? 0.592 : 0.578;
+  const backgroundReadyPoint = isMobileTimeline ? 0.615 : 0.602;
+  const servicesInPoint = isMobileTimeline ? 0.622 : 0.61;
+  const servicesOutPoint = isMobileTimeline ? 0.805 : 0.80;
+  const galleryInPoint = isMobileTimeline ? 0.835 : 0.83;
+  const galleryOutPoint = isMobileTimeline ? 0.858 : 0.872;
+  const reviewsInPoint = isMobileTimeline ? 0.868 : 0.89;
+  const reviewsOutPoint = isMobileTimeline ? 0.905 : 0.918;
+  const finalInPoint = isMobileTimeline ? 0.922 : 0.89;
   const timelinePoints = {
     sobreIn: isMobileTimeline ? 0.33 : 0.29,
     sobreOut: isMobileTimeline ? 0.42 : 0.37,
@@ -292,26 +298,26 @@ function initAnimations() {
     pilaresOut: isMobileTimeline ? 0.555 : 0.54,
     pilaresOff: 0.60,
     servicesIn: servicesInPoint,
-    vantaIn: servicesInPoint,
-    videoOut: servicesInPoint + 0.012
+    servicesOut: servicesOutPoint,
+    galleryIn: galleryInPoint,
+    galleryOut: galleryOutPoint,
+    vantaIn: backgroundInPoint,
+    backgroundReady: backgroundReadyPoint,
+    videoOut: backgroundInPoint
   };
 
   const hoverRescueSlides = [
-    { element: document.getElementById("slide-despertar"), start: 0.00, end: 0.15 },
-    { element: document.getElementById("slide-manifesto"), start: 0.15, end: 0.29 },
-    { element: document.getElementById("slide-sobre"), start: timelinePoints.sobreIn, end: timelinePoints.pilaresIn },
-    { element: document.getElementById("slide-pilares"), start: timelinePoints.pilaresIn, end: timelinePoints.pilaresOff },
-    { element: document.getElementById("slide-atmosfera"), start: timelinePoints.servicesIn, end: 0.75 },
-    { element: document.getElementById("slide-galeria"), start: 0.75, end: reviewsInPoint },
-    ...(isMobileTimeline ? [{ element: document.getElementById("slide-reviews"), start: reviewsInPoint, end: finalInPoint }] : []),
-    { element: document.getElementById("slide-convite"), start: finalInPoint, end: 1.00 }
+    { element: document.getElementById("slide-sobre"), targetSelector: ".sobre-grid", start: timelinePoints.sobreIn, end: timelinePoints.sobreOff },
+    { element: document.getElementById("slide-pilares"), targetSelector: ".pilares-grid", start: timelinePoints.pilaresIn, end: timelinePoints.pilaresOff }
   ].filter(({ element }) => Boolean(element));
 
-  hoverRescueSlides.forEach(({ element }) => {
-    const rescueTarget = element.querySelector(".slide-body") || element;
+  hoverRescueSlides.forEach(({ element, targetSelector }) => {
+    const rescueTarget = element.querySelector(targetSelector) || element.querySelector(".slide-body") || element;
 
     rescueTarget.addEventListener("mouseenter", () => {
-      element.classList.add("is-hover-rescued");
+      if (element.classList.contains("hover-rescue-candidate")) {
+        element.classList.add("is-hover-rescued");
+      }
     });
 
     rescueTarget.addEventListener("mouseleave", () => {
@@ -319,7 +325,9 @@ function initAnimations() {
     });
 
     rescueTarget.addEventListener("focusin", () => {
-      element.classList.add("is-hover-rescued");
+      if (element.classList.contains("hover-rescue-candidate")) {
+        element.classList.add("is-hover-rescued");
+      }
     });
 
     rescueTarget.addEventListener("focusout", () => {
@@ -446,12 +454,18 @@ function initAnimations() {
       trigger: ".scroll-tracker",
       start: "top top",
       end: "bottom bottom",
-      scrub: 0.68 // Suavização do scroll para uma experiência mais fluida
+      scrub: true // Sincroniza exatamente com o scroll e evita slides atrasados/sobrepostos.
     }
   });
 
   function updateWarpBackgroundVisibility(progress) {
-    document.body.classList.toggle("is-warp-active", progress >= timelinePoints.vantaIn);
+    const warpActive = progress >= timelinePoints.vantaIn;
+    document.body.classList.toggle("is-warp-active", warpActive);
+    const vantaLayer = document.getElementById("vanta-bg");
+    const videoLayer = document.querySelector(".video-container");
+    if (vantaLayer) {
+      vantaLayer.style.visibility = warpActive ? "visible" : "";
+    }
   }
 
   // Controla dinamicamente o background leve de transição.
@@ -471,7 +485,7 @@ function initAnimations() {
               .call(setActiveIndicator, [2], timelinePoints.sobreIn)
               .call(setActiveIndicator, [3], timelinePoints.pilaresIn)
               .call(setActiveIndicator, [4], timelinePoints.servicesIn)
-              .call(setActiveIndicator, [5], 0.75)
+              .call(setActiveIndicator, [5], timelinePoints.galleryIn)
               .call(setActiveIndicator, [6], reviewsInPoint)
               .call(setActiveIndicator, [7], finalInPoint);
 
@@ -514,32 +528,34 @@ function initAnimations() {
               .set("#slide-pilares", { pointerEvents: "none" }, timelinePoints.pilaresOff);
 
   // Transição do vídeo para o background CSS leve
-  mainTimeline.to("#vanta-bg", { opacity: 1, autoAlpha: 1, duration: 0.12, ease: "power2.inOut" }, timelinePoints.vantaIn)
-              .to(".video-container", { opacity: 0, duration: 0.14, ease: "power2.inOut" }, timelinePoints.videoOut);
+  mainTimeline.to("#vanta-bg", { opacity: 1, autoAlpha: 1, duration: timelinePoints.backgroundReady - timelinePoints.vantaIn, ease: "power2.inOut" }, timelinePoints.vantaIn)
+              .to(".video-container", { opacity: 0, duration: timelinePoints.backgroundReady - timelinePoints.videoOut, ease: "power2.inOut" }, timelinePoints.videoOut);
 
   // Slide 5 (Atmosfera Gysa - Nuvem Background) surge e desaparece
-  mainTimeline.to("#slide-atmosfera", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.06 }, timelinePoints.servicesIn)
-              .to("#slide-atmosfera .slide-body", { y: 0, duration: 0.06 }, timelinePoints.servicesIn)
-              .to("#slide-atmosfera", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.06 }, 0.69)
-              .to("#slide-atmosfera .slide-body", { y: -40, duration: 0.06 }, 0.69);
+  mainTimeline.to("#slide-atmosfera", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.025 }, timelinePoints.servicesIn)
+              .to("#slide-atmosfera .slide-body", { y: 0, duration: 0.025 }, timelinePoints.servicesIn)
+              .to("#slide-atmosfera", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.025 }, timelinePoints.servicesOut)
+              .to("#slide-atmosfera .slide-body", { y: -40, duration: 0.025 }, timelinePoints.servicesOut);
 
   // Slide 6 (Galeria) surge e desaparece
-  mainTimeline.to("#slide-galeria", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.06 }, 0.75)
-              .to("#slide-galeria .slide-body", { y: 0, duration: 0.06 }, 0.75)
-              .to("#slide-galeria", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.06 }, 0.82)
-              .to("#slide-galeria .slide-body", { y: -40, duration: 0.06 }, 0.82);
+  mainTimeline.to("#slide-galeria", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.03 }, timelinePoints.galleryIn)
+              .to("#slide-galeria .slide-body", { y: 0, duration: 0.03 }, timelinePoints.galleryIn)
+              .to("#slide-galeria", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.025 }, timelinePoints.galleryOut)
+              .to("#slide-galeria .slide-body", { y: -40, duration: 0.025 }, timelinePoints.galleryOut);
 
   // Slide 7 (Reviews Google) surge e desaparece
   if (isMobileTimeline) {
-    mainTimeline.to("#slide-reviews", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.06 }, reviewsInPoint)
-                .to("#slide-reviews .slide-body", { y: 0, duration: 0.06 }, reviewsInPoint)
-                .to("#slide-reviews", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.05 }, reviewsOutPoint)
-                .to("#slide-reviews .slide-body", { y: -40, duration: 0.05 }, reviewsOutPoint);
+    mainTimeline.to("#slide-reviews", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.03 }, reviewsInPoint)
+                .to("#slide-reviews .slide-body", { y: 0, duration: 0.03 }, reviewsInPoint)
+                .to("#slide-reviews", { opacity: 0, autoAlpha: 0, pointerEvents: "none", duration: 0.025 }, reviewsOutPoint)
+                .to("#slide-reviews .slide-body", { y: -40, duration: 0.025 }, reviewsOutPoint);
   }
 
   // Slide 8 (Convite/Rodapé - Background leve) surge e permanece ativo
-  mainTimeline.to("#slide-convite", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.06 }, finalInPoint)
-              .to("#slide-convite .slide-body", { y: 0, duration: 0.06 }, finalInPoint);
+  mainTimeline.to("#slide-convite", { opacity: 1, autoAlpha: 1, pointerEvents: "auto", duration: 0.03 }, finalInPoint)
+              .to("#slide-convite .slide-body", { y: 0, duration: 0.03 }, finalInPoint);
+
+  mainTimeline.call(() => {}, [], 1.0);
 
   // Inicializa o painel explorador de serviços
   renderTabs();
