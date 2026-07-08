@@ -269,8 +269,13 @@ function initAnimations() {
   }
 
   const hoverRescueSlides = [
+    { element: document.getElementById("slide-despertar"), start: 0.00, end: 0.15 },
+    { element: document.getElementById("slide-manifesto"), start: 0.15, end: 0.29 },
     { element: document.getElementById("slide-sobre"), start: 0.29, end: 0.47 },
-    { element: document.getElementById("slide-pilares"), start: 0.47, end: 0.62 }
+    { element: document.getElementById("slide-pilares"), start: 0.47, end: 0.62 },
+    { element: document.getElementById("slide-atmosfera"), start: 0.60, end: 0.75 },
+    { element: document.getElementById("slide-galeria"), start: 0.75, end: 0.90 },
+    { element: document.getElementById("slide-convite"), start: 0.90, end: 1.00 }
   ].filter(({ element }) => Boolean(element));
 
   hoverRescueSlides.forEach(({ element }) => {
@@ -887,39 +892,48 @@ let storyTimerLastTick = 0;
 
 // Mapeamento dos links reais de posts do Instagram do cliente correspondentes
 const storyInstagramLinks = [
-  "https://www.instagram.com/p/DadMNxkMVON/", // Inauguração
+  "https://www.instagram.com/reel/DadMNxkMVON/", // Inauguração
   "https://www.instagram.com/espacogysadf/",  // Localização
-  "https://www.instagram.com/espacogysadf/",  // Essência
+  "https://www.instagram.com/reel/DaFy4SNRjEJ/",  // Essência
   "https://www.instagram.com/espacogysadf/",  // Equipe
   "https://www.instagram.com/espacogysadf/",  // Produtos
   "https://www.instagram.com/reel/DagDg1yRdZ7/" // Reels do Ambiente
 ];
 
+const instagramEmbedStoryIndexes = new Set([0, 2]);
+const storyDurations = [18000, 23000, 18000, 8000, 8000, 18000];
+
 function getStoryCount() {
   return document.querySelectorAll(".story-slide").length;
 }
 
+function getActiveStoryVideo() {
+  return document.querySelector(`#story-slide-${activeStoryIndex} .story-video-player`);
+}
+
+function processInstagramEmbeds() {
+  if (window.instgrm?.Embeds?.process) {
+    window.instgrm.Embeds.process();
+  }
+}
+
+function updateStoryEmbedMode() {
+  const modal = document.getElementById("story-modal");
+  modal?.classList.toggle("embed-active", instagramEmbedStoryIndexes.has(activeStoryIndex));
+  if (instagramEmbedStoryIndexes.has(activeStoryIndex)) {
+    window.setTimeout(processInstagramEmbeds, 60);
+  }
+}
+
 function updateStoryVideos() {
-  const video0 = document.getElementById("story-video-0");
-  const video5 = document.getElementById("story-video-5");
+  document.querySelectorAll(".story-video-player").forEach((video) => {
+    video.pause();
+    video.currentTime = 0;
+  });
 
-  // Pausa ambos e reinicia
-  if (video0) {
-    video0.pause();
-    video0.currentTime = 0;
-  }
-  if (video5) {
-    video5.pause();
-    video5.currentTime = 0;
-  }
-
-  // Reproduz o vídeo ativo se for o slide correspondente
+  const activeVideo = getActiveStoryVideo();
   if (!isStoryPaused) {
-    if (activeStoryIndex === 0 && video0) {
-      video0.play().catch(err => console.log("Video playback blocked:", err));
-    } else if (activeStoryIndex === 5 && video5) {
-      video5.play().catch(err => console.log("Video playback blocked:", err));
-    }
+    activeVideo?.play().catch(err => console.log("Video playback blocked:", err));
   }
 }
 
@@ -944,15 +958,10 @@ window.toggleStoryPlay = function() {
   isStoryPaused = !isStoryPaused;
   updatePlayPauseUI();
 
-  const video0 = document.getElementById("story-video-0");
-  const video5 = document.getElementById("story-video-5");
-
-  if (activeStoryIndex === 0 && video0) {
-    if (isStoryPaused) video0.pause();
-    else video0.play().catch(err => console.log(err));
-  } else if (activeStoryIndex === 5 && video5) {
-    if (isStoryPaused) video5.pause();
-    else video5.play().catch(err => console.log(err));
+  const activeVideo = getActiveStoryVideo();
+  if (activeVideo) {
+    if (isStoryPaused) activeVideo.pause();
+    else activeVideo.play().catch(err => console.log(err));
   }
 };
 
@@ -979,15 +988,11 @@ window.openStory = function(index, event) {
 
 window.closeStory = function() {
   const modal = document.getElementById("story-modal");
-  if (modal) modal.classList.remove("active");
+  if (modal) modal.classList.remove("active", "embed-active");
   
   isStoryPaused = false;
 
-  // Pausa todos os vídeos
-  const video0 = document.getElementById("story-video-0");
-  const video5 = document.getElementById("story-video-5");
-  if (video0) video0.pause();
-  if (video5) video5.pause();
+  document.querySelectorAll(".story-video-player").forEach((video) => video.pause());
   
   if (storyTimer) {
     clearInterval(storyTimer);
@@ -1043,6 +1048,8 @@ function updateStorySlides() {
       slide.classList.remove("active");
     }
   });
+
+  updateStoryEmbedMode();
   
   // Preenche barras anteriores e limpa posteriores
   const fills = document.querySelectorAll(".story-progress-fill");
@@ -1067,8 +1074,7 @@ function startStoryTimer() {
   isStoryPaused = false;
   updatePlayPauseUI();
   
-  const isVideoStory = activeStoryIndex === 0 || activeStoryIndex === getStoryCount() - 1;
-  storyCurrentDuration = isVideoStory ? 18000 : 8000;
+  storyCurrentDuration = storyDurations[activeStoryIndex] || 8000;
   storyTimerElapsed = 0;
   storyTimerLastTick = Date.now();
   

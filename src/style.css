@@ -454,6 +454,56 @@ body.side-menu-open .side-menu-backdrop {
   text-shadow: 0 2px 10px rgba(0,0,0,0.6);
 }
 
+.hero-location-signature {
+  position: absolute;
+  left: clamp(1.5rem, 7vw, 8rem);
+  bottom: clamp(4.8rem, 11vh, 7.5rem);
+  z-index: 103;
+  display: grid;
+  gap: 0.36rem;
+  padding-left: 1.05rem;
+  color: rgba(255, 255, 255, 0.92);
+  text-align: left;
+  pointer-events: none;
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
+}
+
+.hero-location-signature::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.12rem;
+  bottom: 0.08rem;
+  width: 1px;
+  background: linear-gradient(to bottom, rgba(191, 168, 126, 0), rgba(191, 168, 126, 0.95), rgba(191, 168, 126, 0));
+  box-shadow: 0 0 16px rgba(191, 168, 126, 0.48);
+}
+
+.hero-location-signature::after {
+  content: '';
+  width: 4.2rem;
+  height: 1px;
+  margin-top: 0.18rem;
+  background: rgba(191, 168, 126, 0.72);
+  box-shadow: 0 0 12px rgba(191, 168, 126, 0.38);
+}
+
+.hero-location-signature span {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  color: rgba(191, 168, 126, 0.92);
+}
+
+.hero-location-signature strong {
+  font-family: var(--font-title);
+  font-size: clamp(1.35rem, 2vw, 2.05rem);
+  font-weight: 400;
+  line-height: 1;
+  color: #fff;
+}
+
 .hero-whatsapp-popover {
   position: fixed;
   right: clamp(5.4rem, 8vw, 7.4rem);
@@ -603,6 +653,21 @@ body.side-menu-open .side-menu-backdrop {
 }
 
 @media (max-width: 768px) {
+  .hero-location-signature {
+    left: 1rem;
+    bottom: 1.25rem;
+    padding-left: 0.8rem;
+  }
+
+  .hero-location-signature span {
+    font-size: 0.56rem;
+    letter-spacing: 0.28em;
+  }
+
+  .hero-location-signature strong {
+    font-size: 1.15rem;
+  }
+
   .hero-whatsapp-popover {
     right: 1rem;
     bottom: 5.8rem;
@@ -638,6 +703,12 @@ body.side-menu-open .side-menu-backdrop {
     margin: 0 0.72rem 0.72rem;
     padding: 0.42rem 0.68rem;
     font-size: 0.58rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-location-signature {
+    display: none;
   }
 }
 
@@ -748,27 +819,23 @@ body.side-menu-open .side-menu-backdrop {
   text-shadow: 0 0 15px rgba(191, 168, 126, 0.4);
 }
 
-#slide-sobre.hover-rescue-candidate,
-#slide-pilares.hover-rescue-candidate {
+.text-slide.hover-rescue-candidate {
   visibility: visible !important;
   pointer-events: auto !important;
 }
 
-#slide-sobre.hover-rescue-candidate .slide-body,
-#slide-pilares.hover-rescue-candidate .slide-body {
+.text-slide.hover-rescue-candidate .slide-body {
   pointer-events: auto;
 }
 
-#slide-sobre.is-hover-rescued,
-#slide-pilares.is-hover-rescued {
+.text-slide.is-hover-rescued {
   opacity: 1 !important;
   visibility: visible !important;
   pointer-events: auto !important;
   z-index: 24;
 }
 
-#slide-sobre.is-hover-rescued .slide-body,
-#slide-pilares.is-hover-rescued .slide-body {
+.text-slide.is-hover-rescued .slide-body {
   transform: translate3d(0, 0, 0) !important;
   transition: transform 0.22s ease;
 }
@@ -2586,6 +2653,65 @@ body.side-menu-open .side-menu-backdrop {
   height: 100%;
   border: 0;
   background: #fff;
+}
+
+.story-instagram-embed {
+  width: 100%;
+  height: 100%;
+  padding: 3.8rem 0.65rem 1rem;
+  overflow-y: auto;
+  background: #fff;
+  scrollbar-width: none;
+}
+
+.story-instagram-embed::-webkit-scrollbar {
+  display: none;
+}
+
+.story-instagram-embed .instagram-media {
+  min-width: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 auto !important;
+  border-radius: 16px !important;
+}
+
+.story-video-shell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+}
+
+.story-video-shell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.82), transparent 46%, rgba(0, 0, 0, 0.18));
+  pointer-events: none;
+}
+
+.story-video-caption {
+  position: absolute;
+  left: 1.4rem;
+  right: 1.4rem;
+  bottom: 2.25rem;
+  z-index: 10;
+  color: #fff;
+  text-shadow: 0 6px 18px rgba(0, 0, 0, 0.72);
+}
+
+.story-video-caption .story-tag {
+  margin-bottom: 0.5rem;
+}
+
+.story-video-caption h4 {
+  font-family: var(--font-title);
+  font-size: 1.8rem;
+  line-height: 1.1;
+  font-weight: 500;
 }
 
 /* Localização Story Layout */

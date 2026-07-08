@@ -143,6 +143,10 @@
         <h1 class="main-title">Beleza & Sofisticação<br><span class="subtitle-brand">UMA EXPERIÊNCIA SENSORIAL ÚNICA</span></h1>
         <p class="slide-text">"Um novo conceito de autoestima, cuidado e alta sofisticação. Venha viver uma experiência sensorial única, minuciosamente desenhada para você."</p>
       </div>
+      <div class="hero-location-signature" aria-label="Localização: Setor Hoteleiro Norte, Brasília DF">
+        <span>Setor Hoteleiro Norte</span>
+        <strong>Brasília / DF</strong>
+      </div>
       <nav class="hero-story-rail" aria-label="Stories Espaço Gysa">
         <button class="hero-story-chip featured" type="button" onclick="openStory(0, event)" aria-label="Story de inauguração">
           <span class="hero-story-avatar">
@@ -151,12 +155,12 @@
         </button>
         <button class="hero-story-chip" type="button" onclick="openStory(1, event)" aria-label="Story de localização">
           <span class="hero-story-avatar">
-            <img src="https://images.unsplash.com/photo-1560264280-88b68371db39?q=80&w=160&auto=format&fit=crop" alt="" decoding="async">
+            <img src="/story-location-setor-hoteleiro-norte.jpg" alt="" decoding="async">
           </span>
         </button>
         <button class="hero-story-chip" type="button" onclick="openStory(2, event)" aria-label="Story de essência">
           <span class="hero-story-avatar">
-            <img src="https://images.unsplash.com/photo-1595891297464-a21395c6a61b?q=80&w=160&auto=format&fit=crop" alt="" decoding="async">
+            <img src="/frames/frame_0030.jpg" alt="" decoding="async">
           </span>
         </button>
         <button class="hero-story-chip" type="button" onclick="openStory(3, event)" aria-label="Story de equipe">
@@ -194,7 +198,7 @@
           <div class="sobre-card" onclick="openStory(1, event)">
             <div class="sobre-card-header">
               <div class="story-circle">
-                <img src="https://images.unsplash.com/photo-1560264280-88b68371db39?q=80&w=200&auto=format&fit=crop" alt="Localização" decoding="async">
+                <img src="/story-location-setor-hoteleiro-norte.jpg" alt="Localização" decoding="async">
               </div>
               <div>
                 <span class="service-label">Localização</span>
@@ -495,34 +499,32 @@
 
       <!-- Content -->
       <div class="story-body">
-        <!-- Story 0: Inauguração (Vídeo Nativo) -->
+        <!-- Story 0: Inauguração (Reel Instagram) -->
         <div class="story-slide active" id="story-slide-0">
-          <video id="story-video-0" class="story-video-player" src="/Beauty_salon_space_diversity_202607061652.mp4" playsinline loop muted></video>
+          <div class="story-instagram-embed">
+            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DadMNxkMVON/?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14">
+              <a href="https://www.instagram.com/reel/DadMNxkMVON/" target="_blank" rel="noopener">Ver Reel no Instagram</a>
+            </blockquote>
+          </div>
         </div>
 
-        <!-- Story 1: Localização (Custom Image/Design card) -->
+        <!-- Story 1: Localização (Vídeo local) -->
         <div class="story-slide" id="story-slide-1">
-          <div class="story-card-inner">
-            <img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?q=80&w=600&auto=format&fit=crop" alt="Hotel Garvey" class="story-bg-img" decoding="async">
-            <div class="story-text-overlay">
-              <p class="story-tag">GARVEY PARK HOTEL</p>
-              <h4>Localização Central</h4>
-              <p class="story-desc">Estamos na melhor região de Brasília (Asa Norte), no Garvey Park Hotel. Perfeito para quem acabou de chegar na capital e quer praticidade, conforto e atendimento premium.</p>
-              <a href="https://agendeonline.salonsoft.com.br/espacogysa" target="_blank" class="story-cta">AGENDAR ONLINE</a>
+          <div class="story-video-shell">
+            <video id="story-video-1" class="story-video-player" src="/story-location-setor-hoteleiro-norte.mp4" playsinline loop muted preload="metadata" poster="/story-location-setor-hoteleiro-norte.jpg"></video>
+            <div class="story-video-caption">
+              <p class="story-tag">LOCALIZAÇÃO</p>
+              <h4>Setor Hoteleiro Norte - Brasília</h4>
             </div>
           </div>
         </div>
         
-        <!-- Story 2: A Essência -->
+        <!-- Story 2: A Essência (Reel Instagram) -->
         <div class="story-slide" id="story-slide-2">
-          <div class="story-card-inner">
-            <img src="https://images.unsplash.com/photo-1595891297464-a21395c6a61b?q=80&w=600&auto=format&fit=crop" alt="A Essência" class="story-bg-img" decoding="async">
-            <div class="story-text-overlay">
-              <p class="story-tag">CONCEITO & TRAJETÓRIA</p>
-              <h4>Nossa Essência</h4>
-              <p class="story-desc">O Espaço Gysa nasceu da paixão por realçar a beleza e a identidade de cada mulher. Conectamos conhecimento técnico avançado ao acolhimento caloroso em cada ritual.</p>
-              <a href="https://agendeonline.salonsoft.com.br/espacogysa" target="_blank" class="story-cta">CONHECER SERVIÇOS</a>
-            </div>
+          <div class="story-instagram-embed">
+            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DaFy4SNRjEJ/?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14">
+              <a href="https://www.instagram.com/reel/DaFy4SNRjEJ/" target="_blank" rel="noopener">Ver Reel no Instagram</a>
+            </blockquote>
           </div>
         </div>
 
@@ -577,6 +579,7 @@
   <!-- Scripts do Three.js e Vanta.js Clouds -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.clouds.min.js"></script>
+  <script async src="https://www.instagram.com/embed.js"></script>
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>
