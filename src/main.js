@@ -26,10 +26,10 @@ const getFramePath = (index) => `/${frameBasePath}/frame_${index.toString().padS
 const images = new Array(frameCount);
 const frameLoadState = new Array(frameCount).fill("idle");
 const airplay = { frame: 0 };
-const initialFramePreload = isMobileDevice() ? 72 : 96;
-const framePreloadBatchSize = isMobileDevice() ? 32 : 48;
-const framePreloadConcurrency = isMobileDevice() ? 6 : 10;
-const frameLookAhead = isMobileDevice() ? 18 : 28;
+const initialFramePreload = isMobileDevice() ? 24 : 30;
+const framePreloadBatchSize = isMobileDevice() ? 18 : 24;
+const framePreloadConcurrency = isMobileDevice() ? 4 : 5;
+const frameLookAhead = isMobileDevice() ? 16 : 22;
 
 let loadedImagesCount = 0;
 let isLoaded = false;
@@ -37,11 +37,12 @@ let activeFrameLoads = 0;
 let nextSequentialFrame = 0;
 let renderScheduled = false;
 let resizeScheduled = false;
+let framePreloadStarted = false;
 const frameLoadQueue = [];
 
-const scheduleIdleWork = (callback) => {
+const scheduleIdleWork = (callback, timeout = 900) => {
   if ("requestIdleCallback" in window) {
-    window.requestIdleCallback(callback, { timeout: 500 });
+    window.requestIdleCallback(callback, { timeout });
   } else {
     window.setTimeout(callback, 16);
   }
@@ -70,7 +71,7 @@ function scheduleSequentialFrames(count) {
 function scheduleRemainingFrames() {
   scheduleSequentialFrames(framePreloadBatchSize);
   if (nextSequentialFrame < frameCount) {
-    scheduleIdleWork(scheduleRemainingFrames);
+    scheduleIdleWork(scheduleRemainingFrames, 1400);
   }
 }
 
@@ -143,8 +144,18 @@ function loadFrame(frameIndex) {
   }
 }
 
+function startFramePreload() {
+  if (framePreloadStarted) return;
+  framePreloadStarted = true;
+  scheduleIdleWork(scheduleRemainingFrames, 1200);
+}
+
 scheduleSequentialFrames(initialFramePreload);
-scheduleIdleWork(scheduleRemainingFrames);
+if (document.readyState === "complete") {
+  startFramePreload();
+} else {
+  window.addEventListener("load", startFramePreload, { once: true });
+}
 
 // Redimensionamento do canvas com lógica 'object-fit: cover' otimizado para performance máxima (60fps)
 function resizeCanvas() {
