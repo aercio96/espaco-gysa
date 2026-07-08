@@ -308,6 +308,13 @@ function initAnimations() {
     });
   }
 
+  const whatsappPrompt = document.querySelector(".hero-whatsapp-popover");
+  const servicesSlideStart = 0.60;
+
+  function updateWhatsAppPromptVisibility(progress) {
+    whatsappPrompt?.classList.toggle("is-hidden-after-services", progress >= servicesSlideStart);
+  }
+
   document.querySelectorAll(".sobre-card, .pilar-card").forEach((card) => {
     card.setAttribute("role", "button");
     card.setAttribute("tabindex", "0");
@@ -333,6 +340,7 @@ function initAnimations() {
   mainTimeline.eventCallback("onUpdate", () => {
     const progress = mainTimeline.progress();
     updateHoverRescueCandidates(progress);
+    updateWhatsAppPromptVisibility(progress);
 
     if (progress >= 0.50) {
       if (vantaEffect && !vantaEffect.req) {
@@ -346,6 +354,7 @@ function initAnimations() {
     }
   });
   updateHoverRescueCandidates(0);
+  updateWhatsAppPromptVisibility(0);
 
   // Vincula ativação dos indicadores para 7 slides
   mainTimeline.call(setActiveIndicator, [0], 0.0)
