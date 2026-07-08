@@ -3087,6 +3087,17 @@ body:not(.instagram-feed-active) [id*="eapps-instagram"] * {
   border-color: rgba(255, 255, 255, 0.4);
 }
 
+.story-instagram-btn {
+  background: rgba(166, 81, 112, 0.62);
+  border-color: rgba(244, 226, 183, 0.36);
+  color: #fff;
+}
+
+.story-instagram-btn:hover {
+  background: rgba(191, 168, 126, 0.32);
+  border-color: rgba(244, 226, 183, 0.58);
+}
+
 .story-sound-btn.is-sound-on {
   background: rgba(191, 168, 126, 0.28);
   border-color: rgba(244, 226, 183, 0.52);
@@ -3094,6 +3105,22 @@ body:not(.instagram-feed-active) [id*="eapps-instagram"] * {
 
 .story-action-btn svg {
   display: block;
+}
+
+@media (max-width: 430px) {
+  .story-actions {
+    gap: 0.35rem;
+  }
+
+  .story-action-btn {
+    min-width: 1.9rem;
+    min-height: 1.9rem;
+    padding: 0.32rem 0.5rem;
+  }
+
+  .story-instagram-btn span {
+    display: none;
+  }
 }
 
 /* Container de Embed do Instagram */
