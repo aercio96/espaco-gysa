@@ -8,13 +8,13 @@
   "theme_color": "#8C4558",
   "icons": [
     {
-      "src": "/logo/715079342_18105654004890053_2049181529465052405_n-removebg-preview.png",
+      "src": "/logo/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/logo/715079342_18105654004890053_2049181529465052405_n-removebg-preview.png",
+      "src": "/logo/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
